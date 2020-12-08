@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/Bloc/ProductsBloc.dart';
 import 'package:flutter_app/UI/Dashboard/DashDrawer.dart';
 import 'package:flutter_app/UI/Dashboard/Profile/Profile.dart';
+
+import 'Home/Home.dart';
 
 class Dashboard extends StatefulWidget {
   @override
@@ -79,6 +82,7 @@ class _DashboardState extends State<Dashboard> {
         iconTheme: IconThemeData(color: Colors.black),
       ),
       drawer: DashDrawer(),
+      body: Home(),
       bottomNavigationBar: bottomNav(),
     );
   }
@@ -91,13 +95,17 @@ class _DashboardState extends State<Dashboard> {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          Container(
-            width: 60,
-            child: Column(
-              children: [
-                Image.asset("assets/wowIcon.png", height: 30, width: 30),
-                Text("Home")
-              ],
+          InkWell(onTap: (){
+
+          },
+            child: Container(
+              width: 60,
+              child: Column(
+                children: [
+                  Image.asset("assets/wowIcon.png", height: 30, width: 30),
+                  Text("Home")
+                ],
+              ),
             ),
           ),
           Container(
