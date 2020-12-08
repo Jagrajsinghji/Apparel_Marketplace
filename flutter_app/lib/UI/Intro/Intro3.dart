@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_app/UI/SignInUp/SignIn.dart';
 
 class Intro3 extends StatefulWidget {
@@ -9,11 +10,34 @@ class Intro3 extends StatefulWidget {
 
 class _Intro3State extends State<Intro3> {
   @override
+  void initState() {
+    super.initState();
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor: Color(0xffdc0f21),
+    ));
+  }
+
+  @override
+  void dispose() {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor: Color(0xff005294),
+    ));
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    var width = MediaQuery.of(context).size.width;
+    var height = MediaQuery.of(context).size.height;
     return Scaffold(
       body: Stack(
         children: [
-          Image.asset("assets/intro3.png"),
+          Image.asset(
+            "assets/intro3.png",
+            width: width,
+            height: height,
+            fit: BoxFit.fill,
+          ),
           Positioned(
             bottom: 120,
             child: Container(
