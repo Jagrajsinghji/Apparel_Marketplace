@@ -13,21 +13,24 @@ class Dashboard extends StatefulWidget {
 class _DashboardState extends State<Dashboard> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
+  int page=0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(key: _scaffoldKey,
-      appBar: AppBar(
+      appBar: AppBar(elevation: 0,
         leading: IconButton(icon: Icon(Icons.menu),onPressed: (){
           _scaffoldKey.currentState.openDrawer();
         },),
         backgroundColor: Colors.white,
-        title: Image.asset(
-          "assets/logo.png",
-          width: 160,
+        title: Transform.translate(offset: Offset(-25,0),
+          child: Image.asset(
+            "assets/logo.png",
+            width: 160,
+          ),
         ),
         actions: [
           Padding(
-            padding: const EdgeInsets.all(5.0),
+            padding: const EdgeInsets.all(8.0),
             child: InkWell(
               focusColor: Colors.transparent,
               splashColor: Colors.transparent,
@@ -40,7 +43,7 @@ class _DashboardState extends State<Dashboard> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(5.0),
+            padding: const EdgeInsets.all(8.0),
             child: InkWell(
               focusColor: Colors.transparent,
               splashColor: Colors.transparent,
@@ -53,7 +56,7 @@ class _DashboardState extends State<Dashboard> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(5.0),
+            padding: const EdgeInsets.all(8.0),
             child: InkWell(
               focusColor: Colors.transparent,
               splashColor: Colors.transparent,
@@ -66,7 +69,7 @@ class _DashboardState extends State<Dashboard> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(5.0),
+            padding: const EdgeInsets.all(8.0),
             child: InkWell(
               focusColor: Colors.transparent,
               splashColor: Colors.transparent,
@@ -82,7 +85,7 @@ class _DashboardState extends State<Dashboard> {
         iconTheme: IconThemeData(color: Colors.black),
       ),
       drawer: DashDrawer(),
-      body: Home(),
+      body: page==0?Home():Profile(),
       bottomNavigationBar: bottomNav(),
     );
   }
@@ -96,7 +99,9 @@ class _DashboardState extends State<Dashboard> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           InkWell(onTap: (){
-
+setState(() {
+  page=0;
+});
           },
             child: Container(
               width: 60,
@@ -108,48 +113,72 @@ class _DashboardState extends State<Dashboard> {
               ),
             ),
           ),
-          Container(
-            width: 60,
-            child: Column(
-              children: [
-                Image.asset(
-                  "assets/shirtIcon.png",
-                  height: 30,
-                  width: 30,
-                ),
-                Text("Fashion")
-              ],
+          InkWell(onTap: (){
+            setState(() {
+              page=1;
+            });
+          },
+            child: Container(
+              width: 60,
+              child: Column(
+                children: [
+                  Image.asset(
+                    "assets/shirtIcon.png",
+                    height: 30,
+                    width: 30,
+                  ),
+                  Text("Fashion")
+                ],
+              ),
             ),
           ),
-          Container(
-            width: 60,
-            child: Column(
-              children: [
-                Image.asset("assets/chairIcon.png", height: 30, width: 30),
-                Text("Decor")
-              ],
+          InkWell(onTap: (){
+            setState(() {
+              page=2;
+            });
+          },
+            child: Container(
+              width: 60,
+              child: Column(
+                children: [
+                  Image.asset("assets/chairIcon.png", height: 30, width: 30),
+                  Text("Decor")
+                ],
+              ),
             ),
           ),
-          Container(
-            width: 60,
-            child: Column(
-              children: [
-                Image.asset("assets/explore.png", height: 30, width: 30),
-                Text("Explore")
-              ],
+          InkWell(onTap: (){
+            setState(() {
+              page=3;
+            });
+          },
+            child: Container(
+              width: 60,
+              child: Column(
+                children: [
+                  Image.asset("assets/explore.png", height: 30, width: 30),
+                  Text("Explore")
+                ],
+              ),
             ),
           ),
-          Container(
-            width: 60,
-            child: Column(
-              children: [
-                Image.asset(
-                  "assets/user.png",
-                  height: 30,
-                  width: 30,
-                ),
-                Text("Profile")
-              ],
+          InkWell(onTap: (){
+            setState(() {
+              page=4;
+            });
+          },
+            child: Container(
+              width: 60,
+              child: Column(
+                children: [
+                  Image.asset(
+                    "assets/user.png",
+                    height: 30,
+                    width: 30,
+                  ),
+                  Text("Profile")
+                ],
+              ),
             ),
           ),
         ],
