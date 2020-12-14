@@ -41,7 +41,11 @@ lowerBound: 0.0    );
         _controller.forward();
       }
     });
-    Timer(Duration(seconds: 1), ()=>_controller.forward());
+    Timer(Duration(seconds: 1), (){
+      try{
+        _controller?.forward();
+      }catch(e){}
+    });
   }
 
   @override

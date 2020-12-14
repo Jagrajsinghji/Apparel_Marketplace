@@ -1,0 +1,545 @@
+import 'package:flutter/material.dart';
+
+class FilterBy extends StatefulWidget {
+  final Map allFilters, appliedFilters;
+
+  const FilterBy({Key key, this.allFilters, this.appliedFilters})
+      : super(key: key);
+
+  @override
+  _FilterByState createState() => _FilterByState();
+}
+
+class _FilterByState extends State<FilterBy> {
+  List selectedBrands = [],
+      selectedPrice = [],
+      selectedSizes = [],
+      selectedColors = [];
+  String selectedStars="",selectedDiscount="";
+
+  bool showAllBrands = false, brandsMoreThan6 = false;
+
+  double minPrice = 0, maxPrice = 20000;
+
+  RangeValues _priceValues;
+
+  @override
+  void initState() {
+    super.initState();
+    selectedBrands = []..addAll(widget.appliedFilters['brands'] ?? []);
+    selectedPrice = []..addAll(widget.appliedFilters['price'] ?? []);
+    selectedSizes = []..addAll(widget.appliedFilters['size'] ?? []);
+    selectedColors = []..addAll(widget.appliedFilters['colors'] ?? []);
+    selectedStars = widget.appliedFilters['stars'] ?? "";
+    selectedDiscount = widget.appliedFilters['discount'] ?? "";
+    if ((widget.allFilters['brands']?.length ?? 0) > 6) brandsMoreThan6 = true;
+
+    maxPrice = (widget.allFilters['price'] as List)
+          .reduce((curr, next) => curr > next ? curr : next);
+    minPrice = (widget.allFilters['price'] as List)
+          .reduce((curr, next) => curr < next ? curr : next);
+
+      if(selectedPrice.length==2)
+      _priceValues = RangeValues(selectedPrice.first, selectedPrice.last);
+      else
+    _priceValues = RangeValues(minPrice, maxPrice);
+
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Scaffold(
+        body: ListView(
+          shrinkWrap: true,
+          physics: BouncingScrollPhysics(),
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(30.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Filters",
+                    style: TextStyle(
+                      color: Color(0xff2c393f),
+                      fontSize: 16,
+                    ),
+                  ),
+                  FlatButton(onPressed: (){
+                    selectedBrands.clear();
+                    selectedPrice.clear();
+                    selectedSizes.clear();
+                    selectedColors.clear();
+                    selectedStars="";
+                    selectedDiscount="";
+                    maxPrice = (widget.allFilters['price'] as List)
+                        .reduce((curr, next) => curr > next ? curr : next);
+                    minPrice = (widget.allFilters['price'] as List)
+                        .reduce((curr, next) => curr < next ? curr : next);
+                    _priceValues = RangeValues(minPrice, maxPrice);
+                    if(mounted)
+                      setState(() {
+
+                      });
+                  },
+                    child: Text(
+                      "Clear all",
+                      style: TextStyle(
+                        color: Color(0xffdc0f21),
+                        fontSize: 14,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 30.0, bottom: 10),
+              child: Text(
+                "Brand",
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 14,
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: Wrap(
+                alignment: WrapAlignment.spaceEvenly,
+                crossAxisAlignment: WrapCrossAlignment.start,
+                runSpacing: 8,
+                spacing: 8,
+                children: [
+                  ...(widget.allFilters['brands'] as List)
+                      .sublist(
+                          0,
+                          brandsMoreThan6 && !showAllBrands
+                              ? 6
+                              : widget.allFilters['brands'].length)
+                      .map((brand) {
+                    bool selected = selectedBrands.contains(brand) ?? false;
+                    return InkWell(
+                      borderRadius: BorderRadius.circular(4),
+                      onTap: () {
+                        if (selected)
+                          selectedBrands.remove(brand);
+                        else
+                          selectedBrands.add(brand);
+                        if (mounted) setState(() {});
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(4),
+                          border: Border.all(
+                            color: Color(0xff969696),
+                            width: 1,
+                          ),
+                          color: selected ? Color(0xff686868) : Colors.white,
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Text(
+                            "$brand",
+                            style: TextStyle(
+                              color:
+                                  selected ? Colors.white : Color(0xff969696),
+                              fontSize: 14,
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                ],
+              ),
+            ),
+            if (brandsMoreThan6)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                child: FlatButton(
+                  onPressed: () {
+                    if (mounted)
+                      setState(() {
+                        showAllBrands = !showAllBrands;
+                      });
+                  },
+                  child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        showAllBrands ? "- less" : "+ more",
+                        style: TextStyle(
+                          color: Color(0xff196f96),
+                          fontSize: 12,
+                        ),
+                      )),
+                ),
+              ),
+            Padding(
+              padding: const EdgeInsets.only(
+                left: 30.0,
+                top: 10,
+              ),
+              child: Text(
+                "Price Range",
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 14,
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Theme(
+                data: ThemeData(
+                    sliderTheme: SliderThemeData(
+                        rangeTrackShape: RoundedRectRangeSliderTrackShape(),
+                        rangeValueIndicatorShape:
+                            PaddleRangeSliderValueIndicatorShape(),
+                        showValueIndicator: ShowValueIndicator.always)),
+                child: RangeSlider(
+                  values: _priceValues,
+                  activeColor: Color(0xffDC0F21),
+                  inactiveColor: Color(0xff5B5B5B),
+                  onChanged: (x) {
+                    if (mounted)
+                      setState(() {
+                        _priceValues = x;
+                        selectedPrice.clear();
+                        selectedPrice.add(x.start);
+                        selectedPrice.add(x.end);
+                      });
+
+                  },
+                  min: minPrice,
+                  max: maxPrice,
+                  labels: RangeLabels(
+                      _priceValues.start.toString().substring(0, 4),
+                      _priceValues.end.toString().substring(0, 4)),
+                ),
+              ),
+            ),
+            Transform.translate(
+              offset: Offset(0, -15),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Min",
+                      style: TextStyle(
+                        color: Color(0xff969696),
+                        fontSize: 14,
+                      ),
+                    ),
+                    Text(
+                      "Max",
+                      style: TextStyle(
+                        color: Color(0xff969696),
+                        fontSize: 14,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            if((widget.allFilters['size'] as List).length>0)
+           ...[ Padding(
+              padding: const EdgeInsets.only(left: 30.0, top: 10, bottom: 10),
+              child: Text(
+                "Size",
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 14,
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: Wrap(
+                alignment: WrapAlignment.spaceEvenly,
+                crossAxisAlignment: WrapCrossAlignment.start,
+                runSpacing: 8,
+                spacing: 8,
+                children: [
+                  ...(widget.allFilters['size'] as List).map((s) {
+                    bool selected = selectedSizes.contains(s) ?? false;
+                    return InkWell(
+                      borderRadius: BorderRadius.circular(4),
+                      onTap: () {
+                        if (selected)
+                          selectedSizes.remove(s);
+                        else
+                          selectedSizes.add(s);
+                        if (mounted) setState(() {});
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(4),
+                          border: Border.all(
+                            color: Color(0xff969696),
+                            width: 1,
+                          ),
+                          color: selected ? Color(0xff686868) : Colors.white,
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Text(
+                            "$s",
+                            style: TextStyle(
+                              color:
+                                  selected ? Colors.white : Color(0xff969696),
+                              fontSize: 14,
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                ],
+              ),
+            ),],
+         if((widget.allFilters['colors'] as List).length>0)
+         ...  [ Padding(
+              padding: const EdgeInsets.only(left: 30.0, top: 10, bottom: 10),
+              child: Text(
+                "Colour ${(widget.allFilters['colors'] as List).length}",
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 14,
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: Wrap(
+                alignment: WrapAlignment.start,
+                crossAxisAlignment: WrapCrossAlignment.start,
+                runSpacing: 8,
+                spacing: 8,
+                children: [
+                  ...(widget.allFilters['colors'] as List).map((c) {
+                    bool selected = selectedColors.contains(c) ?? false;
+                    return InkWell(
+                      borderRadius: BorderRadius.circular(4),
+                      onTap: () {
+                        if (selected)
+                          selectedColors.remove(c);
+                        else
+                          selectedColors.add(c);
+                        if (mounted) setState(() {});
+                      },
+                      child: Stack(
+                        children: [
+                          Container(
+                            width: 50,
+                            height: 35,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(4),
+                              color: Color(int.parse("0xff" + c)),
+                            ),
+                          ),
+                          if (selected)
+                            Container(
+                              width: 50,
+                              height: 35,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(4),
+                                color: Colors.black26,
+                              ),
+                              child: Icon(Icons.check, color: Colors.white),
+                            ),
+                        ],
+                      ),
+                    );
+                  }).toList(),
+                ],
+              ),
+            ),],
+            Padding(
+              padding: const EdgeInsets.only(left: 30.0, top: 10, bottom: 10),
+              child: Text(
+                "Star Rating",
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 14,
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: Wrap(
+                alignment: WrapAlignment.start,
+                crossAxisAlignment: WrapCrossAlignment.start,
+                runSpacing: 8,
+                spacing: 8,
+                children: [
+                  ...List.generate(5, (index) {
+                    bool selected = selectedStars=="$index" ?? false;
+                    return InkWell(
+                      borderRadius: BorderRadius.circular(4),
+                      onTap: () {
+                        if (selected)
+                          selectedStars
+                              ="";
+                        else
+                          selectedStars="$index";
+                        if (mounted) setState(() {});
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(4),
+                          border: Border.all(
+                            color: Color(0xff969696),
+                            width: 1,
+                          ),
+                          color: selected ? Color(0xff686868) : Colors.white,
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Text(
+                            "${index + 1}${index == 4 ? "" : "+"}",
+                            style: TextStyle(
+                              color:
+                                  selected ? Colors.white : Color(0xff969696),
+                              fontSize: 14,
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  })
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 30.0, top: 10, bottom: 10),
+              child: Text(
+                "Discount",
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 14,
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: Wrap(
+                alignment: WrapAlignment.start,
+                crossAxisAlignment: WrapCrossAlignment.start,
+                runSpacing: 8,
+                spacing: 8,
+                children: [
+                  ...List.generate(4, (index) {
+                    bool selected = selectedDiscount=="$index" ?? false;
+                    String text = "10% Or Above";
+                    switch (index) {
+                      case 1:
+                        text = "30% Or Above";
+                        break;
+                      case 2:
+                        text = "50% Or Above";
+                        break;
+                      case 3:
+                        text = "70% Or Above";
+                        break;
+                    }
+                    return InkWell(
+                      borderRadius: BorderRadius.circular(4),
+                      onTap: () {
+                        if (selected)
+                          selectedDiscount=(index).toString();
+                        else
+                          selectedDiscount=(index).toString();
+                        if (mounted) setState(() {});
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(4),
+                          border: Border.all(
+                            color: Color(0xff969696),
+                            width: 1,
+                          ),
+                          color: selected ? Color(0xff686868) : Colors.white,
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Text(
+                            "$text",
+                            style: TextStyle(
+                              color:
+                                  selected ? Colors.white : Color(0xff969696),
+                              fontSize: 14,
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  })
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(right:5.0),
+                      child: FlatButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        color: Color(0xff7B8387),
+                        height: 60,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8)),
+                        child: Text(
+                          "Close",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(left:5.0),
+                      child: FlatButton(
+                        onPressed: () {
+                          Map appFilters = {}..addAll(
+                          {"brands": selectedBrands, "price": selectedPrice, "colors": selectedColors, "size": selectedSizes,
+                          "stars":selectedStars,"discount":selectedDiscount});
+
+                          Navigator.pop(context,appFilters);
+                        },
+                        color: Color(0xffDC0F21),
+                        height: 60,
+
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8)),
+                        child: Text(
+                          "Apply",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

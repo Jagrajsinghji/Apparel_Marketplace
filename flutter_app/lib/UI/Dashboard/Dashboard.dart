@@ -52,7 +52,9 @@ class _DashboardState extends State<Dashboard> {
                 width: 20,
                 height: 20,
               ),
-              onTap: () {},
+              onTap: () {
+                Navigator.pushNamed(context,  "Notifications");
+              },
             ),
           ),
           Padding(
@@ -65,7 +67,9 @@ class _DashboardState extends State<Dashboard> {
                 width: 20,
                 height: 20,
               ),
-              onTap: () {},
+              onTap: () {
+                Navigator.pushNamed(context,  "WishList");
+              },
             ),
           ),
           Padding(
@@ -78,7 +82,9 @@ class _DashboardState extends State<Dashboard> {
                 width: 20,
                 height: 20,
               ),
-              onTap: () {},
+              onTap: () {
+                Navigator.pushNamed(context,  "ShoppingBag");
+              },
             ),
           ),
         ],

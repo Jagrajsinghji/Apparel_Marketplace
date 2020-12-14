@@ -51,7 +51,9 @@ class _ProfileState extends State<Profile> {
               ),
             )),
         SizedBox(height: 40.23),
-        ListTile(
+        ListTile(onTap: (){
+          Navigator.pushNamed(context,  "Orders");
+        },
           title: Text(
             "Orders",
             style: TextStyle(
@@ -71,27 +73,9 @@ class _ProfileState extends State<Profile> {
             ),
           ),
         ),
-        ListTile(
-          title: Text(
-            "Orders",
-            style: TextStyle(
-              color: Color(0xff9d9d9d),
-              fontSize: 14,
-              fontFamily: "Poppins",
-              fontWeight: FontWeight.w400,
-            ),
-          ),
-          subtitle: Text(
-            "Check your order status",
-            style: TextStyle(
-              color: Color(0xff9d9d9d),
-              fontSize: 10,
-              fontFamily: "Poppins",
-              fontWeight: FontWeight.w400,
-            ),
-          ),
-        ),
-        ListTile(
+        ListTile(onTap: (){
+          Navigator.pushNamed(context, "HelpCenter");
+        },
           title: Text(
             "Help Center",
             style: TextStyle(

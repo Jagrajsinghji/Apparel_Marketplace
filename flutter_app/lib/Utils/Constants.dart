@@ -5,7 +5,7 @@ class Constants {
   static const BASE_URL = "http://dev.wowfas.com/old";
 
   static BaseOptions baseOptions = BaseOptions(
-      baseUrl: BASE_URL, connectTimeout: 5000, receiveTimeout: 3000,
+      baseUrl: BASE_URL, connectTimeout: 5000, receiveTimeout: 5000,
   );
 
   static GlobalKey<NavigatorState> navigatorKey =GlobalKey();
