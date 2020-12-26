@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/UI/Dashboard/Item/ItemPage.dart';
-import 'package:flutter_app/Utils/Constants.dart';
+import 'package:flutter_app/Utils/Session.dart';
 
 class ProductGridWIthThumbnail extends StatefulWidget {
   final List productData;
@@ -32,7 +32,7 @@ class _ProductGridWIthThumbnailState extends State<ProductGridWIthThumbnail> {
             Padding(
               padding: const EdgeInsets.only(top: 10.0),
               child: Container(
-                color: Colors.grey.shade200,
+                color: Colors.white,
                 child: Padding(
                   padding:
                       const EdgeInsets.only(left: 20.0, top: 10, bottom: 10),
@@ -52,7 +52,7 @@ class _ProductGridWIthThumbnailState extends State<ProductGridWIthThumbnail> {
               ),
             ),
             Container(
-              color: Colors.grey.shade200,
+              color: Colors.white,
               child: Padding(
                 padding:
                     const EdgeInsets.only(bottom: 10.0, right: 10, left: 10),
@@ -61,59 +61,76 @@ class _ProductGridWIthThumbnailState extends State<ProductGridWIthThumbnail> {
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        childAspectRatio: .8,
-                        crossAxisCount: 2,
-                        crossAxisSpacing: 10,
-                        mainAxisSpacing: 10),
+                      childAspectRatio: .8,
+                      crossAxisCount: 2,
+                    ),
                     itemBuilder: (c, i) {
                       Map data = widget.productData.elementAt(i) ?? {};
-                      return InkWell(
-                        onTap: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (c) => ItemPage(
-                                    itemSlug: data['slug'],
-                                  )));
-                        },
-                        key: Key(data['id']?.toString() ?? "$i"),
-                        borderRadius: BorderRadius.circular(8),
-                        child: Container(
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(8)),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Expanded(
-                                flex: 1,
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(8),
-                                  child: Container(
-                                    color: Colors.white,
-                                    child: CachedNetworkImage(
-                                      imageUrl:
-                                          "${Constants.BASE_URL}/assets/images/thumbnails/${data['thumbnail']}",
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Expanded(
-                                  flex: 0,
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 4, right: 4, top: 4, bottom: 10),
-                                    child: Text(
-                                      "${data['name']}",
-                                      maxLines: 2,
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        color: Color(0xff727272),
-                                        fontSize: 12,
-                                        letterSpacing: 0.45,
+                      String tag = data['slug'] + widget.title;
+                      return Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (c) => ItemPage(
+                                      tag: tag,
+                                      itemSlug: data['slug'],
+                                    )));
+                          },
+                          key: Key(data['id']?.toString() ?? "$i"),
+                          borderRadius: BorderRadius.circular(8),
+                          child: Hero(
+                            tag: tag,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  boxShadow: [
+                                    BoxShadow(
+                                        color: Colors.black45,
+                                        offset: Offset(0, 2),
+                                        spreadRadius: 0.5,
+                                        blurRadius: 1)
+                                  ],
+                                  color: Colors.white,
+                                  border:
+                                      Border.all(color: Colors.grey.shade300),
+                                  borderRadius: BorderRadius.circular(8)),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(
+                                    flex: 1,
+                                    child: Container(
+                                      color: Colors.white,
+                                      child: CachedNetworkImage(
+                                        imageUrl:
+                                            "${Session.BASE_URL}/assets/images/thumbnails/${data['thumbnail']}",
                                       ),
                                     ),
-                                  )),
-                            ],
+                                  ),
+                                  Expanded(
+                                      flex: 0,
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 4,
+                                            right: 4,
+                                            top: 4,
+                                            bottom: 10),
+                                        child: Text(
+                                          "${data['name']}",
+                                          maxLines: 2,
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            color: Color(0xff727272),
+                                            fontSize: 12,
+                                            letterSpacing: 0.45,
+                                          ),
+                                        ),
+                                      )),
+                                ],
+                              ),
+                            ),
                           ),
                         ),
                       );

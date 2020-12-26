@@ -13,8 +13,11 @@ class _Intro1State extends State<Intro1> {
   @override
   void initState() {
     super.initState();
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarColor:Color(0xfffaae00), ));
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor: Color(0xfffaae00),
+    ));
   }
+
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
@@ -93,9 +96,18 @@ class _Intro1State extends State<Intro1> {
                       borderRadius: BorderRadius.circular(600),
                       onTap: () {
                         Navigator.push(
-                            context, PageRouteBuilder(pageBuilder:  (c,a,b) => Intro2(),transitionsBuilder: (c,a,b,w){
-                              return SlideTransition(position: Tween(begin: Offset(2.0, 0),end:Offset.zero).animate(a),child: w,);
-                        }));
+                            context,
+                            PageRouteBuilder(
+                                pageBuilder: (c, a, b) => Intro2(),
+                                transitionsBuilder: (c, a, b, w) {
+                                  return SlideTransition(
+                                    position: Tween(
+                                            begin: Offset(2.0, 0),
+                                            end: Offset.zero)
+                                        .animate(a),
+                                    child: w,
+                                  );
+                                }));
                       },
                       child: Center(
                         child: Text(

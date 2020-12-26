@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/Utils/Constants.dart';
+import 'package:flutter_app/Utils/Session.dart';
 
 class HelpCenter extends StatefulWidget {
   @override
@@ -26,7 +26,7 @@ class _HelpCenterState extends State<HelpCenter> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-                  Text(
+          Text(
             "Help Center",
             style: TextStyle(
               color: Color(0xff5b5b5b),
@@ -47,9 +47,11 @@ class _HelpCenterState extends State<HelpCenter> {
             height: 20,
           ),
           Center(
-            child: InkWell( borderRadius: BorderRadius.circular(600),
-              onTap: (){
-                Navigator.pushNamedAndRemoveUntil(context, Constants.BASE_URL, (route) => false);
+            child: InkWell(
+              borderRadius: BorderRadius.circular(600),
+              onTap: () {
+                Navigator.pushNamedAndRemoveUntil(
+                    context, Session.BASE_URL, (route) => false);
               },
               child: Container(
                 width: 186,

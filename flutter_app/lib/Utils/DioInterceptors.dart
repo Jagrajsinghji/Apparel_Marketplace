@@ -1,25 +1,30 @@
 import 'package:dio/dio.dart';
-import 'package:flutter_app/Bloc/AppErrorBloc.dart';
+import 'package:flutter_app/Utils/Session.dart';
 
-class DioInterceptor extends Interceptor{
+class DioInterceptor extends Interceptor {
+  static DioInterceptor _instance = DioInterceptor._private();
 
-  final AppErrorBloc _appErrorBloc;
+  DioInterceptor._private();
 
-  DioInterceptor(this._appErrorBloc);
+  factory DioInterceptor.getInstance() => _instance;
 
   @override
-  Future onRequest(RequestOptions options) async{
-    return options ;
+  Future onRequest(RequestOptions options) async {
+    options.headers.addAll((await Session.instance.getHeaders()));
+    return options;
   }
 
   @override
-  Future onError(DioError err) async{
+  Future onError(DioError err) async {
+    print("****************************************************");
+    print(err);
+    print("****************************************************");
     // _appErrorBloc.updateError(err.message);
-    return true;
+    return err;
   }
 
   @override
-  Future onResponse(Response response)async {
+  Future onResponse(Response response) async {
     return response;
   }
 }

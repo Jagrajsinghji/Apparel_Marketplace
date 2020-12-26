@@ -33,7 +33,9 @@ dependencies:
   provider: ^4.3.2+3
   cached_network_image: ^2.4.1
   pull_to_refresh: ^1.6.3
-
+  fluttertoast: ^7.1.5
+  shared_preferences: ^0.5.12+4
+  http:
 
 
 dev_dependencies:

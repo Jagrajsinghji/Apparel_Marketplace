@@ -63,19 +63,31 @@ class _ForgotPassword2State extends State<ForgotPassword2> {
               ),
             ),
           ),
-
           SizedBox(height: 150),
-          Container(height: 150,color: Colors.red,
-            child: PinCodeTextField(appContext: context,cursorColor: Colors.black,
-            pinTheme: PinTheme(shape: PinCodeFieldShape.box,
-            activeColor: Colors.black,
-            inactiveColor: Colors.black,
-            selectedColor: Colors.red),
-            onChanged: (s){
-
-            },length: 4,),
+          Container(
+            height: 150,
+            color: Color(0xffDC0F21),
+            child: PinCodeTextField(
+              appContext: context,
+              cursorColor: Colors.black,
+              pinTheme: PinTheme(
+                  shape: PinCodeFieldShape.box,
+                  activeColor: Colors.black,
+                  inactiveColor: Colors.black,
+                  selectedColor: Color(0xffDC0F21)),
+              onChanged: (s) {},
+              length: 4,
+            ),
           ),
-          Center(child: Container(height: 185,width: 185,child: CircularProgressIndicator(valueColor:AlwaysStoppedAnimation<Color>(Color(0xff5B5B5B)) ,strokeWidth: 7,))),
+          Center(
+              child: Container(
+                  height: 185,
+                  width: 185,
+                  child: CircularProgressIndicator(
+                    valueColor:
+                        AlwaysStoppedAnimation<Color>(Color(0xff5B5B5B)),
+                    strokeWidth: 7,
+                  ))),
           SizedBox(height: 10),
           Center(
             child: Text(
@@ -89,13 +101,11 @@ class _ForgotPassword2State extends State<ForgotPassword2> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 27,vertical: 10),
-            child: InkWell(onTap: (){
-
-            },
+            padding: const EdgeInsets.symmetric(horizontal: 27, vertical: 10),
+            child: InkWell(
+              onTap: () {},
               borderRadius: BorderRadius.circular(100),
               child: Container(
-
                 height: 58,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(100),

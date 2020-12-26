@@ -15,7 +15,7 @@ class _FilterByState extends State<FilterBy> {
       selectedPrice = [],
       selectedSizes = [],
       selectedColors = [];
-  String selectedStars="",selectedDiscount="";
+  String selectedStars = "", selectedDiscount = "";
 
   bool showAllBrands = false, brandsMoreThan6 = false;
 
@@ -35,15 +35,14 @@ class _FilterByState extends State<FilterBy> {
     if ((widget.allFilters['brands']?.length ?? 0) > 6) brandsMoreThan6 = true;
 
     maxPrice = (widget.allFilters['price'] as List)
-          .reduce((curr, next) => curr > next ? curr : next);
+        .reduce((curr, next) => curr > next ? curr : next);
     minPrice = (widget.allFilters['price'] as List)
-          .reduce((curr, next) => curr < next ? curr : next);
+        .reduce((curr, next) => curr < next ? curr : next);
 
-      if(selectedPrice.length==2)
+    if (selectedPrice.length == 2)
       _priceValues = RangeValues(selectedPrice.first, selectedPrice.last);
-      else
-    _priceValues = RangeValues(minPrice, maxPrice);
-
+    else
+      _priceValues = RangeValues(minPrice, maxPrice);
   }
 
   @override
@@ -66,23 +65,34 @@ class _FilterByState extends State<FilterBy> {
                       fontSize: 16,
                     ),
                   ),
-                  FlatButton(onPressed: (){
-                    selectedBrands.clear();
-                    selectedPrice.clear();
-                    selectedSizes.clear();
-                    selectedColors.clear();
-                    selectedStars="";
-                    selectedDiscount="";
-                    maxPrice = (widget.allFilters['price'] as List)
-                        .reduce((curr, next) => curr > next ? curr : next);
-                    minPrice = (widget.allFilters['price'] as List)
-                        .reduce((curr, next) => curr < next ? curr : next);
-                    _priceValues = RangeValues(minPrice, maxPrice);
-                    if(mounted)
-                      setState(() {
+                  FlatButton(
+                    onPressed: () {
+                      selectedBrands.clear();
+                      selectedPrice.clear();
+                      selectedSizes.clear();
+                      selectedColors.clear();
+                      selectedStars = "";
+                      selectedDiscount = "";
+                      maxPrice = (widget.allFilters['price'] as List)
+                          .reduce((curr, next) => curr > next ? curr : next);
+                      minPrice = (widget.allFilters['price'] as List)
+                          .reduce((curr, next) => curr < next ? curr : next);
+                      _priceValues = RangeValues(minPrice, maxPrice);
+                      Map appFilters = {}..addAll({
+                          "brands": selectedBrands,
+                          "price": selectedPrice,
+                          "colors": selectedColors,
+                          "size": selectedSizes,
+                          "stars": selectedStars,
+                          "discount": selectedDiscount
+                        });
 
-                      });
-                  },
+                      Navigator.pop(context, appFilters);
+                      // if(mounted)
+                      //   setState(() {
+                      //
+                      //   });
+                    },
                     child: Text(
                       "Clear all",
                       style: TextStyle(
@@ -210,7 +220,6 @@ class _FilterByState extends State<FilterBy> {
                         selectedPrice.add(x.start);
                         selectedPrice.add(x.end);
                       });
-
                   },
                   min: minPrice,
                   max: maxPrice,
@@ -245,119 +254,121 @@ class _FilterByState extends State<FilterBy> {
                 ),
               ),
             ),
-            if((widget.allFilters['size'] as List).length>0)
-           ...[ Padding(
-              padding: const EdgeInsets.only(left: 30.0, top: 10, bottom: 10),
-              child: Text(
-                "Size",
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 14,
+            if ((widget.allFilters['size'] as List).length > 0) ...[
+              Padding(
+                padding: const EdgeInsets.only(left: 30.0, top: 10, bottom: 10),
+                child: Text(
+                  "Size",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 14,
+                  ),
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: Wrap(
-                alignment: WrapAlignment.spaceEvenly,
-                crossAxisAlignment: WrapCrossAlignment.start,
-                runSpacing: 8,
-                spacing: 8,
-                children: [
-                  ...(widget.allFilters['size'] as List).map((s) {
-                    bool selected = selectedSizes.contains(s) ?? false;
-                    return InkWell(
-                      borderRadius: BorderRadius.circular(4),
-                      onTap: () {
-                        if (selected)
-                          selectedSizes.remove(s);
-                        else
-                          selectedSizes.add(s);
-                        if (mounted) setState(() {});
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(4),
-                          border: Border.all(
-                            color: Color(0xff969696),
-                            width: 1,
-                          ),
-                          color: selected ? Color(0xff686868) : Colors.white,
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Text(
-                            "$s",
-                            style: TextStyle(
-                              color:
-                                  selected ? Colors.white : Color(0xff969696),
-                              fontSize: 14,
-                            ),
-                          ),
-                        ),
-                      ),
-                    );
-                  }).toList(),
-                ],
-              ),
-            ),],
-         if((widget.allFilters['colors'] as List).length>0)
-         ...  [ Padding(
-              padding: const EdgeInsets.only(left: 30.0, top: 10, bottom: 10),
-              child: Text(
-                "Colour ${(widget.allFilters['colors'] as List).length}",
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 14,
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: Wrap(
-                alignment: WrapAlignment.start,
-                crossAxisAlignment: WrapCrossAlignment.start,
-                runSpacing: 8,
-                spacing: 8,
-                children: [
-                  ...(widget.allFilters['colors'] as List).map((c) {
-                    bool selected = selectedColors.contains(c) ?? false;
-                    return InkWell(
-                      borderRadius: BorderRadius.circular(4),
-                      onTap: () {
-                        if (selected)
-                          selectedColors.remove(c);
-                        else
-                          selectedColors.add(c);
-                        if (mounted) setState(() {});
-                      },
-                      child: Stack(
-                        children: [
-                          Container(
-                            width: 50,
-                            height: 35,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(4),
-                              color: Color(int.parse("0xff" + c)),
-                            ),
-                          ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: Wrap(
+                  alignment: WrapAlignment.spaceEvenly,
+                  crossAxisAlignment: WrapCrossAlignment.start,
+                  runSpacing: 8,
+                  spacing: 8,
+                  children: [
+                    ...(widget.allFilters['size'] as List).map((s) {
+                      bool selected = selectedSizes.contains(s) ?? false;
+                      return InkWell(
+                        borderRadius: BorderRadius.circular(4),
+                        onTap: () {
                           if (selected)
+                            selectedSizes.remove(s);
+                          else
+                            selectedSizes.add(s);
+                          if (mounted) setState(() {});
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(4),
+                            border: Border.all(
+                              color: Color(0xff969696),
+                              width: 1,
+                            ),
+                            color: selected ? Color(0xff686868) : Colors.white,
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Text(
+                              "$s",
+                              style: TextStyle(
+                                color:
+                                    selected ? Colors.white : Color(0xff969696),
+                                fontSize: 14,
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                  ],
+                ),
+              ),
+            ],
+            if ((widget.allFilters['colors'] as List).length > 0) ...[
+              Padding(
+                padding: const EdgeInsets.only(left: 30.0, top: 10, bottom: 10),
+                child: Text(
+                  "Colour ${(widget.allFilters['colors'] as List).length}",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 14,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: Wrap(
+                  alignment: WrapAlignment.start,
+                  crossAxisAlignment: WrapCrossAlignment.start,
+                  runSpacing: 8,
+                  spacing: 8,
+                  children: [
+                    ...(widget.allFilters['colors'] as List).map((c) {
+                      bool selected = selectedColors.contains(c) ?? false;
+                      return InkWell(
+                        borderRadius: BorderRadius.circular(4),
+                        onTap: () {
+                          if (selected)
+                            selectedColors.remove(c);
+                          else
+                            selectedColors.add(c);
+                          if (mounted) setState(() {});
+                        },
+                        child: Stack(
+                          children: [
                             Container(
                               width: 50,
                               height: 35,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(4),
-                                color: Colors.black26,
+                                color: Color(int.parse("0xff" + c)),
                               ),
-                              child: Icon(Icons.check, color: Colors.white),
                             ),
-                        ],
-                      ),
-                    );
-                  }).toList(),
-                ],
+                            if (selected)
+                              Container(
+                                width: 50,
+                                height: 35,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(4),
+                                  color: Colors.black26,
+                                ),
+                                child: Icon(Icons.check, color: Colors.white),
+                              ),
+                          ],
+                        ),
+                      );
+                    }).toList(),
+                  ],
+                ),
               ),
-            ),],
+            ],
             Padding(
               padding: const EdgeInsets.only(left: 30.0, top: 10, bottom: 10),
               child: Text(
@@ -377,15 +388,14 @@ class _FilterByState extends State<FilterBy> {
                 spacing: 8,
                 children: [
                   ...List.generate(5, (index) {
-                    bool selected = selectedStars=="$index" ?? false;
+                    bool selected = selectedStars == "$index" ?? false;
                     return InkWell(
                       borderRadius: BorderRadius.circular(4),
                       onTap: () {
                         if (selected)
-                          selectedStars
-                              ="";
+                          selectedStars = "";
                         else
-                          selectedStars="$index";
+                          selectedStars = "$index";
                         if (mounted) setState(() {});
                       },
                       child: Container(
@@ -433,7 +443,7 @@ class _FilterByState extends State<FilterBy> {
                 spacing: 8,
                 children: [
                   ...List.generate(4, (index) {
-                    bool selected = selectedDiscount=="$index" ?? false;
+                    bool selected = selectedDiscount == "$index" ?? false;
                     String text = "10% Or Above";
                     switch (index) {
                       case 1:
@@ -450,9 +460,9 @@ class _FilterByState extends State<FilterBy> {
                       borderRadius: BorderRadius.circular(4),
                       onTap: () {
                         if (selected)
-                          selectedDiscount=(index).toString();
+                          selectedDiscount = (index).toString();
                         else
-                          selectedDiscount=(index).toString();
+                          selectedDiscount = (index).toString();
                         if (mounted) setState(() {});
                       },
                       child: Container(
@@ -489,7 +499,7 @@ class _FilterByState extends State<FilterBy> {
                 children: [
                   Expanded(
                     child: Padding(
-                      padding: const EdgeInsets.only(right:5.0),
+                      padding: const EdgeInsets.only(right: 5.0),
                       child: FlatButton(
                         onPressed: () {
                           Navigator.pop(context);
@@ -510,18 +520,22 @@ class _FilterByState extends State<FilterBy> {
                   ),
                   Expanded(
                     child: Padding(
-                      padding: const EdgeInsets.only(left:5.0),
+                      padding: const EdgeInsets.only(left: 5.0),
                       child: FlatButton(
                         onPressed: () {
-                          Map appFilters = {}..addAll(
-                          {"brands": selectedBrands, "price": selectedPrice, "colors": selectedColors, "size": selectedSizes,
-                          "stars":selectedStars,"discount":selectedDiscount});
+                          Map appFilters = {}..addAll({
+                              "brands": selectedBrands,
+                              "price": selectedPrice,
+                              "colors": selectedColors,
+                              "size": selectedSizes,
+                              "stars": selectedStars,
+                              "discount": selectedDiscount
+                            });
 
-                          Navigator.pop(context,appFilters);
+                          Navigator.pop(context, appFilters);
                         },
                         color: Color(0xffDC0F21),
                         height: 60,
-
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8)),
                         child: Text(

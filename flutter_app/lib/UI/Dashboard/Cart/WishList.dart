@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/Utils/Constants.dart';
+import 'package:flutter_app/Utils/Session.dart';
 
 class WishList extends StatefulWidget {
   @override
@@ -9,18 +9,21 @@ class WishList extends StatefulWidget {
 class _WishListState extends State<WishList> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar: AppBar(
-      elevation: 0,
-      leading: FlatButton(
-        child: Image.asset("assets/backArrow.png"),
-        onPressed: () {
-          Navigator.of(context).pop();
-        },
+    return Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+        leading: FlatButton(
+          child: Image.asset("assets/backArrow.png"),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+        backgroundColor: Colors.white,
+        iconTheme: IconThemeData(color: Colors.black),
       ),
       backgroundColor: Colors.white,
-      iconTheme: IconThemeData(color: Colors.black),
-    ),backgroundColor: Colors.white,
-      body: Column(mainAxisAlignment: MainAxisAlignment.center,
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Center(
             child: Text(
@@ -43,9 +46,11 @@ class _WishListState extends State<WishList> {
           ),
           SizedBox(height: 20),
           Center(
-            child: InkWell( borderRadius: BorderRadius.circular(600),
-              onTap: (){
-              Navigator.pushNamedAndRemoveUntil(context, Constants.BASE_URL, (route) => false);
+            child: InkWell(
+              borderRadius: BorderRadius.circular(600),
+              onTap: () {
+                Navigator.pushNamedAndRemoveUntil(
+                    context, Session.BASE_URL, (route) => false);
               },
               child: Container(
                 width: 186,
