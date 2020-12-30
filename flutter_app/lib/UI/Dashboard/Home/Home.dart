@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_app/Bloc/CategoryBloc.dart';
 import 'package:flutter_app/Bloc/ProductsBloc.dart';
+import 'package:flutter_app/UI/Dashboard/Category/Categories.dart';
 import 'package:flutter_app/UI/Dashboard/Category/CategoriesPage.dart';
 import 'package:flutter_app/UI/Dashboard/Home/Brands.dart';
 import 'package:flutter_app/UI/Dashboard/Home/ProductGridWIthThumbnail.dart';
@@ -12,7 +13,7 @@ import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shimmer/shimmer.dart';
 
-import 'file:///D:/JagrajSingh/WOW-APP/flutter_app/lib/UI/Dashboard/Category/Categories.dart';
+
 
 import 'ProductListWIthThumbnail.dart';
 import 'Sliders.dart';

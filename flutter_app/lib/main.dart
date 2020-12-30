@@ -1,4 +1,4 @@
-import 'package:firebase_core/firebase_core.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_app/Bloc/ProductsBloc.dart';
 import 'package:flutter_app/UI/Dashboard/Profile/HelpCenter.dart';
@@ -16,7 +16,7 @@ import 'UI/Dashboard/Profile/Orders.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  // await Firebase.initializeApp();
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider<ProductsBloc>.value(value: ProductsBloc()),

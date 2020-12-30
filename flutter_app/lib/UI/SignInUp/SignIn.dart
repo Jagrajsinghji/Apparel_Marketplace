@@ -1,7 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/Bloc/AuthBloc.dart';
 import 'package:flutter_app/UI/SignInUp/SignUp.dart';
+import 'package:flutter_app/Utils/Session.dart';
 import 'package:provider/provider.dart';
 
 import 'ForgotPassword1.dart';
@@ -298,9 +299,9 @@ class _SignInState extends State<SignIn> {
             children: [
               InkWell(
                 onTap: () {
-                  _authBloc.googleSignIn(() => Navigator.pop(context), (error) {
-                    print(error);
-                  });
+                  // _authBloc.googleSignIn(() => Navigator.pop(context), (error) {
+                  //   print(error);
+                  // });
                 },
                 child: Container(
                   height: 58,
@@ -385,57 +386,57 @@ class _SignInState extends State<SignIn> {
           loading = true;
         });
 
-      FirebaseAuth.instance
-          .signInWithEmailAndPassword(email: email.trim(), password: pass)
-          .then((userCreds) async {
-        if (userCreds?.user != null) {
-          Navigator.pop(context);
-        }
-      }).catchError((err) {
-        errorMessage = err.message.toString();
-        showError = true;
-        loading = false;
-        if (mounted) setState(() {});
-      });
-
-      // try {
-      //   Response resp = await Provider.of<AuthBloc>(context, listen: false)
-      //       .login(email, pass);
-      //   String dataEmail = resp.data['data']['email'];
-      //   if (dataEmail == email) {
-      //     String value = resp.data['data']['api_token'] ?? "";
-      //     if (value.length == 0)
-      //       throw DioError(
-      //           type: DioErrorType.RESPONSE,
-      //           response: Response(data: {"message": "", "code": 101}));
-      //     else {
-      //       Session.instance.setToken(value);
-      //       await Provider.of<AuthBloc>(context, listen: false)
-      //           .getUserProfile();
-      //       Navigator.pop(context);
-      //     }
-      //   } else
-      //     throw DioError(
-      //         type: DioErrorType.RESPONSE,
-      //         response: Response(data: {"message": "", "code": 102}));
-      // } on DioError catch (error) {
-      //   var data = error.response.data;
-      //   print(data);
-      //   if (data is Map) {
-      //     var msg = data['message'];
-      //     var code = data['code'] ?? "";
-      //     if (msg.toString().toLowerCase().contains("invalid"))
-      //       errorMessage = "Invalid Credentials.";
-      //     else
-      //       errorMessage =
-      //           "Something went wrong. Please try after some time.$code";
-      //   } else
-      //     errorMessage = "Something went wrong. Please try after some time.";
-      //
+      // FirebaseAuth.instance
+      //     .signInWithEmailAndPassword(email: email.trim(), password: pass)
+      //     .then((userCreds) async {
+      //   if (userCreds?.user != null) {
+      //     Navigator.pop(context);
+      //   }
+      // }).catchError((err) {
+      //   errorMessage = err.message.toString();
       //   showError = true;
       //   loading = false;
       //   if (mounted) setState(() {});
-      // }
+      // });
+
+      try {
+        Response resp = await Provider.of<AuthBloc>(context, listen: false)
+            .login(email, pass);
+        String dataEmail = resp.data['data']['email'];
+        if (dataEmail == email) {
+          String value = resp.data['data']['api_token'] ?? "";
+          if (value.length == 0)
+            throw DioError(
+                type: DioErrorType.RESPONSE,
+                response: Response(data: {"message": "", "code": 101}));
+          else {
+            Session.instance.setToken(value);
+            await Provider.of<AuthBloc>(context, listen: false)
+                .getUserProfile();
+            Navigator.pop(context);
+          }
+        } else
+          throw DioError(
+              type: DioErrorType.RESPONSE,
+              response: Response(data: {"message": "", "code": 102}));
+      } on DioError catch (error) {
+        var data = error.response.data;
+        print(data);
+        if (data is Map) {
+          var msg = data['message'];
+          var code = data['code'] ?? "";
+          if (msg.toString().toLowerCase().contains("invalid"))
+            errorMessage = "Invalid Credentials.";
+          else
+            errorMessage =
+                "Something went wrong. Please try after some time.$code";
+        } else
+          errorMessage = "Something went wrong. Please try after some time.";
+
+        showError = true;
+        loading = false;
+        if (mounted) setState(() {});
+      }
     }
   }
 }

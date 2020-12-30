@@ -1,6 +1,7 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/Bloc/AuthBloc.dart';
 import 'package:flutter_app/UI/SignInUp/SignIn.dart';
+import 'package:provider/provider.dart';
 
 class Profile extends StatefulWidget {
   @override
@@ -12,15 +13,14 @@ class _ProfileState extends State<Profile> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xffE5E5E5),
-      body: StreamBuilder<User>(
-          stream: FirebaseAuth.instance.authStateChanges(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting)
-              return Center(
-                  child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation(Color(0xffdc0f21)),
-              ));
-            if (snapshot.data == null)
+      body: Consumer<AuthBloc>(
+          builder: (context, snapshot,w) {
+            // if (snapshot.connectionState == ConnectionState.waiting)
+            //   return Center(
+            //       child: CircularProgressIndicator(
+            //     valueColor: AlwaysStoppedAnimation(Color(0xffdc0f21)),
+            //   ));
+            if (snapshot.userData.length==0)
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -102,7 +102,7 @@ class _ProfileState extends State<Profile> {
                                     )),
                               ),
                               Text(
-                                "Hello, ${snapshot.data?.displayName ?? snapshot.data.email.split("@").first}",
+                                "Hello, ${snapshot.userData??""}",
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 14,
@@ -209,28 +209,29 @@ class _ProfileState extends State<Profile> {
                         ),
                       ),
                     ),
-                    ListTile(
-                      onTap: () {
-                        FirebaseAuth.instance.signOut();
-                        if (mounted) setState(() {});
-                      },
-                      title: Text(
-                        "LogOut",
-                        style: TextStyle(
-                          color: Color(0xff9d9d9d),
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                      subtitle: Text(
-                        "LogOut your account from this device.",
-                        style: TextStyle(
-                          color: Color(0xff9d9d9d),
-                          fontSize: 10,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                    ),
+                    // ListTile(
+                    //   onTap: () {
+                    //     // FirebaseAuth.instance.signOut();
+                    //     //
+                    //     // if (mounted) setState(() {});
+                    //   },
+                    //   title: Text(
+                    //     "LogOut",
+                    //     style: TextStyle(
+                    //       color: Color(0xff9d9d9d),
+                    //       fontSize: 14,
+                    //       fontWeight: FontWeight.w400,
+                    //     ),
+                    //   ),
+                    //   subtitle: Text(
+                    //     "LogOut your account from this device.",
+                    //     style: TextStyle(
+                    //       color: Color(0xff9d9d9d),
+                    //       fontSize: 10,
+                    //       fontWeight: FontWeight.w400,
+                    //     ),
+                    //   ),
+                    // ),
                   ]);
             }
           }),

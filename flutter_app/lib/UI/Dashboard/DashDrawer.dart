@@ -1,6 +1,7 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/Bloc/AuthBloc.dart';
 import 'package:flutter_app/Utils/Session.dart';
+import 'package:provider/provider.dart';
 
 import 'Category/CategoriesPage.dart';
 
@@ -27,9 +28,8 @@ class _DashDrawerState extends State<DashDrawer> {
               physics: BouncingScrollPhysics(),
               shrinkWrap: true,
               children: [
-                StreamBuilder<User>(
-                    stream: FirebaseAuth.instance.authStateChanges(),
-                    builder: (context, snapshot) {
+                Consumer<AuthBloc>(
+                    builder: (context, snapshot,w) {
                       return Container(
                           width: double.infinity,
                           height: 120,
@@ -57,7 +57,7 @@ class _DashDrawerState extends State<DashDrawer> {
                                     )),
                               ),
                               Text(
-                                "Hello ${snapshot?.data?.displayName ?? snapshot?.data?.email?.split("@")?.first ?? ""}",
+                                "Hello ${snapshot?.userData??""}",
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 14,

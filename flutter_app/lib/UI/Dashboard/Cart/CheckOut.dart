@@ -2,8 +2,8 @@ import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/Bloc/AuthBloc.dart';
 import 'package:flutter_app/Bloc/CartBloc.dart';
 import 'package:flutter_app/UI/Dashboard/Profile/AddAddress.dart';
 import 'package:flutter_app/UI/SignInUp/SignIn.dart';
@@ -1014,8 +1014,8 @@ class _CheckOutState extends State<CheckOut> {
       setState(() {
         isLoading = true;
       });
-    // AuthBloc _authBloc = Provider.of<AuthBloc>(context, listen: false);
-    if (FirebaseAuth.instance.currentUser != null) {
+    AuthBloc _authBloc = Provider.of<AuthBloc>(context, listen: false);
+    if (_authBloc.userData.length>0) {
       Navigator.push(
           context,
           MaterialPageRoute(
@@ -1025,8 +1025,8 @@ class _CheckOutState extends State<CheckOut> {
     } else {
       await Navigator.push(
           context, MaterialPageRoute(builder: (c) => SignIn()));
-      // AuthBloc _authBloc1 = Provider.of<AuthBloc>(context, listen: false);
-      if (FirebaseAuth.instance.currentUser != null) {
+      AuthBloc _authBloc1 = Provider.of<AuthBloc>(context, listen: false);
+      if (_authBloc1.userData.length>0) {
         Navigator.push(
             context,
             MaterialPageRoute(

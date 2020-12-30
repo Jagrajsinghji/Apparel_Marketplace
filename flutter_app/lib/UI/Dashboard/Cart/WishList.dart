@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/UI/Components/GlobalWidget.dart';
 import 'package:flutter_app/Utils/Session.dart';
