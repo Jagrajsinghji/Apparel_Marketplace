@@ -42,7 +42,8 @@ class AuthBloc with ChangeNotifier {
   Future<Response> getUserProfile() async {
     Dio dio = Dio(Session.instance.baseOptions);
     dio.interceptors.add(_dioInterceptor);
-    Response response = await dio.get("${Session.BASE_URL}/api/user/profile");
+    String token =await Session.instance.getToken();
+    Response response = await dio.get("${Session.BASE_URL}/api/user/profile",options: Options(headers: {"Authorization":"Bearer $token"}));
     Session.instance.updateCookie(response);
     if (response.data is Map) userData = response?.data ?? {};
     else userData = {};
@@ -71,17 +72,31 @@ Future<Response> login(
     "${Session.BASE_URL}/api/user/login?email=$email&password=$password",
   );
   Session.instance.updateCookie(response);
+  if(response.data is Map &&response.data.length>0){
+    String apiToken = response.data['success']['token'];
+    if(apiToken!=null)
+    Session.instance.setToken(apiToken);
+  }
   await getUserProfile();
   return response;
 }
-
+  Future<Response> logOut() async {
+    Dio dio = Dio(Session.instance.baseOptions);
+    dio.interceptors.add(_dioInterceptor);
+    Response response = await dio.post(
+        "${Session.BASE_URL}/api/user/logout");
+    Session.instance.updateCookie(response);
+    Session.instance.setToken(null);
+    await getUserProfile();
+    return response;
+  }
 Future<Response> register(Map data) async {
   Dio dio = Dio(Session.instance.baseOptions);
   dio.interceptors.add(_dioInterceptor);
   Response response = await dio.post(
       "${Session.BASE_URL}/api/user/register?name=${data['name']}&email=${data['email']}&mobile_number=${data['number']}&password=${data['password']}&password_confirmation=${data['password']}&codes=${data['code']}");
   Session.instance.updateCookie(response);
-  await getUserProfile();
+  await login(data['email'],data['password']);
   return response;
 }
 
@@ -93,4 +108,6 @@ Future<Response> resetPassword(String email) async {
   Session.instance.updateCookie(response);
   return response;
 }
+
+
 }

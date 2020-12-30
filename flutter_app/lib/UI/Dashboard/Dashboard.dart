@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_app/Bloc/ScreenBloc.dart';
 import 'package:flutter_app/UI/Components/CartIcon.dart';
 import 'package:flutter_app/UI/Components/GlobalWidget.dart';
@@ -21,6 +22,14 @@ class Dashboard extends StatefulWidget {
 
 class _DashboardState extends State<Dashboard> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
+  @override
+  void initState() {
+    super.initState();
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor: Color(0xffdc0f21),
+    ));
+  }
 
   @override
   Widget build(BuildContext context) {

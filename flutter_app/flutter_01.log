@@ -1,0 +1,75 @@
+Flutter crash report.
+Please report a bug at https://github.com/flutter/flutter/issues.
+
+## command
+
+flutter --no-color pub get
+
+## exception
+
+FormatException: FormatException: Unexpected end of input (at character 1)
+
+^
+
+
+```
+#0      _ChunkedJsonParser.fail (dart:convert-patch/convert_patch.dart:1404:5)
+#1      _ChunkedJsonParser.close (dart:convert-patch/convert_patch.dart:522:7)
+#2      _parseJson (dart:convert-patch/convert_patch.dart:41:10)
+#3      JsonDecoder.convert (dart:convert/json.dart:505:36)
+#4      JsonCodec.decode (dart:convert/json.dart:156:41)
+#5      createPluginSymlinks (package:flutter_tools/src/plugins.dart:1074:50)
+#6      refreshPluginsList (package:flutter_tools/src/plugins.dart:1144:5)
+<asynchronous suspension>
+#7      FlutterProject.ensureReadyForPlatformSpecificTooling (package:flutter_tools/src/project.dart:242:11)
+#8      PackagesGetCommand.runCommand (package:flutter_tools/src/commands/packages.dart:152:23)
+<asynchronous suspension>
+#9      FlutterCommand.verifyThenRunCommand (package:flutter_tools/src/runner/flutter_command.dart:977:18)
+#10     _rootRunUnary (dart:async/zone.dart:1198:47)
+#11     _CustomZone.runUnary (dart:async/zone.dart:1100:19)
+#12     _FutureListener.handleValue (dart:async/future_impl.dart:143:18)
+#13     Future._propagateToListeners.handleValueCallback (dart:async/future_impl.dart:696:45)
+#14     Future._propagateToListeners (dart:async/future_impl.dart:725:32)
+#15     Future._completeWithValue (dart:async/future_impl.dart:529:5)
+#16     Future._asyncCompleteWithValue.<anonymous closure> (dart:async/future_impl.dart:567:7)
+#17     _rootRun (dart:async/zone.dart:1190:13)
+#18     _CustomZone.run (dart:async/zone.dart:1093:19)
+#19     _CustomZone.runGuarded (dart:async/zone.dart:997:7)
+#20     _CustomZone.bindCallbackGuarded.<anonymous closure> (dart:async/zone.dart:1037:23)
+#21     _microtaskLoop (dart:async/schedule_microtask.dart:41:21)
+#22     _startMicrotaskLoop (dart:async/schedule_microtask.dart:50:5)
+#23     _runPendingImmediateCallback (dart:isolate-patch/isolate_patch.dart:118:13)
+#24     _RawReceivePortImpl._handleMessage (dart:isolate-patch/isolate_patch.dart:169:5)
+```
+
+## flutter doctor
+
+```
+[✓] Flutter (Channel stable, 1.22.5, on Microsoft Windows [Version 10.0.18363.1256], locale en-IN)
+    • Flutter version 1.22.5 at C:\flutter
+    • Framework revision 7891006299 (3 weeks ago), 2020-12-10 11:54:40 -0800
+    • Engine revision ae90085a84
+    • Dart version 2.10.4
+
+[✓] Android toolchain - develop for Android devices (Android SDK version 30.0.3)
+    • Android SDK at C:\Users\Lenovo\AppData\Local\Android\sdk
+    • Platform android-30, build-tools 30.0.3
+    • Java binary at: C:\Program Files\Android\Android Studio\jre\bin\java
+    • Java version OpenJDK Runtime Environment (build 1.8.0_242-release-1644-b01)
+    • All Android licenses accepted.
+
+[!] Android Studio (version 4.1.0)
+    • Android Studio at C:\Program Files\Android\Android Studio
+    ✗ Flutter plugin not installed; this adds Flutter specific functionality.
+    ✗ Dart plugin not installed; this adds Dart specific functionality.
+    • Java version OpenJDK Runtime Environment (build 1.8.0_242-release-1644-b01)
+
+[✓] Connected device (1 available)
+    • sdk gphone x86 arm (mobile) • emulator-5554 • android-x86 • Android 11 (API 30) (emulator)
+
+! Doctor found issues in 1 category.
+```
+ • sdk gphone x86 arm (mobile) • emulator-5554 • android-x86 • Android 11 (API 30) (emulator)
+
+! Doctor found issues in 1 category.
+```

@@ -31,7 +31,7 @@ class _CheckOutState extends State<CheckOut> {
   bool initializeVars = false;
 
   int shippingMethodValue = 0, packingValue = 0;
-  Map<String, double> priceData = {};
+  Map<String, dynamic> checkOutData = {};
 
   @override
   Widget build(BuildContext context) {
@@ -39,11 +39,17 @@ class _CheckOutState extends State<CheckOut> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        title: Text(
-          "Check Out",
-          style: TextStyle(
-            color: Color(0xff2c393f),
-            fontSize: 18,
+        title: Hero(
+          tag: "CheckOUtTag",
+          child: Material(
+            color: Colors.transparent,
+            child: Text(
+              "Check Out",
+              style: TextStyle(
+                color: Color(0xff2c393f),
+                fontSize: 18,
+              ),
+            ),
           ),
         ),
         leading: FlatButton(
@@ -73,8 +79,8 @@ class _CheckOutState extends State<CheckOut> {
                   if (products.length == 0) {
                     return noProducts();
                   }
-                  double totalPrice =
-                      double.parse(data['totalPrice']?.toString() ?? "0");
+                  double totalMRP =
+                      double.parse(data['totalMRP']?.toString() ?? "0");
                   List shippingData = data['shipping_data'] ?? [];
                   List packageData = data['package_data'] ?? [];
 
@@ -94,12 +100,16 @@ class _CheckOutState extends State<CheckOut> {
                     }
                     initializeVars = true;
                   }
-                  priceData.addAll({
-                    "totalPrice": totalPrice,
-                    "couponAmt": couponAmt,
-                    "shippingAmt": shippingAmt,
-                    "packingAmt": packingAmt,
-                    "totalQty": double.parse("${data['totalQty'] ?? "0"}")
+                  checkOutData.addAll({
+                    "totalMRP": totalMRP,
+                    "shippingCost": shippingAmt,
+                    "packingCost": packingAmt,
+                    "totalQty": double.parse("${data['totalQty'] ?? "0"}"),
+                    "vendorShippingId": data['vendor_shipping_id'],
+                    "vendorPackingId": data['vendor_packing_id'],
+                    "couponCode": _cartBloc.couponData['coupon_code'],
+                    "couponId": _cartBloc.couponData['coupon_id'],
+                    "couponDiscount": couponAmt,
                   });
                   return Stack(
                     children: [
@@ -143,7 +153,7 @@ class _CheckOutState extends State<CheckOut> {
                                                 pageBuilder: (c, a, b) =>
                                                     ApplyCoupon(
                                                       totalPrice:
-                                                          totalPrice.toString(),
+                                                          totalMRP.toString(),
                                                     )));
                                       },
                                       leading: Container(
@@ -179,7 +189,7 @@ class _CheckOutState extends State<CheckOut> {
                                                 pageBuilder: (c, a, b) =>
                                                     ApplyCoupon(
                                                       totalPrice:
-                                                          totalPrice.toString(),
+                                                          totalMRP.toString(),
                                                     )));
                                       },
                                       leading: Container(
@@ -389,7 +399,7 @@ class _CheckOutState extends State<CheckOut> {
                                                 ),
                                               ),
                                               Text(
-                                                "\u20B9 $totalPrice",
+                                                "\u20B9 $totalMRP",
                                                 style: TextStyle(
                                                   color: Color(0xff7f7f7f),
                                                   fontSize: 14,
@@ -427,7 +437,7 @@ class _CheckOutState extends State<CheckOut> {
                                                                 (c, a, b) =>
                                                                     ApplyCoupon(
                                                                       totalPrice:
-                                                                          totalPrice
+                                                                          totalMRP
                                                                               .toString(),
                                                                     )));
                                                   },
@@ -530,7 +540,7 @@ class _CheckOutState extends State<CheckOut> {
                                                 ),
                                               ),
                                               Text(
-                                                "\u20B9 ${totalPrice + shippingAmt + packingAmt}",
+                                                "\u20B9 ${totalMRP + shippingAmt + packingAmt - couponAmt}",
                                                 style: TextStyle(
                                                   color: Color(0xff515151),
                                                   fontSize: 14,
@@ -1015,23 +1025,23 @@ class _CheckOutState extends State<CheckOut> {
         isLoading = true;
       });
     AuthBloc _authBloc = Provider.of<AuthBloc>(context, listen: false);
-    if (_authBloc.userData.length>0) {
+    if (_authBloc.userData.length > 0) {
       Navigator.push(
           context,
           MaterialPageRoute(
               builder: (c) => AddAddress(
-                    priceData: priceData,
+                    checkOutData: checkOutData,
                   )));
     } else {
       await Navigator.push(
           context, MaterialPageRoute(builder: (c) => SignIn()));
       AuthBloc _authBloc1 = Provider.of<AuthBloc>(context, listen: false);
-      if (_authBloc1.userData.length>0) {
+      if (_authBloc1.userData.length > 0) {
         Navigator.push(
             context,
             MaterialPageRoute(
                 builder: (c) => AddAddress(
-                      priceData: priceData,
+                      checkOutData: checkOutData,
                     )));
       } else
         Fluttertoast.showToast(msg: "Please Login To Proceed");

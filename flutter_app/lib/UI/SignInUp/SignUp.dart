@@ -485,9 +485,6 @@ class _SignUpState extends State<SignUp> {
                     type: DioErrorType.RESPONSE,
                     response: Response(data: {"message": "", "code": 101}));
               else {
-                Session.instance.setToken(value);
-                await Provider.of<AuthBloc>(context, listen: false)
-                    .getUserProfile();
                 showDialog(
                     context: context,
                     builder: (c) => AlertDialog(

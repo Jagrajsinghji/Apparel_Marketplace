@@ -400,22 +400,12 @@ class _SignInState extends State<SignIn> {
       // });
 
       try {
-        Response resp = await Provider.of<AuthBloc>(context, listen: false)
-            .login(email, pass);
-        String dataEmail = resp.data['data']['email'];
-        if (dataEmail == email) {
-          String value = resp.data['data']['api_token'] ?? "";
-          if (value.length == 0)
-            throw DioError(
-                type: DioErrorType.RESPONSE,
-                response: Response(data: {"message": "", "code": 101}));
-          else {
-            Session.instance.setToken(value);
-            await Provider.of<AuthBloc>(context, listen: false)
-                .getUserProfile();
-            Navigator.pop(context);
-          }
-        } else
+        Response resp = await Provider.of<AuthBloc>(context, listen: false).login(email, pass);
+
+        if(resp.data is Map &&resp.data.length>0){
+          Navigator.pop(context);
+        }
+         else
           throw DioError(
               type: DioErrorType.RESPONSE,
               response: Response(data: {"message": "", "code": 102}));
@@ -425,7 +415,7 @@ class _SignInState extends State<SignIn> {
         if (data is Map) {
           var msg = data['message'];
           var code = data['code'] ?? "";
-          if (msg.toString().toLowerCase().contains("invalid"))
+          if (msg.toString().toLowerCase().contains("Unauthorised"))
             errorMessage = "Invalid Credentials.";
           else
             errorMessage =

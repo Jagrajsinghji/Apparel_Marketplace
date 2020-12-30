@@ -73,12 +73,14 @@ class _Intro2State extends State<Intro2> {
               flex: 0,
               child: Padding(
                 padding: const EdgeInsets.only(left: 27),
-                child: Text(
-                  "Browse and search your new style from all\nthe brands list",
-                  style: TextStyle(
-                    color: Color(0xff2c393f),
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
+                child: Align(alignment: Alignment.centerLeft,
+                  child: Text(
+                    "Browse and search your new style from all\nthe brands list",
+                    style: TextStyle(
+                      color: Color(0xff2c393f),
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                    ),
                   ),
                 ),
               ),
@@ -115,7 +117,7 @@ class _Intro2State extends State<Intro2> {
                       },
                       child: Center(
                         child: Text(
-                          "Go Shopping",
+                          "Next",
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 14,

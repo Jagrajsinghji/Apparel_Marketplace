@@ -1,7 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_app/UI/Dashboard/Dashboard.dart';
 import 'package:flutter_app/UI/Intro/Intro1.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -16,9 +18,11 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   void initState() {
     super.initState();
-    Timer(Duration(seconds: 3), () {
+    Timer(Duration(seconds: 3), () async {
+      SharedPreferences _prefs = await SharedPreferences.getInstance();
+      bool viewIntro = _prefs.getBool("viewIntro")??true;
       Navigator.of(context)
-          .pushReplacement(MaterialPageRoute(builder: (c) => Intro1()));
+          .pushReplacement(MaterialPageRoute(builder: (c) => viewIntro?Intro1():Dashboard()));
     });
     _animCont = AnimationController(
         duration: Duration(

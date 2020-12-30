@@ -209,29 +209,30 @@ class _ProfileState extends State<Profile> {
                         ),
                       ),
                     ),
-                    // ListTile(
-                    //   onTap: () {
-                    //     // FirebaseAuth.instance.signOut();
-                    //     //
-                    //     // if (mounted) setState(() {});
-                    //   },
-                    //   title: Text(
-                    //     "LogOut",
-                    //     style: TextStyle(
-                    //       color: Color(0xff9d9d9d),
-                    //       fontSize: 14,
-                    //       fontWeight: FontWeight.w400,
-                    //     ),
-                    //   ),
-                    //   subtitle: Text(
-                    //     "LogOut your account from this device.",
-                    //     style: TextStyle(
-                    //       color: Color(0xff9d9d9d),
-                    //       fontSize: 10,
-                    //       fontWeight: FontWeight.w400,
-                    //     ),
-                    //   ),
-                    // ),
+                    ListTile(
+                      onTap: () {
+
+                        // FirebaseAuth.instance.signOut();
+                        //
+                        // if (mounted) setState(() {});
+                      },
+                      title: Text(
+                        "LogOut",
+                        style: TextStyle(
+                          color: Color(0xff9d9d9d),
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                      subtitle: Text(
+                        "LogOut your account from this device.",
+                        style: TextStyle(
+                          color: Color(0xff9d9d9d),
+                          fontSize: 10,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ),
                   ]);
             }
           }),

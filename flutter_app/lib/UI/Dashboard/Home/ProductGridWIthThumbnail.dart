@@ -84,47 +84,49 @@ class _ProductGridWIthThumbnailState extends State<ProductGridWIthThumbnail> {
                           borderRadius: BorderRadius.circular(8),
                           child: Hero(
                             tag: tag,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  border:
-                                      Border.all(color: Colors.grey.shade300),
-                                  borderRadius: BorderRadius.circular(8)),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Expanded(
-                                    flex: 1,
-                                    child: Container(
-                                      color: Colors.white,
-                                      child: CachedNetworkImage(
-                                        imageUrl:
-                                            "${Session.BASE_URL}/assets/images/thumbnails/${data['thumbnail']}",
+                            child: Material(color: Colors.transparent,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    border:
+                                        Border.all(color: Colors.grey.shade300),
+                                    borderRadius: BorderRadius.circular(8)),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Expanded(
+                                      flex: 1,
+                                      child: Container(
+                                        color: Colors.white,
+                                        child: CachedNetworkImage(
+                                          imageUrl:
+                                              "${Session.BASE_URL}/assets/images/thumbnails/${data['thumbnail']}",
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  Expanded(
-                                      flex: 0,
-                                      child: Padding(
-                                        padding: const EdgeInsets.only(
-                                            left: 4,
-                                            right: 4,
-                                            top: 4,
-                                            bottom: 10),
-                                        child: Text(
-                                          "${data['name']}",
-                                          maxLines: 2,
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                            color: Color(0xff727272),
-                                            fontSize: 12,
-                                            letterSpacing: 0.45,
+                                    Expanded(
+                                        flex: 0,
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(
+                                              left: 4,
+                                              right: 4,
+                                              top: 4,
+                                              bottom: 10),
+                                          child: Text(
+                                            "${data['name']}",
+                                            maxLines: 2,
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              color: Color(0xff727272),
+                                              fontSize: 12,
+                                              letterSpacing: 0.45,
+                                            ),
                                           ),
-                                        ),
-                                      )),
-                                ],
+                                        )),
+                                  ],
+                                ),
                               ),
                             ),
                           ),

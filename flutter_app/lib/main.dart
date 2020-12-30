@@ -13,6 +13,7 @@ import 'Bloc/ScreenBloc.dart';
 import 'UI/Dashboard/Cart/ShoppingBag.dart';
 import 'UI/Dashboard/Dashboard.dart';
 import 'UI/Dashboard/Profile/Orders.dart';
+import "UI/SplashScreen.dart";
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,12 +31,13 @@ void main() async {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(textTheme: GoogleFonts.poppinsTextTheme()),
       routes: {
+        "Splash":(c)=>SplashScreen(),
         Session.BASE_URL: (c) => Dashboard(),
         "ShoppingBag": (c) => ShoppingBag(),
         "Orders": (c) => Orders(),
         "HelpCenter": (c) => HelpCenter(),
       },
-      initialRoute: Session.BASE_URL,
+      initialRoute: "Splash",
       onUnknownRoute: (r) {
         return MaterialPageRoute(builder: (c) => Dashboard());
       },

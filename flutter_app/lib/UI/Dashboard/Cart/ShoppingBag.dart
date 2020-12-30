@@ -71,7 +71,7 @@ class _ShoppingBagState extends State<ShoppingBag> {
               else {
                 Map data = snapshot?.cartData ?? {};
                 Map products = data['products'] ?? {};
-                print(products);
+                // print(products);
                 if (products.length == 0) {
                   return noProducts();
                 }
@@ -115,20 +115,24 @@ class _ShoppingBagState extends State<ShoppingBag> {
                           onTap: () {
                             // Fluttertoast.showToast(msg: "Still in Development");
                             Navigator.push(context,
-                                MaterialPageRoute(builder: (c) => CheckOut()));
+                                PageRouteBuilder(reverseTransitionDuration: Duration(milliseconds: 800),transitionDuration: Duration(milliseconds: 800),pageBuilder:  (c,a,b) => CheckOut()));
                           },
-                          child: Container(
-                            height: 60,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(600),
-                              color: Color(0xffdc0f21),
-                            ),
-                            child: Center(
-                              child: Text(
-                                "Check Out",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14,
+                          child: Hero(tag: "CheckOUtTag",
+                            child: Material(color: Colors.transparent,
+                              child: Container(
+                                height: 60,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(600),
+                                  color: Color(0xffdc0f21),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    "Check Out",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 14,
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),

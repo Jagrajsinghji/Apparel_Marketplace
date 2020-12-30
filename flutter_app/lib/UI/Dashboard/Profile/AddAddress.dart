@@ -1,16 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/Bloc/AuthBloc.dart';
 import 'package:flutter_app/UI/Dashboard/Cart/PaymentOptions.dart';
+import 'package:provider/provider.dart';
 
 class AddAddress extends StatefulWidget {
-  final Map<String, double> priceData;
+  final Map<String, dynamic> checkOutData;
 
-  const AddAddress({Key key, this.priceData}) : super(key: key);
+  const AddAddress({Key key, this.checkOutData}) : super(key: key);
 
   @override
   _AddAddressState createState() => _AddAddressState();
 }
 
 class _AddAddressState extends State<AddAddress> {
+  GlobalKey<FormFieldState> _nameKey = GlobalKey();
+  GlobalKey<FormFieldState> _mobileKey = GlobalKey();
+  GlobalKey<FormFieldState> _pinKey = GlobalKey();
+  GlobalKey<FormFieldState> _addressKey = GlobalKey();
+  GlobalKey<FormFieldState> _townKey = GlobalKey();
+  GlobalKey<FormFieldState> _cityKey = GlobalKey();
+  GlobalKey<FormFieldState> _stateKey = GlobalKey();
+
+  String name, mobileNo, pinCode, address, town, city, state;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,6 +69,15 @@ class _AddAddressState extends State<AddAddress> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: TextFormField(
+                      key: _nameKey,
+                      validator: (c) {
+                        if (c
+                            .trim()
+                            .length < 4)
+                          return "Name must be greater than 4 words";
+                        return null;
+                      },
+                      onChanged: (c) => name = c,
                       decoration: InputDecoration(
                         enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(5),
@@ -82,7 +103,16 @@ class _AddAddressState extends State<AddAddress> {
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: TextFormField(
+                    child: TextFormField(keyboardType: TextInputType.number,
+                      key: _mobileKey,
+                      validator: (c) {
+                        if (c
+                            .trim()
+                            .length < 10)
+                          return "Invalid Mobile Number";
+                        return null;
+                      },
+                      onChanged: (c) => mobileNo = c,
                       decoration: InputDecoration(
                         enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(5),
@@ -129,7 +159,15 @@ class _AddAddressState extends State<AddAddress> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: TextFormField(
+                    child: TextFormField(keyboardType: TextInputType.number,
+                      key: _pinKey,
+                      validator: (val) {
+                        if (val.trim().length!=6) {
+                          return "Enter Valid Pin Code";
+                        }
+                        return null;
+                      },
+                      onChanged: (c) => pinCode = c,
                       decoration: InputDecoration(
                         enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(5),
@@ -156,6 +194,14 @@ class _AddAddressState extends State<AddAddress> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: TextFormField(
+                      key: _addressKey,
+                      onChanged: (c) => address = c,
+                      validator: (c) =>
+                      c
+                          .trim()
+                          .length < 5
+                          ? "Please enter a valid Address"
+                          : null,
                       decoration: InputDecoration(
                         enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(5),
@@ -182,6 +228,14 @@ class _AddAddressState extends State<AddAddress> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: TextFormField(
+                      validator: (c) =>
+                      c
+                          .trim()
+                          .length == 0
+                          ? "Please Enter Locality/Town"
+                          : null,
+                      onChanged: (c) => town = c,
+                      key: _townKey,
                       decoration: InputDecoration(
                         enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(5),
@@ -211,15 +265,23 @@ class _AddAddressState extends State<AddAddress> {
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: TextFormField(
+                            onChanged: (c) => city = c,
+                            validator: (c) =>
+                            c
+                                .trim()
+                                .length == 0
+                                ? "Please a valid City/District"
+                                : null,
+                            key: _cityKey,
                             decoration: InputDecoration(
                               enabledBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(5),
                                   borderSide:
-                                      BorderSide(color: Color(0xffA8A8A8))),
+                                  BorderSide(color: Color(0xffA8A8A8))),
                               focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(5),
                                   borderSide:
-                                      BorderSide(color: Color(0xffA8A8A8))),
+                                  BorderSide(color: Color(0xffA8A8A8))),
                               errorBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(5),
                               ),
@@ -241,15 +303,23 @@ class _AddAddressState extends State<AddAddress> {
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: TextFormField(
+                            key: _stateKey,
+                            onChanged: (c) => state = c,
+                            validator: (c) =>
+                            c
+                                .trim()
+                                .length == 0
+                                ? "Please a valid State"
+                                : null,
                             decoration: InputDecoration(
                               enabledBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(5),
                                   borderSide:
-                                      BorderSide(color: Color(0xffA8A8A8))),
+                                  BorderSide(color: Color(0xffA8A8A8))),
                               focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(5),
                                   borderSide:
-                                      BorderSide(color: Color(0xffA8A8A8))),
+                                  BorderSide(color: Color(0xffA8A8A8))),
                               errorBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(5),
                               ),
@@ -364,12 +434,7 @@ class _AddAddressState extends State<AddAddress> {
           Padding(
             padding: const EdgeInsets.all(20.0),
             child: InkWell(
-              onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (c) => PaymentOptions(
-                          priceData: widget.priceData,
-                        )));
-              },
+              onTap: _proceed,
               child: Container(
                 height: 60,
                 decoration: BoxDecoration(
@@ -378,18 +443,46 @@ class _AddAddressState extends State<AddAddress> {
                 ),
                 child: Center(
                     child: Text(
-                  // "Add Address",
-                  " Proceed",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 14,
-                  ),
-                )),
+                      // "Add Address",
+                      " Proceed",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 14,
+                      ),
+                    )),
               ),
             ),
           )
         ],
       ),
     );
+  }
+
+
+  void _proceed() {
+    if (_nameKey.currentState.validate() &&
+        _mobileKey.currentState.validate() && _pinKey.currentState.validate() &&
+        _addressKey.currentState.validate() &&
+        _townKey.currentState.validate() && _cityKey.currentState.validate() &&
+        _stateKey.currentState.validate()){
+      AuthBloc aBloc= Provider.of<AuthBloc>(context,listen: false);
+
+      Map<String,dynamic> data = {
+        "name":name,
+        "phone":mobileNo,
+        "zip":pinCode,
+        "address":address,
+        "city":city,
+        "state":state,
+        "personalEmail":aBloc.userData['email'],
+        "personalName":aBloc.userData['name'],
+        "userId":aBloc.userData['user_id'],
+      };
+      data.addAll(widget.checkOutData);
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (c) => PaymentOptions(
+            checkOutData: data,
+          )));
+    }
   }
 }
