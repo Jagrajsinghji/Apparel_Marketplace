@@ -18,7 +18,6 @@ class _ForgotPassword3State extends State<ForgotPassword3> {
           style: TextStyle(
             color: Color(0xff2c393f),
             fontSize: 14,
-            fontFamily: "Poppins",
             fontWeight: FontWeight.w400,
           ),
         ),
@@ -53,13 +52,11 @@ class _ForgotPassword3State extends State<ForgotPassword3> {
                   hintStyle: TextStyle(
                     color: Color(0xff9d9d9d),
                     fontSize: 14,
-                    fontFamily: "Poppins",
                     fontWeight: FontWeight.w400,
                   ),
                 ),
                 style: TextStyle(
                   fontSize: 14,
-                  fontFamily: "Poppins",
                   fontWeight: FontWeight.w400,
                 ),
               ),
@@ -88,13 +85,11 @@ class _ForgotPassword3State extends State<ForgotPassword3> {
                   hintStyle: TextStyle(
                     color: Color(0xff9d9d9d),
                     fontSize: 14,
-                    fontFamily: "Poppins",
                     fontWeight: FontWeight.w400,
                   ),
                 ),
                 style: TextStyle(
                   fontSize: 14,
-                  fontFamily: "Poppins",
                   fontWeight: FontWeight.w400,
                 ),
               ),
@@ -117,7 +112,6 @@ class _ForgotPassword3State extends State<ForgotPassword3> {
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 14,
-                      fontFamily: "Poppins",
                       fontWeight: FontWeight.w400,
                     ),
                   ),

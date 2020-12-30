@@ -1,8 +1,7 @@
-import 'package:dio/dio.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/Bloc/AuthBloc.dart';
 import 'package:flutter_app/UI/SignInUp/SignUp.dart';
-import 'package:flutter_app/Utils/Session.dart';
 import 'package:provider/provider.dart';
 
 import 'ForgotPassword1.dart';
@@ -23,6 +22,7 @@ class _SignInState extends State<SignIn> {
 
   @override
   Widget build(BuildContext context) {
+    AuthBloc _authBloc = Provider.of<AuthBloc>(context);
     return Scaffold(
       backgroundColor: Colors.white,
       body: ListView(
@@ -40,7 +40,6 @@ class _SignInState extends State<SignIn> {
               style: TextStyle(
                 color: Color(0xff2c393f),
                 fontSize: 40,
-                fontFamily: "Poppins",
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -52,7 +51,6 @@ class _SignInState extends State<SignIn> {
               style: TextStyle(
                 color: Color(0xff2c393f),
                 fontSize: 14,
-                fontFamily: "Poppins",
                 fontWeight: FontWeight.w400,
               ),
             ),
@@ -101,13 +99,11 @@ class _SignInState extends State<SignIn> {
                   hintStyle: TextStyle(
                     color: Color(0xff9d9d9d),
                     fontSize: 14,
-                    fontFamily: "Poppins",
                     fontWeight: FontWeight.w400,
                   ),
                 ),
                 style: TextStyle(
                   fontSize: 14,
-                  fontFamily: "Poppins",
                   fontWeight: FontWeight.w400,
                 ),
               ),
@@ -150,7 +146,6 @@ class _SignInState extends State<SignIn> {
                     hintStyle: TextStyle(
                       color: Color(0xff9d9d9d),
                       fontSize: 14,
-                      fontFamily: "Poppins",
                       fontWeight: FontWeight.w400,
                     ),
                     suffixIcon: Container(
@@ -177,7 +172,6 @@ class _SignInState extends State<SignIn> {
                 obscureText: showPassword,
                 style: TextStyle(
                   fontSize: 14,
-                  fontFamily: "Poppins",
                   fontWeight: FontWeight.w400,
                 ),
               ),
@@ -191,7 +185,6 @@ class _SignInState extends State<SignIn> {
                 style: TextStyle(
                   color: Color(0xffdc0f21),
                   fontSize: 14,
-                  fontFamily: "Poppins",
                   fontWeight: FontWeight.w400,
                 ),
               ),
@@ -212,7 +205,6 @@ class _SignInState extends State<SignIn> {
                   style: TextStyle(
                     color: Color(0xff729aff),
                     fontSize: 14,
-                    fontFamily: "Poppins",
                     fontWeight: FontWeight.w400,
                   ),
                 ),
@@ -223,7 +215,7 @@ class _SignInState extends State<SignIn> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 27),
             child: InkWell(
-              onTap: signIn,
+              onTap: () => signIn(_authBloc),
               borderRadius: BorderRadius.circular(100),
               child: Container(
                 height: 58,
@@ -242,7 +234,6 @@ class _SignInState extends State<SignIn> {
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 14,
-                            fontFamily: "Poppins",
                             fontWeight: FontWeight.w400,
                           ),
                         ),
@@ -259,7 +250,6 @@ class _SignInState extends State<SignIn> {
                 "Don’t have an account? ",
                 style: TextStyle(
                   fontSize: 14,
-                  fontFamily: "Poppins",
                   fontWeight: FontWeight.w400,
                 ),
               ),
@@ -272,7 +262,6 @@ class _SignInState extends State<SignIn> {
                   "Sign Up",
                   style: TextStyle(
                     fontSize: 14,
-                    fontFamily: "Poppins",
                     color: Color(0xff1382B6),
                     fontWeight: FontWeight.w400,
                   ),
@@ -287,7 +276,6 @@ class _SignInState extends State<SignIn> {
               style: TextStyle(
                 color: Color(0xff2c393f),
                 fontSize: 14,
-                fontFamily: "Poppins",
                 fontWeight: FontWeight.w400,
               ),
             ),
@@ -299,7 +287,6 @@ class _SignInState extends State<SignIn> {
               style: TextStyle(
                 color: Color(0xff2c393f),
                 fontSize: 14,
-                fontFamily: "Poppins",
                 fontWeight: FontWeight.w400,
               ),
             ),
@@ -309,36 +296,42 @@ class _SignInState extends State<SignIn> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Container(
-                height: 58,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  color: Color(0xff7b8387),
-                ),
-                child: Center(
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Transform.scale(
-                          scale: .5,
-                          child: Image.asset(
-                            "assets/google.png",
-                          )),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 25.0),
-                        child: Text(
-                          "Google",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 14,
-                            fontFamily: "Poppins",
-                            fontWeight: FontWeight.w400,
+              InkWell(
+                onTap: () {
+                  _authBloc.googleSignIn(() => Navigator.pop(context), (error) {
+                    print(error);
+                  });
+                },
+                child: Container(
+                  height: 58,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    color: Color(0xff7b8387),
+                  ),
+                  child: Center(
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Transform.scale(
+                            scale: .5,
+                            child: Image.asset(
+                              "assets/google.png",
+                            )),
+                        Padding(
+                          padding: const EdgeInsets.only(right: 25.0),
+                          child: Text(
+                            "Google",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -369,7 +362,6 @@ class _SignInState extends State<SignIn> {
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 14,
-                            fontFamily: "Poppins",
                             fontWeight: FontWeight.w400,
                           ),
                         ),
@@ -385,51 +377,65 @@ class _SignInState extends State<SignIn> {
     );
   }
 
-  void signIn() async {
+  void signIn(AuthBloc authBloc) async {
     if (_emailKey.currentState.validate() && _passKey.currentState.validate()) {
       if (mounted)
         setState(() {
           showError = false;
           loading = true;
         });
-      try {
-        Response resp = await Provider.of<AuthBloc>(context, listen: false)
-            .login(email, pass);
-        String dataEmail = resp.data['data']['email'];
-        if (dataEmail == email) {
-          String value = resp.data['data']['api_token'] ?? "";
-          if (value.length == 0)
-            throw DioError(
-                type: DioErrorType.RESPONSE,
-                response: Response(data: {"message": "", "code": 101}));
-          else {
-            Session.instance.setToken(value);
-            await Provider.of<AuthBloc>(context, listen: false)
-                .getUserProfile();
-            Navigator.pop(context);
-          }
-        } else
-          throw DioError(
-              type: DioErrorType.RESPONSE,
-              response: Response(data: {"message": "", "code": 102}));
-      } on DioError catch (error) {
-        var data = error.response.data;
-        print(data);
-        if (data is Map) {
-          var msg = data['message'];
-          var code = data['code'] ?? "";
-          if (msg.toString().toLowerCase().contains("invalid"))
-            errorMessage = "Invalid Credentials.";
-          else
-            errorMessage =
-                "Something went wrong. Please try after some time.$code";
-        } else
-          errorMessage = "Something went wrong. Please try after some time.";
 
+      FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: email.trim(), password: pass)
+          .then((userCreds) async {
+        if (userCreds?.user != null) {
+          Navigator.pop(context);
+        }
+      }).catchError((err) {
+        errorMessage = err.message.toString();
         showError = true;
         loading = false;
         if (mounted) setState(() {});
-      }
+      });
+
+      // try {
+      //   Response resp = await Provider.of<AuthBloc>(context, listen: false)
+      //       .login(email, pass);
+      //   String dataEmail = resp.data['data']['email'];
+      //   if (dataEmail == email) {
+      //     String value = resp.data['data']['api_token'] ?? "";
+      //     if (value.length == 0)
+      //       throw DioError(
+      //           type: DioErrorType.RESPONSE,
+      //           response: Response(data: {"message": "", "code": 101}));
+      //     else {
+      //       Session.instance.setToken(value);
+      //       await Provider.of<AuthBloc>(context, listen: false)
+      //           .getUserProfile();
+      //       Navigator.pop(context);
+      //     }
+      //   } else
+      //     throw DioError(
+      //         type: DioErrorType.RESPONSE,
+      //         response: Response(data: {"message": "", "code": 102}));
+      // } on DioError catch (error) {
+      //   var data = error.response.data;
+      //   print(data);
+      //   if (data is Map) {
+      //     var msg = data['message'];
+      //     var code = data['code'] ?? "";
+      //     if (msg.toString().toLowerCase().contains("invalid"))
+      //       errorMessage = "Invalid Credentials.";
+      //     else
+      //       errorMessage =
+      //           "Something went wrong. Please try after some time.$code";
+      //   } else
+      //     errorMessage = "Something went wrong. Please try after some time.";
+      //
+      //   showError = true;
+      //   loading = false;
+      //   if (mounted) setState(() {});
+      // }
     }
   }
 }

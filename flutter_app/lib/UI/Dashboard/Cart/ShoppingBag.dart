@@ -37,11 +37,17 @@ class _ShoppingBagState extends State<ShoppingBag> {
       child: Scaffold(
         appBar: AppBar(
           elevation: 0,
-          title: Text(
-            "Shopping Bag",
-            style: TextStyle(
-              color: Color(0xff2c393f),
-              fontSize: 18,
+          title: Hero(
+            tag: "ShoppingBag",
+            child: Material(
+              color: Colors.transparent,
+              child: Text(
+                "Shopping Bag",
+                style: TextStyle(
+                  color: Color(0xff2c393f),
+                  fontSize: 18,
+                ),
+              ),
             ),
           ),
           leading: FlatButton(
@@ -53,7 +59,7 @@ class _ShoppingBagState extends State<ShoppingBag> {
           backgroundColor: Colors.white,
           iconTheme: IconThemeData(color: Colors.black),
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: Color(0xffE5E5E5),
         body: Stack(
           children: [
             Consumer<CartBloc>(builder: (context, snapshot, w) {
@@ -65,8 +71,9 @@ class _ShoppingBagState extends State<ShoppingBag> {
               else {
                 Map data = snapshot?.cartData ?? {};
                 Map products = data['products'] ?? {};
+                print(products);
                 if (products.length == 0) {
-                  noProducts();
+                  return noProducts();
                 }
                 return Stack(
                   children: [
@@ -140,7 +147,8 @@ class _ShoppingBagState extends State<ShoppingBag> {
                   color: Colors.black54,
                   child: Center(
                       child: CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(Color(0xffDC0F21)),
+                    valueColor:
+                        AlwaysStoppedAnimation<Color>(Color(0xffDC0F21)),
                   )),
                 ),
               )
@@ -269,7 +277,6 @@ class _ShoppingBagState extends State<ShoppingBag> {
                           style: TextStyle(
                             color: Color(0xff515151),
                             fontSize: 12,
-                            fontFamily: "Poppins",
                             fontWeight: FontWeight.w300,
                             letterSpacing: 0.30,
                           ),
@@ -326,7 +333,7 @@ class _ShoppingBagState extends State<ShoppingBag> {
                     //           //     color:
                     //           //         Color(0xff515151),
                     //           //     fontSize: 12,
-                    //           //     fontFamily: "Poppins",
+                    //           //
                     //           //     fontWeight:
                     //           //         FontWeight.w300,
                     //           //     letterSpacing: 0.30,
@@ -420,7 +427,6 @@ class _ShoppingBagState extends State<ShoppingBag> {
                                           style: TextStyle(
                                             color: Color(0xff515151),
                                             fontSize: 12,
-                                            fontFamily: "Poppins",
                                             fontWeight: FontWeight.w300,
                                             letterSpacing: 0.30,
                                           ),
@@ -432,7 +438,6 @@ class _ShoppingBagState extends State<ShoppingBag> {
                                       style: TextStyle(
                                         color: Color(0xff515151),
                                         fontSize: 12,
-                                        fontFamily: "Poppins",
                                         fontWeight: FontWeight.w300,
                                         letterSpacing: 0.30,
                                       ),
@@ -539,8 +544,8 @@ class _ShoppingBagState extends State<ShoppingBag> {
                               child: Text(
                                 "${details['whole_sell_discount']}% Off",
                                 maxLines: 1,
-                                style:
-                                    TextStyle(fontSize: 15, color: Color(0xffDC0F21)),
+                                style: TextStyle(
+                                    fontSize: 15, color: Color(0xffDC0F21)),
                               ),
                             ),
                         ],

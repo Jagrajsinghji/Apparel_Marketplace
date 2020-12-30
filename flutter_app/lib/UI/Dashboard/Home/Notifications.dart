@@ -21,13 +21,14 @@ class _NotificationsState extends State<Notifications> {
         iconTheme: IconThemeData(color: Colors.black),
       ),
       backgroundColor: Colors.white,
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+      body: ListView(shrinkWrap: true,
         children: [
-          Container(
-            child: Image.asset("assets/cross.png"),
-            height: 40,
-            width: 40,
+          Hero(tag: "Notifications",
+            child: Container(
+              child: Image.asset("assets/cross.png"),
+              height: 40,
+              width: 40,
+            ),
           ),
           SizedBox(
             height: 20,

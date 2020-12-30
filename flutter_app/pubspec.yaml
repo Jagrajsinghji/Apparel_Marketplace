@@ -35,7 +35,14 @@ dependencies:
   pull_to_refresh: ^1.6.3
   fluttertoast: ^7.1.5
   shared_preferences: ^0.5.12+4
-  http:
+  google_sign_in: ^4.5.6
+  firebase_core: ^0.5.3
+  firebase_auth: ^0.18.4+1
+  google_fonts: ^1.1.1
+  image_picker: ^0.6.7+17
+  shimmer: ^1.1.2
+
+
 
 
 dev_dependencies:
@@ -56,6 +63,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/
+    - assets/DealsBanners/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

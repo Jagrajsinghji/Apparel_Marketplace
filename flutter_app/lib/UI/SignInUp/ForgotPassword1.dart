@@ -1,7 +1,4 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app/Bloc/AuthBloc.dart';
-import 'package:provider/provider.dart';
 
 class ForgotPassword1 extends StatefulWidget {
   @override
@@ -25,7 +22,6 @@ class _ForgotPassword1State extends State<ForgotPassword1> {
           style: TextStyle(
             color: Color(0xff2c393f),
             fontSize: 14,
-            fontFamily: "Poppins",
             fontWeight: FontWeight.w400,
           ),
         ),
@@ -50,7 +46,6 @@ class _ForgotPassword1State extends State<ForgotPassword1> {
                 style: TextStyle(
                   color: Color(0xff9d9d9d),
                   fontSize: 14,
-                  fontFamily: "Poppins",
                   fontWeight: FontWeight.w400,
                 ),
               ),
@@ -97,13 +92,11 @@ class _ForgotPassword1State extends State<ForgotPassword1> {
                   hintStyle: TextStyle(
                     color: Color(0xff9d9d9d),
                     fontSize: 14,
-                    fontFamily: "Poppins",
                     fontWeight: FontWeight.w400,
                   ),
                 ),
                 style: TextStyle(
                   fontSize: 14,
-                  fontFamily: "Poppins",
                   fontWeight: FontWeight.w400,
                 ),
               ),
@@ -117,7 +110,6 @@ class _ForgotPassword1State extends State<ForgotPassword1> {
                 style: TextStyle(
                   color: Color(0xffdc0f21),
                   fontSize: 14,
-                  fontFamily: "Poppins",
                   fontWeight: FontWeight.w400,
                 ),
               ),
@@ -140,7 +132,6 @@ class _ForgotPassword1State extends State<ForgotPassword1> {
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 14,
-                      fontFamily: "Poppins",
                       fontWeight: FontWeight.w400,
                     ),
                   ),
@@ -154,72 +145,72 @@ class _ForgotPassword1State extends State<ForgotPassword1> {
   }
 
   void reset() async {
-    if (_emailKey.currentState.validate()) {
-      if (mounted)
-        setState(() {
-          showError = false;
-        });
-      Response resp = await Provider.of<AuthBloc>(context, listen: false)
-          .resetPassword(email);
-      var respData = resp.data;
-      if (respData is Map) {
-        if (respData.containsKey("errors")) {
-          if (respData['errors']
-              .toString()
-              .toLowerCase()
-              .contains("no account"))
-            errorMessage = "No account exist for particular email address.";
-          else
-            errorMessage = "Something went wrong. Please try after some time.";
-        } else if (respData.containsKey("message")) {
-          if (respData['message']
-              .toString()
-              .toLowerCase()
-              .contains("reseted successfully"))
-            showDialog(
-                context: context,
-                builder: (c) => AlertDialog(
-                      actions: [
-                        FlatButton(
-                            onPressed: () {
-                              Navigator.pop(c);
-                              Navigator.pop(context);
-                            },
-                            child: Text(
-                              "Got It",
-                              style: TextStyle(
-                                fontFamily: "Poppins",
-                              ),
-                            ))
-                      ],
-                      title: Text(
-                        "Password Reset Successfully",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontFamily: "Poppins",
-                        ),
-                      ),
-                      content: Text(
-                        "An email has been sent to your email address with new password.\nPlease login to your account with that password.",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontFamily: "Poppins",
-                        ),
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ));
-
-          return;
-        } else
-          errorMessage = "Something went wrong. Please try after some time.";
-      } else
-        errorMessage = "Something went wrong. Please try after some time.";
-      if (mounted)
-        setState(() {
-          showError = true;
-        });
-    }
+    // if (_emailKey.currentState.validate()) {
+    //   if (mounted)
+    //     setState(() {
+    //       showError = false;
+    //     });
+    //   Response resp = await Provider.of<AuthBloc>(context, listen: false)
+    //       .resetPassword(email);
+    //   var respData = resp.data;
+    //   if (respData is Map) {
+    //     if (respData.containsKey("errors")) {
+    //       if (respData['errors']
+    //           .toString()
+    //           .toLowerCase()
+    //           .contains("no account"))
+    //         errorMessage = "No account exist for particular email address.";
+    //       else
+    //         errorMessage = "Something went wrong. Please try after some time.";
+    //     } else if (respData.containsKey("message")) {
+    //       if (respData['message']
+    //           .toString()
+    //           .toLowerCase()
+    //           .contains("reseted successfully"))
+    //         showDialog(
+    //             context: context,
+    //             builder: (c) => AlertDialog(
+    //                   actions: [
+    //                     FlatButton(
+    //                         onPressed: () {
+    //                           Navigator.pop(c);
+    //                           Navigator.pop(context);
+    //                         },
+    //                         child: Text(
+    //                           "Got It",
+    //                           style: TextStyle(
+    //
+    //                           ),
+    //                         ))
+    //                   ],
+    //                   title: Text(
+    //                     "Password Reset Successfully",
+    //                     textAlign: TextAlign.center,
+    //                     style: TextStyle(
+    //
+    //                     ),
+    //                   ),
+    //                   content: Text(
+    //                     "An email has been sent to your email address with new password.\nPlease login to your account with that password.",
+    //                     textAlign: TextAlign.center,
+    //                     style: TextStyle(
+    //
+    //                     ),
+    //                   ),
+    //                   shape: RoundedRectangleBorder(
+    //                     borderRadius: BorderRadius.circular(8),
+    //                   ),
+    //                 ));
+    //
+    //       return;
+    //     } else
+    //       errorMessage = "Something went wrong. Please try after some time.";
+    //   } else
+    //     errorMessage = "Something went wrong. Please try after some time.";
+    //   if (mounted)
+    //     setState(() {
+    //       showError = true;
+    //     });
+    // }
   }
 }

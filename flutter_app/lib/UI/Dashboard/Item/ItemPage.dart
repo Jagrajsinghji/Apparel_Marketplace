@@ -7,12 +7,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/Bloc/CartBloc.dart';
 import 'package:flutter_app/Bloc/ItemBloc.dart';
 import 'package:flutter_app/UI/Components/CartIcon.dart';
+import 'package:flutter_app/UI/Dashboard/Cart/WishList.dart';
 import 'package:flutter_app/Utils/Session.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 
 class ItemPage extends StatefulWidget {
   final String itemSlug;
   final String tag;
+
   const ItemPage({Key key, this.itemSlug, this.tag}) : super(key: key);
 
   @override
@@ -27,60 +30,304 @@ class _ItemPageState extends State<ItemPage> {
   @override
   Widget build(BuildContext context) {
     CartBloc _cartBloc = Provider.of<CartBloc>(context);
-    return Hero(tag: widget.tag,
-      child: FutureBuilder<Response>(
-        future: ItemBloc().getItemBySlug(widget.itemSlug),
-        builder: (c, s) {
-          if (s.data == null)
-            return Material(
-              child: Center(
-                  child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation(Color(0xffdc0f21)),
-              )),
-            );
-          else {
-            Map data = s.data.data ?? {};
-            Map productData = data["product"];
-
-            sizeMap = mapSizeToQty(productData);
-            outOfStock = ((sizeMap.values.every((element) => element == "0")) &&
-                (productData['stock'] == null));
-            String itemId = productData['id'].toString() +
-                selectedSize.trim().replaceAll(" ", "-");
-            Map prods = (_cartBloc.cartData ?? {})['products'] ?? {};
-            alreadyAdded = prods.containsKey(itemId);
-            return Scaffold(
-              backgroundColor: Color(0xffE5E5E5),
-              appBar: AppBar(
-                elevation: 0,
-                leading: FlatButton(
-                  child: Image.asset("assets/backArrow.png"),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
+    return Scaffold(
+      backgroundColor: Color(0xffE5E5E5),
+      appBar: AppBar(
+        elevation: 0,
+        leading: FlatButton(
+          child: Image.asset("assets/backArrow.png"),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+        backgroundColor: Colors.white,
+        actions: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: InkWell(
+              focusColor: Colors.transparent,
+              splashColor: Colors.transparent,
+              child: Hero(
+                tag: "WishList",
+                child: Image.asset(
+                  "assets/favourite.png",
+                  width: 20,
+                  height: 20,
                 ),
-                backgroundColor: Colors.white,
-                actions: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: InkWell(
-                      focusColor: Colors.transparent,
-                      splashColor: Colors.transparent,
-                      child: Image.asset(
-                        "assets/favourite.png",
-                        width: 20,
-                        height: 20,
-                      ),
-                      onTap: () {
-                        Navigator.pushNamed(context, "WishList");
-                      },
-                    ),
-                  ),
-                  CartIcon()
-                ],
-                iconTheme: IconThemeData(color: Colors.black),
               ),
-              body: ListView(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    PageRouteBuilder(
+                        transitionDuration: Duration(seconds: 1),
+                        reverseTransitionDuration: Duration(milliseconds: 800),
+                        pageBuilder: (c, a, b) => WishList()));
+              },
+            ),
+          ),
+          CartIcon()
+        ],
+        iconTheme: IconThemeData(color: Colors.black),
+      ),
+      body: Hero(
+        tag: widget.tag,
+        child: FutureBuilder<Response>(
+          future: ItemBloc().getItemBySlug(widget.itemSlug),
+          builder: (c, s) {
+            if (s.data == null)
+              return Shimmer.fromColors(
+                baseColor: Colors.grey.shade400,
+                highlightColor: Colors.redAccent,
+                child: ListView(
+                  physics: BouncingScrollPhysics(),
+                  shrinkWrap: true,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        height: MediaQuery.of(context).size.height / 2.5,
+                        decoration: BoxDecoration(
+                            color: Colors.grey,
+                            borderRadius: BorderRadius.circular(8)),
+                      ),
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: 20.0, top: 5, bottom: 5),
+                          child: Container(
+                            width: 200,
+                            height: 20,
+                            decoration: BoxDecoration(
+                                color: Colors.grey,
+                                borderRadius: BorderRadius.circular(8)),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: 20.0, top: 5, bottom: 5, right: 20),
+                          child: Container(
+                            height: 20,
+                            decoration: BoxDecoration(
+                                color: Colors.grey,
+                                borderRadius: BorderRadius.circular(8)),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10.0),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 20.0, bottom: 15),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    color: Colors.grey,
+                                    borderRadius: BorderRadius.circular(8)),
+                                height: 25,
+                                width: 100,
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 20.0),
+                              child: Wrap(
+                                alignment: WrapAlignment.start,
+                                crossAxisAlignment: WrapCrossAlignment.start,
+                                runSpacing: 8,
+                                spacing: 8,
+                                children: [
+                                  Container(
+                                    decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(4),
+                                        color: Colors.grey),
+                                    width: 35,
+                                    height: 35,
+                                  ),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(4),
+                                        color: Colors.grey),
+                                    width: 35,
+                                    height: 35,
+                                  ),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(4),
+                                        color: Colors.grey),
+                                    width: 35,
+                                    height: 35,
+                                  ),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(4),
+                                        color: Colors.grey),
+                                    width: 35,
+                                    height: 35,
+                                  )
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 20.0, bottom: 10),
+                              child: Container(
+                                height: 25,
+                                width: 150,
+                                decoration: BoxDecoration(
+                                    color: Colors.grey,
+                                    borderRadius: BorderRadius.circular(8)),
+                              ),
+                            ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20),
+                              child: Container(
+                                height: 50,
+                                decoration: BoxDecoration(
+                                    color: Colors.grey,
+                                    borderRadius: BorderRadius.circular(8)),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 20, right: 20, top: 10),
+                              child: Text(
+                                "Pay on delivery might be available\nTry & buy might be available",
+                                style: TextStyle(
+                                  color: Color(0xff969696),
+                                  fontSize: 10,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10.0),
+                      child: Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.only(right: 5.0),
+                                child: Container(
+                                  height: 60,
+                                  decoration: BoxDecoration(
+                                      color: Colors.grey,
+                                      borderRadius: BorderRadius.circular(8)),
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.only(right: 5.0),
+                                child: Container(
+                                  height: 60,
+                                  decoration: BoxDecoration(
+                                      color: Colors.grey,
+                                      borderRadius: BorderRadius.circular(8)),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10.0),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 20.0, bottom: 2),
+                              child: Text(
+                                "Easy 30 days return and exchange",
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 20.0, right: 20),
+                              child: Text(
+                                "Choose to return or exchange for a different size (if available) within 30 days",
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Container(
+                      height: 60,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Image.asset(
+                            "assets/trophy.png",
+                            height: 20,
+                            width: 20,
+                          ),
+                          Image.asset(
+                            "assets/lightAward.png",
+                            height: 20,
+                            width: 20,
+                          ),
+                          Image.asset(
+                            "assets/freshTag.png",
+                            height: 20,
+                            width: 20,
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              );
+            else {
+              Map data = s.data.data ?? {};
+              Map productData = data["product"];
+
+              sizeMap = mapSizeToQty(productData);
+              outOfStock =
+                  ((sizeMap.values.every((element) => element == "0")) &&
+                      (productData['stock'] == null));
+              String itemId = productData['id'].toString() +
+                  selectedSize.trim().replaceAll(" ", "-");
+              Map prods = (_cartBloc.cartData ?? {})['products'] ?? {};
+              alreadyAdded = prods.containsKey(itemId);
+              return ListView(
                 physics: BouncingScrollPhysics(),
                 shrinkWrap: true,
                 children: [
@@ -202,8 +449,8 @@ class _ItemPageState extends State<ItemPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 20.0, bottom: 15),
+                                padding: const EdgeInsets.only(
+                                    left: 20.0, bottom: 15),
                                 child: Text(
                                   "Select Size",
                                   style: TextStyle(
@@ -213,8 +460,8 @@ class _ItemPageState extends State<ItemPage> {
                                 ),
                               ),
                               Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 20.0),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 20.0),
                                 child: Wrap(
                                   alignment: WrapAlignment.start,
                                   crossAxisAlignment: WrapCrossAlignment.start,
@@ -255,7 +502,8 @@ class _ItemPageState extends State<ItemPage> {
                                                     bottom: 10,
                                                     right: int.parse(s.value) ==
                                                                 0 ||
-                                                            int.parse(s.value) > 6
+                                                            int.parse(s.value) >
+                                                                6
                                                         ? 10
                                                         : 0),
                                                 child: Text(
@@ -326,7 +574,8 @@ class _ItemPageState extends State<ItemPage> {
                               ),
                             ),
                             Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 20),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20),
                               child: Container(
                                 height: 50,
                                 child: TextField(
@@ -340,11 +589,13 @@ class _ItemPageState extends State<ItemPage> {
                                         fontSize: 10,
                                       ),
                                       focusedBorder: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(4),
+                                          borderRadius:
+                                              BorderRadius.circular(4),
                                           borderSide: BorderSide(
                                               color: Color(0xff979797))),
                                       enabledBorder: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(4),
+                                          borderRadius:
+                                              BorderRadius.circular(4),
                                           borderSide: BorderSide(
                                               color: Color(0xff979797)))),
                                 ),
@@ -507,7 +758,8 @@ class _ItemPageState extends State<ItemPage> {
                             child: InkWell(
                               onTap: () {
                                 Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (c) => ItemPage(tag: tag,
+                                    builder: (c) => ItemPage(
+                                          tag: tag,
                                           itemSlug: prods['slug'],
                                         )));
                               },
@@ -617,10 +869,10 @@ class _ItemPageState extends State<ItemPage> {
                     ),
                   )
                 ],
-              ),
-            );
-          }
-        },
+              );
+            }
+          },
+        ),
       ),
     );
   }

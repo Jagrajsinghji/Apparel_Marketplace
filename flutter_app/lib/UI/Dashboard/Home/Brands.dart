@@ -45,7 +45,8 @@ class _BrandsState extends State<Brands> {
           ),
         ),
       ),
-      Container(color: Colors.white,
+      Container(
+        color: Colors.white,
         child: Padding(
           padding: const EdgeInsets.only(top: 8.0, left: 8.0, right: 8.0),
           child: GridView.builder(
@@ -59,7 +60,9 @@ class _BrandsState extends State<Brands> {
                 return ClipRRect(
                   borderRadius: BorderRadius.circular(8),
                   child: Container(
-                    decoration: BoxDecoration(color: Colors.white,border: Border.all(color: Colors.grey.shade300)),
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: Border.all(color: Colors.grey.shade300)),
                     child: CachedNetworkImage(
                       imageUrl:
                           "${Session.BASE_URL}/assets/images/partner/${data['photo']}",
@@ -70,14 +73,17 @@ class _BrandsState extends State<Brands> {
         ),
       ),
       if (moreThanSix)
-        Container(color: Colors.white,
+        Container(
+          color: Colors.white,
           child: ListTile(
             onTap: () {
               setState(() {
                 expand = !expand;
               });
-              if(!expand)
-              widget.scrollController.animateTo(250, duration: Duration(milliseconds: 500), curve: Curves.easeIn);
+              if (!expand)
+                widget.scrollController.animateTo(250,
+                    duration: Duration(milliseconds: 500),
+                    curve: Curves.easeIn);
             },
             trailing: Icon(expand
                 ? Icons.keyboard_arrow_up_sharp

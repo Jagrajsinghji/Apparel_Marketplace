@@ -42,7 +42,7 @@ class _ProductGridWIthThumbnailState extends State<ProductGridWIthThumbnail> {
                       "${widget.title}",
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        color: Color(0xff727272),
+                        color: Colors.black,
                         fontSize: 15,
                         letterSpacing: 0.45,
                       ),
@@ -71,8 +71,11 @@ class _ProductGridWIthThumbnailState extends State<ProductGridWIthThumbnail> {
                         padding: const EdgeInsets.all(5.0),
                         child: InkWell(
                           onTap: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (c) => ItemPage(
+                            Navigator.of(context).push(PageRouteBuilder(
+                                transitionDuration: Duration(seconds: 1),
+                                reverseTransitionDuration:
+                                    Duration(milliseconds: 800),
+                                pageBuilder: (c, a, b) => ItemPage(
                                       tag: tag,
                                       itemSlug: data['slug'],
                                     )));
@@ -83,13 +86,6 @@ class _ProductGridWIthThumbnailState extends State<ProductGridWIthThumbnail> {
                             tag: tag,
                             child: Container(
                               decoration: BoxDecoration(
-                                  boxShadow: [
-                                    BoxShadow(
-                                        color: Colors.black45,
-                                        offset: Offset(0, 2),
-                                        spreadRadius: 0.5,
-                                        blurRadius: 1)
-                                  ],
                                   color: Colors.white,
                                   border:
                                       Border.all(color: Colors.grey.shade300),

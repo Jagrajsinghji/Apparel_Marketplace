@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/UI/Dashboard/Cart/PaymentOptions.dart';
 
 class AddAddress extends StatefulWidget {
+  final Map<String, double> priceData;
+
+  const AddAddress({Key key, this.priceData}) : super(key: key);
+
   @override
   _AddAddressState createState() => _AddAddressState();
 }
@@ -20,7 +25,7 @@ class _AddAddressState extends State<AddAddress> {
         ),
         backgroundColor: Colors.white,
         title: Text(
-          "Add New Address",
+          "Add Shipping Address",
           style: TextStyle(
             color: Color(0xff2c393f),
             fontSize: 18,
@@ -66,13 +71,11 @@ class _AddAddressState extends State<AddAddress> {
                         hintStyle: TextStyle(
                           color: Color(0xff9d9d9d),
                           fontSize: 14,
-                          fontFamily: "Poppins",
                           fontWeight: FontWeight.w400,
                         ),
                       ),
                       style: TextStyle(
                         fontSize: 14,
-                        fontFamily: "Poppins",
                         fontWeight: FontWeight.w400,
                       ),
                     ),
@@ -94,13 +97,11 @@ class _AddAddressState extends State<AddAddress> {
                         hintStyle: TextStyle(
                           color: Color(0xff9d9d9d),
                           fontSize: 14,
-                          fontFamily: "Poppins",
                           fontWeight: FontWeight.w400,
                         ),
                       ),
                       style: TextStyle(
                         fontSize: 14,
-                        fontFamily: "Poppins",
                         fontWeight: FontWeight.w400,
                       ),
                     ),
@@ -143,13 +144,11 @@ class _AddAddressState extends State<AddAddress> {
                         hintStyle: TextStyle(
                           color: Color(0xff9d9d9d),
                           fontSize: 14,
-                          fontFamily: "Poppins",
                           fontWeight: FontWeight.w400,
                         ),
                       ),
                       style: TextStyle(
                         fontSize: 14,
-                        fontFamily: "Poppins",
                         fontWeight: FontWeight.w400,
                       ),
                     ),
@@ -171,13 +170,11 @@ class _AddAddressState extends State<AddAddress> {
                         hintStyle: TextStyle(
                           color: Color(0xff9d9d9d),
                           fontSize: 14,
-                          fontFamily: "Poppins",
                           fontWeight: FontWeight.w400,
                         ),
                       ),
                       style: TextStyle(
                         fontSize: 14,
-                        fontFamily: "Poppins",
                         fontWeight: FontWeight.w400,
                       ),
                     ),
@@ -199,13 +196,11 @@ class _AddAddressState extends State<AddAddress> {
                         hintStyle: TextStyle(
                           color: Color(0xff9d9d9d),
                           fontSize: 14,
-                          fontFamily: "Poppins",
                           fontWeight: FontWeight.w400,
                         ),
                       ),
                       style: TextStyle(
                         fontSize: 14,
-                        fontFamily: "Poppins",
                         fontWeight: FontWeight.w400,
                       ),
                     ),
@@ -232,13 +227,11 @@ class _AddAddressState extends State<AddAddress> {
                               hintStyle: TextStyle(
                                 color: Color(0xff9d9d9d),
                                 fontSize: 14,
-                                fontFamily: "Poppins",
                                 fontWeight: FontWeight.w400,
                               ),
                             ),
                             style: TextStyle(
                               fontSize: 14,
-                              fontFamily: "Poppins",
                               fontWeight: FontWeight.w400,
                             ),
                           ),
@@ -264,13 +257,11 @@ class _AddAddressState extends State<AddAddress> {
                               hintStyle: TextStyle(
                                 color: Color(0xff9d9d9d),
                                 fontSize: 14,
-                                fontFamily: "Poppins",
                                 fontWeight: FontWeight.w400,
                               ),
                             ),
                             style: TextStyle(
                               fontSize: 14,
-                              fontFamily: "Poppins",
                               fontWeight: FontWeight.w400,
                             ),
                           ),
@@ -282,110 +273,119 @@ class _AddAddressState extends State<AddAddress> {
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(top: 20, left: 10, bottom: 10.0),
-            child: Text(
-              "Save Address as",
-              style: TextStyle(
-                color: Color(0xff515151),
-                fontSize: 15,
-                letterSpacing: 0.45,
-              ),
-            ),
-          ),
-          Container(
-            color: Colors.white,
-            child: Padding(
-              padding: const EdgeInsets.all(14.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Container(
-                    width: 116,
-                    height: 38,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(113),
-                      border: Border.all(
-                        color: Color(0xffdc0f21),
-                        width: 0.50,
-                      ),
-                      color: Colors.white,
-                    ),
-                    child: Center(
-                      child: Text(
-                        "Home",
-                        style: TextStyle(
-                          color: Color(0xff7f7f7f),
-                          fontSize: 12,
-                          letterSpacing: 0.36,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    width: 116,
-                    height: 38,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(113),
-                      border: Border.all(
-                        color: Color(0xffdc0f21),
-                        width: 0.50,
-                      ),
-                      color: Colors.white,
-                    ),
-                    child: Center(
-                      child: Text(
-                        "Work",
-                        style: TextStyle(
-                          color: Color(0xff7f7f7f),
-                          fontSize: 12,
-                          letterSpacing: 0.36,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 10.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Checkbox(
-                  value: true,
-                  activeColor: Color(0xffdc0f21),
-                  onChanged: (t) {},
-                ),
-                Text(
-                  "Make this my default address",
-                  style: TextStyle(
-                    color: Color(0xff7f7f7f),
-                    fontSize: 12,
-                    letterSpacing: 0.36,
-                  ),
-                ),
-              ],
-            ),
-          ),
+          // Padding(
+          //   padding: const EdgeInsets.only(top: 20, left: 10, bottom: 10.0),
+          //   child: Text(
+          //     "Save Address as",
+          //     style: TextStyle(
+          //       color: Color(0xff515151),
+          //       fontSize: 15,
+          //       letterSpacing: 0.45,
+          //     ),
+          //   ),
+          // ),
+          // Container(
+          //   color: Colors.white,
+          //   child: Padding(
+          //     padding: const EdgeInsets.all(14.0),
+          //     child: Row(
+          //       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          //       crossAxisAlignment: CrossAxisAlignment.center,
+          //       children: [
+          //         Container(
+          //           width: 116,
+          //           height: 38,
+          //           decoration: BoxDecoration(
+          //             borderRadius: BorderRadius.circular(113),
+          //             border: Border.all(
+          //               color: Color(0xffdc0f21),
+          //               width: 0.50,
+          //             ),
+          //             color: Colors.white,
+          //           ),
+          //           child: Center(
+          //             child: Text(
+          //               "Home",
+          //               style: TextStyle(
+          //                 color: Color(0xff7f7f7f),
+          //                 fontSize: 12,
+          //                 letterSpacing: 0.36,
+          //               ),
+          //             ),
+          //           ),
+          //         ),
+          //         Container(
+          //           width: 116,
+          //           height: 38,
+          //           decoration: BoxDecoration(
+          //             borderRadius: BorderRadius.circular(113),
+          //             border: Border.all(
+          //               color: Color(0xffdc0f21),
+          //               width: 0.50,
+          //             ),
+          //             color: Colors.white,
+          //           ),
+          //           child: Center(
+          //             child: Text(
+          //               "Work",
+          //               style: TextStyle(
+          //                 color: Color(0xff7f7f7f),
+          //                 fontSize: 12,
+          //                 letterSpacing: 0.36,
+          //               ),
+          //             ),
+          //           ),
+          //         ),
+          //       ],
+          //     ),
+          //   ),
+          // ),
+          // Padding(
+          //   padding: const EdgeInsets.only(left: 10.0),
+          //   child: Row(
+          //     mainAxisAlignment: MainAxisAlignment.start,
+          //     children: [
+          //       Checkbox(
+          //         value: true,
+          //         activeColor: Color(0xffdc0f21),
+          //         onChanged: (t) {},
+          //       ),
+          //       Text(
+          //         "Make this my default address",
+          //         style: TextStyle(
+          //           color: Color(0xff7f7f7f),
+          //           fontSize: 12,
+          //           letterSpacing: 0.36,
+          //         ),
+          //       ),
+          //     ],
+          //   ),
+          // ),
           Padding(
             padding: const EdgeInsets.all(20.0),
-            child: Container(
-              height: 60,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(600),
-                color: Color(0xffdc0f21),
-              ),
-              child: Center(
-                  child: Text(
-                "Add Address",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 14,
+            child: InkWell(
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (c) => PaymentOptions(
+                          priceData: widget.priceData,
+                        )));
+              },
+              child: Container(
+                height: 60,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(600),
+                  color: Color(0xffdc0f21),
                 ),
-              )),
+                child: Center(
+                    child: Text(
+                  // "Add Address",
+                  " Proceed",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 14,
+                  ),
+                )),
+              ),
             ),
           )
         ],

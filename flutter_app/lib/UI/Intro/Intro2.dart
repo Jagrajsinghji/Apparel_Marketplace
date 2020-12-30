@@ -45,7 +45,6 @@ class _Intro2State extends State<Intro2> {
                 style: TextStyle(
                   color: Color(0xff2c393f),
                   fontSize: 27,
-                  fontFamily: "Poppins",
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -79,7 +78,6 @@ class _Intro2State extends State<Intro2> {
                   style: TextStyle(
                     color: Color(0xff2c393f),
                     fontSize: 14,
-                    fontFamily: "Poppins",
                     fontWeight: FontWeight.w400,
                   ),
                 ),
@@ -121,7 +119,6 @@ class _Intro2State extends State<Intro2> {
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 14,
-                            fontFamily: "Poppins",
                             fontWeight: FontWeight.w400,
                           ),
                         ),

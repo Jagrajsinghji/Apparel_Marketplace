@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "929155793177",
+    "project_id": "wowfas-marketplace",
+    "storage_bucket": "wowfas-marketplace.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:929155793177:android:a5ab5e896a4138891d8588",
+        "android_client_info": {
+          "package_name": "in.weexpan.flutter_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "929155793177-0olhci1emrt2793gr3ojvqbhhjv5cb4g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBGrR4jH72z_54Lwv0-cxTbtci3-vwAD2I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "929155793177-0olhci1emrt2793gr3ojvqbhhjv5cb4g.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

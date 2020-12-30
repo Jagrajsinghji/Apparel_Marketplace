@@ -2,8 +2,8 @@ import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app/Bloc/AuthBloc.dart';
 import 'package:flutter_app/Bloc/CartBloc.dart';
 import 'package:flutter_app/UI/Dashboard/Profile/AddAddress.dart';
 import 'package:flutter_app/UI/SignInUp/SignIn.dart';
@@ -31,6 +31,7 @@ class _CheckOutState extends State<CheckOut> {
   bool initializeVars = false;
 
   int shippingMethodValue = 0, packingValue = 0;
+  Map<String, double> priceData = {};
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +55,7 @@ class _CheckOutState extends State<CheckOut> {
         backgroundColor: Colors.white,
         iconTheme: IconThemeData(color: Colors.black),
       ),
-      backgroundColor: Colors.white,
+      backgroundColor: Color(0xffE5E5E5),
       body: Stack(
         children: [
           FutureBuilder<Response>(
@@ -63,7 +64,8 @@ class _CheckOutState extends State<CheckOut> {
                 if (snapshot?.data == null)
                   return Center(
                       child: CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(Color(0xffDC0F21)),
+                    valueColor:
+                        AlwaysStoppedAnimation<Color>(Color(0xffDC0F21)),
                   ));
                 else {
                   Map data = snapshot?.data?.data ?? {};
@@ -72,26 +74,33 @@ class _CheckOutState extends State<CheckOut> {
                     return noProducts();
                   }
                   double totalPrice =
-                      double.parse(data['totalPrice']?.toString() ?? 0);
+                      double.parse(data['totalPrice']?.toString() ?? "0");
                   List shippingData = data['shipping_data'] ?? [];
                   List packageData = data['package_data'] ?? [];
 
                   if (_cartBloc.couponData.length > 0)
                     couponAmt = double.parse(
-                        _cartBloc.couponData['coupon_amt']?.toString() ?? 0);
+                        _cartBloc.couponData['coupon_amt']?.toString() ?? "0");
                   if (!initializeVars) {
                     if (shippingData.length > 0) {
                       shippingMethodValue = shippingData.first['id'] ?? 0;
                       shippingAmt = double.parse(
-                          shippingData.first['price']?.toString() ?? 0);
+                          shippingData.first['price']?.toString() ?? "0");
                     }
                     if (packageData.length > 0) {
                       packingValue = packageData.first['id'] ?? 0;
                       packingAmt = double.parse(
-                          packageData.first['price']?.toString() ?? 0);
+                          packageData.first['price']?.toString() ?? "0");
                     }
                     initializeVars = true;
                   }
+                  priceData.addAll({
+                    "totalPrice": totalPrice,
+                    "couponAmt": couponAmt,
+                    "shippingAmt": shippingAmt,
+                    "packingAmt": packingAmt,
+                    "totalQty": double.parse("${data['totalQty'] ?? "0"}")
+                  });
                   return Stack(
                     children: [
                       Padding(
@@ -204,61 +213,70 @@ class _CheckOutState extends State<CheckOut> {
                               /// Shipping Data
                               if (shippingData.length > 0)
                                 Theme(
-                                  data:
-                                      ThemeData(accentColor: Color(0xffFF1D1D)),
-                                  child: ExpansionTile(
-                                    childrenPadding: EdgeInsets.zero,
-                                    children: [
-                                      ...shippingData.map((sd) {
-                                        return ListTile(
-                                          leading: Radio(
-                                            value: sd['id'] ??
-                                                shippingData.indexOf(sd),
-                                            groupValue: shippingMethodValue,
-                                            activeColor: Color(0xffFF1D1D),
-                                            onChanged: (v) {
-                                              if (mounted)
-                                                setState(() {
-                                                  shippingMethodValue = v;
-                                                  shippingAmt = double.parse(
-                                                      sd['price']?.toString() ??
-                                                          0);
-                                                });
-                                            },
+                                  data: ThemeData(
+                                    accentColor: Color(0xffFF1D1D),
+                                  ),
+                                  child: Padding(
+                                    padding:
+                                        EdgeInsets.only(bottom: 10, top: 10),
+                                    child: Container(
+                                      color: Colors.white,
+                                      child: ExpansionTile(
+                                        childrenPadding: EdgeInsets.zero,
+                                        children: [
+                                          ...shippingData.map((sd) {
+                                            return ListTile(
+                                              leading: Radio(
+                                                value: sd['id'] ??
+                                                    shippingData.indexOf(sd),
+                                                groupValue: shippingMethodValue,
+                                                activeColor: Color(0xffFF1D1D),
+                                                onChanged: (v) {
+                                                  if (mounted)
+                                                    setState(() {
+                                                      shippingMethodValue = v;
+                                                      shippingAmt = double
+                                                          .parse(sd['price']
+                                                                  ?.toString() ??
+                                                              0);
+                                                    });
+                                                },
+                                              ),
+                                              trailing: Text(
+                                                "\u20B9 ${sd['price']}",
+                                                style: TextStyle(
+                                                  color: Color(0xff515151),
+                                                  fontSize: 15,
+                                                  letterSpacing: 0.45,
+                                                ),
+                                              ),
+                                              title: Text(
+                                                "${sd['title']}",
+                                                style: TextStyle(
+                                                  color: Color(0xff515151),
+                                                  fontSize: 15,
+                                                  letterSpacing: 0.45,
+                                                ),
+                                              ),
+                                              subtitle: Text(
+                                                "${sd['subtitle']}",
+                                                style: TextStyle(
+                                                  color: Color(0xff515151),
+                                                  fontSize: 15,
+                                                  letterSpacing: 0.45,
+                                                ),
+                                              ),
+                                            );
+                                          }).toList(),
+                                        ],
+                                        title: Text(
+                                          "Shipping",
+                                          style: TextStyle(
+                                            color: Color(0xff515151),
+                                            fontSize: 15,
+                                            letterSpacing: 0.45,
                                           ),
-                                          trailing: Text(
-                                            "\u20B9 ${sd['price']}",
-                                            style: TextStyle(
-                                              color: Color(0xff515151),
-                                              fontSize: 15,
-                                              letterSpacing: 0.45,
-                                            ),
-                                          ),
-                                          title: Text(
-                                            "${sd['title']}",
-                                            style: TextStyle(
-                                              color: Color(0xff515151),
-                                              fontSize: 15,
-                                              letterSpacing: 0.45,
-                                            ),
-                                          ),
-                                          subtitle: Text(
-                                            "${sd['subtitle']}",
-                                            style: TextStyle(
-                                              color: Color(0xff515151),
-                                              fontSize: 15,
-                                              letterSpacing: 0.45,
-                                            ),
-                                          ),
-                                        );
-                                      }).toList(),
-                                    ],
-                                    title: Text(
-                                      "Shipping",
-                                      style: TextStyle(
-                                        color: Color(0xff515151),
-                                        fontSize: 15,
-                                        letterSpacing: 0.45,
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -269,59 +287,67 @@ class _CheckOutState extends State<CheckOut> {
                                 Theme(
                                   data:
                                       ThemeData(accentColor: Color(0xffFF1D1D)),
-                                  child: ExpansionTile(
-                                    childrenPadding: EdgeInsets.zero,
-                                    children: [
-                                      ...packageData.map((pd) {
-                                        return ListTile(
-                                          leading: Radio(
-                                            value: pd['id'] ??
-                                                packageData.indexOf(pd),
-                                            groupValue: packingValue,
-                                            activeColor: Color(0xffFF1D1D),
-                                            onChanged: (v) {
-                                              if (mounted)
-                                                setState(() {
-                                                  packingValue = v;
-                                                  packingAmt = double.parse(
-                                                      pd['price']?.toString() ??
-                                                          0);
-                                                });
-                                            },
+                                  child: Padding(
+                                    padding:
+                                        EdgeInsets.only(bottom: 10, top: 10),
+                                    child: Container(
+                                      color: Colors.white,
+                                      child: ExpansionTile(
+                                        childrenPadding: EdgeInsets.zero,
+                                        children: [
+                                          ...packageData.map((pd) {
+                                            return ListTile(
+                                              leading: Radio(
+                                                value: pd['id'] ??
+                                                    packageData.indexOf(pd),
+                                                groupValue: packingValue,
+                                                activeColor: Color(0xffFF1D1D),
+                                                onChanged: (v) {
+                                                  if (mounted)
+                                                    setState(() {
+                                                      packingValue = v;
+                                                      packingAmt = double.parse(
+                                                          pd['price']
+                                                                  ?.toString() ??
+                                                              0);
+                                                    });
+                                                },
+                                              ),
+                                              trailing: Text(
+                                                "\u20B9 ${pd['price']}",
+                                                style: TextStyle(
+                                                  color: Color(0xff515151),
+                                                  fontSize: 15,
+                                                  letterSpacing: 0.45,
+                                                ),
+                                              ),
+                                              title: Text(
+                                                "${pd['title']}",
+                                                style: TextStyle(
+                                                  color: Color(0xff515151),
+                                                  fontSize: 15,
+                                                  letterSpacing: 0.45,
+                                                ),
+                                              ),
+                                              subtitle: Text(
+                                                "${pd['subtitle']}",
+                                                style: TextStyle(
+                                                  color: Color(0xff515151),
+                                                  fontSize: 15,
+                                                  letterSpacing: 0.45,
+                                                ),
+                                              ),
+                                            );
+                                          }).toList(),
+                                        ],
+                                        title: Text(
+                                          "Packaging",
+                                          style: TextStyle(
+                                            color: Color(0xff515151),
+                                            fontSize: 15,
+                                            letterSpacing: 0.45,
                                           ),
-                                          trailing: Text(
-                                            "\u20B9 ${pd['price']}",
-                                            style: TextStyle(
-                                              color: Color(0xff515151),
-                                              fontSize: 15,
-                                              letterSpacing: 0.45,
-                                            ),
-                                          ),
-                                          title: Text(
-                                            "${pd['title']}",
-                                            style: TextStyle(
-                                              color: Color(0xff515151),
-                                              fontSize: 15,
-                                              letterSpacing: 0.45,
-                                            ),
-                                          ),
-                                          subtitle: Text(
-                                            "${pd['subtitle']}",
-                                            style: TextStyle(
-                                              color: Color(0xff515151),
-                                              fontSize: 15,
-                                              letterSpacing: 0.45,
-                                            ),
-                                          ),
-                                        );
-                                      }).toList(),
-                                    ],
-                                    title: Text(
-                                      "Packaging",
-                                      style: TextStyle(
-                                        color: Color(0xff515151),
-                                        fontSize: 15,
-                                        letterSpacing: 0.45,
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -338,7 +364,7 @@ class _CheckOutState extends State<CheckOut> {
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          "Price Details (${data['totalQty']} Items)",
+                                          "Price Details (${data['totalQty']}${data['totalQty'] > 1 ? " Items)" : " Item)"} ",
                                           style: TextStyle(
                                             color: Color(0xff515151),
                                             fontSize: 15,
@@ -481,6 +507,10 @@ class _CheckOutState extends State<CheckOut> {
                                               ),
                                             ],
                                           ),
+                                        ),
+                                        Divider(
+                                          color: Color(0xffDCDCDC),
+                                          height: 2,
                                         ),
                                         Padding(
                                           padding: const EdgeInsets.symmetric(
@@ -684,7 +714,6 @@ class _CheckOutState extends State<CheckOut> {
                           style: TextStyle(
                             color: Color(0xff515151),
                             fontSize: 12,
-                            fontFamily: "Poppins",
                             fontWeight: FontWeight.w300,
                             letterSpacing: 0.30,
                           ),
@@ -741,7 +770,7 @@ class _CheckOutState extends State<CheckOut> {
                     //           //     color:
                     //           //         Color(0xff515151),
                     //           //     fontSize: 12,
-                    //           //     fontFamily: "Poppins",
+                    //           //
                     //           //     fontWeight:
                     //           //         FontWeight.w300,
                     //           //     letterSpacing: 0.30,
@@ -835,7 +864,6 @@ class _CheckOutState extends State<CheckOut> {
                                           style: TextStyle(
                                             color: Color(0xff515151),
                                             fontSize: 12,
-                                            fontFamily: "Poppins",
                                             fontWeight: FontWeight.w300,
                                             letterSpacing: 0.30,
                                           ),
@@ -847,7 +875,6 @@ class _CheckOutState extends State<CheckOut> {
                                       style: TextStyle(
                                         color: Color(0xff515151),
                                         fontSize: 12,
-                                        fontFamily: "Poppins",
                                         fontWeight: FontWeight.w300,
                                         letterSpacing: 0.30,
                                       ),
@@ -954,8 +981,8 @@ class _CheckOutState extends State<CheckOut> {
                               child: Text(
                                 "${details['whole_sell_discount']}% Off",
                                 maxLines: 1,
-                                style:
-                                    TextStyle(fontSize: 15, color: Color(0xffDC0F21)),
+                                style: TextStyle(
+                                    fontSize: 15, color: Color(0xffDC0F21)),
                               ),
                             ),
                         ],
@@ -987,25 +1014,25 @@ class _CheckOutState extends State<CheckOut> {
       setState(() {
         isLoading = true;
       });
-    AuthBloc _authBloc = Provider.of<AuthBloc>(context, listen: false);
-    if (_authBloc.userData.length != 0) {
-      if (_authBloc.userData['email'] != null) {
-        /// user logged in
-        if (_authBloc.userData['address'] == null ||
-            _authBloc.userData['city'] ||
-            _authBloc.userData['zip'] == null ||
-            _authBloc.userData['country'])
-          Navigator.push(
-              context, MaterialPageRoute(builder: (c) => AddAddress()));
-        else
-          Fluttertoast.showToast(msg: "Order Placed");
-      }
+    // AuthBloc _authBloc = Provider.of<AuthBloc>(context, listen: false);
+    if (FirebaseAuth.instance.currentUser != null) {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (c) => AddAddress(
+                    priceData: priceData,
+                  )));
     } else {
       await Navigator.push(
           context, MaterialPageRoute(builder: (c) => SignIn()));
-      AuthBloc _authBloc1 = Provider.of<AuthBloc>(context, listen: false);
-      if (_authBloc1.userData.length != 0) {
-        Fluttertoast.showToast(msg: "Order Placed");
+      // AuthBloc _authBloc1 = Provider.of<AuthBloc>(context, listen: false);
+      if (FirebaseAuth.instance.currentUser != null) {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (c) => AddAddress(
+                      priceData: priceData,
+                    )));
       } else
         Fluttertoast.showToast(msg: "Please Login To Proceed");
     }

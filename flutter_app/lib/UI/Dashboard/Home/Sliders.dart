@@ -68,7 +68,7 @@ class _SlidersState extends State<Sliders> with TickerProviderStateMixin {
     return SliverList(
         delegate: SliverChildListDelegate([
       Padding(
-        padding: const EdgeInsets.symmetric(vertical:10),
+        padding: const EdgeInsets.symmetric(vertical: 10),
         child: Container(
           height: widget.height,
           width: double.infinity,
@@ -78,7 +78,7 @@ class _SlidersState extends State<Sliders> with TickerProviderStateMixin {
             controller: _pageController,
             itemBuilder: (c, i) {
               Map data = widget.slidersData.elementAt(i) ?? {};
-              return  CachedNetworkImage(
+              return CachedNetworkImage(
                 errorWidget: (c, e, d) {
                   return Center(child: Text("Error Loading File"));
                 },

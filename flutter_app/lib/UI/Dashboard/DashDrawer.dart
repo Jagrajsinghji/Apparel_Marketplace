@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/Utils/Session.dart';
 
@@ -23,44 +24,49 @@ class _DashDrawerState extends State<DashDrawer> {
         children: [
           Expanded(
             child: ListView(
+              physics: BouncingScrollPhysics(),
               shrinkWrap: true,
               children: [
-                Container(
-                    width: double.infinity,
-                    height: 120,
-                    color: Color(0xff303847),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Container(
-                              width: 60,
-                              height: 60,
-                              decoration: BoxDecoration(
+                StreamBuilder<User>(
+                    stream: FirebaseAuth.instance.authStateChanges(),
+                    builder: (context, snapshot) {
+                      return Container(
+                          width: double.infinity,
+                          height: 120,
+                          color: Color(0xff303847),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: Container(
+                                    width: 60,
+                                    height: 60,
+                                    decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius:
+                                            BorderRadius.circular(15)),
+                                    child: Transform.scale(
+                                      scale: .5,
+                                      child: Image.asset(
+                                        "assets/user.png",
+                                        height: 30,
+                                        width: 30,
+                                      ),
+                                    )),
+                              ),
+                              Text(
+                                "Hello ${snapshot?.data?.displayName ?? snapshot?.data?.email?.split("@")?.first ?? ""}",
+                                style: TextStyle(
                                   color: Colors.white,
-                                  borderRadius: BorderRadius.circular(15)),
-                              child: Transform.scale(
-                                scale: .5,
-                                child: Image.asset(
-                                  "assets/user.png",
-                                  height: 30,
-                                  width: 30,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w400,
                                 ),
-                              )),
-                        ),
-                        Text(
-                          "Hello, Rahul",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 14,
-                            fontFamily: "Poppins",
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                      ],
-                    )),
+                              ),
+                            ],
+                          ));
+                    }),
                 SizedBox(height: 22.33),
                 Padding(
                   padding: const EdgeInsets.only(left: 80.0),
@@ -74,7 +80,6 @@ class _DashDrawerState extends State<DashDrawer> {
                       style: TextStyle(
                         color: Color(0xff9d9d9d),
                         fontSize: 14,
-                        fontFamily: "Poppins",
                         fontWeight: FontWeight.w400,
                       ),
                     ),
@@ -96,7 +101,6 @@ class _DashDrawerState extends State<DashDrawer> {
                       style: TextStyle(
                         color: Color(0xff9d9d9d),
                         fontSize: 14,
-                        fontFamily: "Poppins",
                         fontWeight: FontWeight.w400,
                       ),
                     ),
@@ -118,7 +122,6 @@ class _DashDrawerState extends State<DashDrawer> {
                       style: TextStyle(
                         color: Color(0xff9d9d9d),
                         fontSize: 14,
-                        fontFamily: "Poppins",
                         fontWeight: FontWeight.w400,
                       ),
                     ),
@@ -136,7 +139,6 @@ class _DashDrawerState extends State<DashDrawer> {
                       style: TextStyle(
                         color: Color(0xff9d9d9d),
                         fontSize: 14,
-                        fontFamily: "Poppins",
                         fontWeight: FontWeight.w400,
                       ),
                     ),
@@ -158,7 +160,6 @@ class _DashDrawerState extends State<DashDrawer> {
                       style: TextStyle(
                         color: Color(0xff9d9d9d),
                         fontSize: 14,
-                        fontFamily: "Poppins",
                         fontWeight: FontWeight.w400,
                       ),
                     ),
@@ -180,7 +181,6 @@ class _DashDrawerState extends State<DashDrawer> {
                       style: TextStyle(
                         color: Color(0xff9d9d9d),
                         fontSize: 14,
-                        fontFamily: "Poppins",
                         fontWeight: FontWeight.w400,
                       ),
                     ),
@@ -202,7 +202,6 @@ class _DashDrawerState extends State<DashDrawer> {
                       style: TextStyle(
                         color: Color(0xff9d9d9d),
                         fontSize: 14,
-                        fontFamily: "Poppins",
                         fontWeight: FontWeight.w400,
                       ),
                     ),
@@ -224,7 +223,6 @@ class _DashDrawerState extends State<DashDrawer> {
                       style: TextStyle(
                         color: Color(0xff9d9d9d),
                         fontSize: 14,
-                        fontFamily: "Poppins",
                         fontWeight: FontWeight.w400,
                       ),
                     ),
@@ -252,7 +250,6 @@ class _DashDrawerState extends State<DashDrawer> {
                       style: TextStyle(
                         color: Color(0xff9d9d9d),
                         fontSize: 14,
-                        fontFamily: "Poppins",
                         fontWeight: FontWeight.w400,
                       ),
                     ),
@@ -270,7 +267,6 @@ class _DashDrawerState extends State<DashDrawer> {
                       style: TextStyle(
                         color: Color(0xff9d9d9d),
                         fontSize: 14,
-                        fontFamily: "Poppins",
                         fontWeight: FontWeight.w400,
                       ),
                     ),
@@ -288,7 +284,6 @@ class _DashDrawerState extends State<DashDrawer> {
                       style: TextStyle(
                         color: Color(0xff9d9d9d),
                         fontSize: 14,
-                        fontFamily: "Poppins",
                         fontWeight: FontWeight.w400,
                       ),
                     ),
@@ -307,7 +302,6 @@ class _DashDrawerState extends State<DashDrawer> {
                       style: TextStyle(
                         color: Color(0xff9d9d9d),
                         fontSize: 14,
-                        fontFamily: "Poppins",
                         fontWeight: FontWeight.w400,
                       ),
                     ),
@@ -325,7 +319,6 @@ class _DashDrawerState extends State<DashDrawer> {
                       style: TextStyle(
                         color: Color(0xff9d9d9d),
                         fontSize: 14,
-                        fontFamily: "Poppins",
                         fontWeight: FontWeight.w400,
                       ),
                     ),
@@ -343,7 +336,6 @@ class _DashDrawerState extends State<DashDrawer> {
                       style: TextStyle(
                         color: Color(0xff9d9d9d),
                         fontSize: 14,
-                        fontFamily: "Poppins",
                         fontWeight: FontWeight.w400,
                       ),
                     ),
@@ -361,7 +353,6 @@ class _DashDrawerState extends State<DashDrawer> {
                       style: TextStyle(
                         color: Color(0xff9d9d9d),
                         fontSize: 14,
-                        fontFamily: "Poppins",
                         fontWeight: FontWeight.w400,
                       ),
                     ),
@@ -377,7 +368,6 @@ class _DashDrawerState extends State<DashDrawer> {
               style: TextStyle(
                 color: Color(0xff9d9d9d),
                 fontSize: 14,
-                fontFamily: "Poppins",
                 fontWeight: FontWeight.w400,
               ),
             ),

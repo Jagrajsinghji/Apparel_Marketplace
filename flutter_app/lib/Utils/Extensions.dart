@@ -4,6 +4,7 @@ import 'package:flutter_app/Bloc/CartBloc.dart';
 import 'package:flutter_app/Bloc/CategoryBloc.dart';
 import 'package:flutter_app/Bloc/ProductsBloc.dart';
 import 'package:provider/provider.dart';
+
 extension intToBool on int {
   bool toBool() => this != 0;
 }
@@ -17,10 +18,5 @@ void refreshBlocs(BuildContext context) {
   productsBloc.getHomePageExtras();
   categoryBloc.getAllCategories();
   cartBloc.getCartItems();
-  authBloc.getUserProfile();
-
-
-
+  // authBloc.getUserProfile();
 }
-
-

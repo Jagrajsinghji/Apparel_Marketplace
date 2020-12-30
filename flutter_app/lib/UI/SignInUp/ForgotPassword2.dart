@@ -19,7 +19,6 @@ class _ForgotPassword2State extends State<ForgotPassword2> {
           style: TextStyle(
             color: Color(0xff2c393f),
             fontSize: 14,
-            fontFamily: "Poppins",
             fontWeight: FontWeight.w400,
           ),
         ),
@@ -35,7 +34,6 @@ class _ForgotPassword2State extends State<ForgotPassword2> {
               style: TextStyle(
                 color: Color(0xffdc0f21),
                 fontSize: 26,
-                fontFamily: "Poppins",
                 fontWeight: FontWeight.w400,
               ),
             ),
@@ -58,7 +56,6 @@ class _ForgotPassword2State extends State<ForgotPassword2> {
               style: TextStyle(
                 color: Color(0xff9d9d9d),
                 fontSize: 14,
-                fontFamily: "Poppins",
                 fontWeight: FontWeight.w400,
               ),
             ),
@@ -95,7 +92,6 @@ class _ForgotPassword2State extends State<ForgotPassword2> {
               style: TextStyle(
                 color: Color(0xff5b5b5b),
                 fontSize: 14,
-                fontFamily: "Poppins",
                 fontWeight: FontWeight.w400,
               ),
             ),
@@ -117,7 +113,6 @@ class _ForgotPassword2State extends State<ForgotPassword2> {
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 14,
-                      fontFamily: "Poppins",
                       fontWeight: FontWeight.w400,
                     ),
                   ),

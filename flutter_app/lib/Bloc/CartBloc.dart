@@ -8,7 +8,6 @@ class CartBloc with ChangeNotifier {
   Map cartData = {};
   Map couponData = {};
 
-
   DioInterceptor _dioInterceptor = DioInterceptor.getInstance();
 
   CartBloc() {
@@ -133,6 +132,46 @@ class CartBloc with ChangeNotifier {
     dio.interceptors.add(_dioInterceptor);
     Response response =
         await dio.get("/api/carts/coupon?code=$coupon&total=$total");
+    Session.instance.updateCookie(response);
+    if (response?.data is Map) {
+      couponData = response.data;
+    } else
+      couponData = {};
+    notifyListeners();
+    return response;
+  }
+
+  Future<Response> placeCashOnDeliveryOrder(
+      {String personalEmail,
+      String personalName,
+      String personalPass,
+      String userId,
+      int totalQty,
+      String shipping,
+      String pickupLocation,
+      String email,
+      String name,
+      String tax,
+      String phone,
+      String total,
+      String method,
+      String personalConfirm,
+      String shippingCost,
+      String packingCost,
+      String customerCountry,
+      String address,
+      String city,
+      String zip,
+      String vendorShippingId,
+      String vendorPackingId,
+      String dp,
+      String couponCode,
+      String couponDiscount,
+      String couponId}) async {
+    Dio dio = Dio(Session.instance.baseOptions);
+    dio.interceptors.add(_dioInterceptor);
+    Response response = await dio.get(
+        "/api/cashon/delivery?personal_email=$personalEmail&personal_name=$personalName&personal_pass=$personalPass&user_id=$userId&totalQty=$totalQty&shipping=$shipping&pickup_location=$pickupLocation&email=$email&name=$name&tax=$tax&phone=$phone&total=$total&method=$method&personal_confirm=$personalConfirm&shipping_cost=$shippingCost&packing_cost=$packingCost&customer_country=$customerCountry&address=$address&city=$city&zip=$zip&vendor_shipping_id=$vendorShippingId&vendor_packing_id=$vendorPackingId&dp=$dp&coupon_code=$couponCode&coupon_discount=$couponDiscount&coupon_id=$couponId");
     Session.instance.updateCookie(response);
     if (response?.data is Map) {
       couponData = response.data;

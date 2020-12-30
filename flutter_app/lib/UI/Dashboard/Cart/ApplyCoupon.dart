@@ -24,7 +24,7 @@ class _ApplyCouponState extends State<ApplyCoupon> {
       backgroundColor: Colors.black26,
       body: InkWell(
         onTap: () {
-          FocusScope.of(context).requestFocus(FocusNode());
+          Navigator.pop(context);
         },
         child: Container(
           color: Colors.transparent,
@@ -46,7 +46,7 @@ class _ApplyCouponState extends State<ApplyCoupon> {
                         child: Center(
                             child: Text(
                           "Please Enter Your Coupon Code",
-                          style: TextStyle(fontFamily: "Poppins", fontSize: 16),
+                          style: TextStyle(fontSize: 16),
                         )),
                       ),
                       Padding(
@@ -64,19 +64,18 @@ class _ApplyCouponState extends State<ApplyCoupon> {
                           ),
                         ),
                       ),
-                      if(invalidCoupon)
-                      Padding(
-                        padding: const EdgeInsets.only(top:20.0),
-                        child: Center(
-                            child: Text(
-                          "Invalid Code",
-                          style: TextStyle(
-                            fontFamily: "Poppins",
-                            fontSize: 16,
-                            color: Color(0xffDC0F21),
-                          ),
-                        )),
-                      ),
+                      if (invalidCoupon)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 20.0),
+                          child: Center(
+                              child: Text(
+                            "Invalid Code",
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Color(0xffDC0F21),
+                            ),
+                          )),
+                        ),
                       Padding(
                         padding: const EdgeInsets.all(20.0),
                         child: Center(

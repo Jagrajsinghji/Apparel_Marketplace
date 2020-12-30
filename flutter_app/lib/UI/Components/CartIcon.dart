@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/Bloc/CartBloc.dart';
+import 'package:flutter_app/UI/Dashboard/Cart/ShoppingBag.dart';
+import 'package:flutter_app/UI/Dashboard/Search/SearchProds.dart';
 import 'package:provider/provider.dart';
 
 class CartIcon extends StatefulWidget {
@@ -20,35 +22,43 @@ class _CartIconState extends State<CartIcon> {
             child: InkWell(
               focusColor: Colors.transparent,
               splashColor: Colors.transparent,
-              child: Stack(
-                children: [
-                  Center(
-                    child: Image.asset(
-                      "assets/cart.png",
-                      width: 20,
-                      height: 20,
-                    ),
-                  ),
-                  if (totalItems != 0)
-                    Positioned(
-                      top: 5,
-                      right: 0,
-                      child: Container(
-                        child: Padding(
-                          padding: const EdgeInsets.all(4.0),
-                          child: Text(
-                            "$totalItems",
-                            style: TextStyle(fontSize: 8),
-                          ),
-                        ),
-                        decoration: BoxDecoration(
-                            color: Color(0xffdc0f21), shape: BoxShape.circle),
+              child: Hero(
+                tag: "ShoppingBag",
+                child: Stack(
+                  children: [
+                    Center(
+                      child: Image.asset(
+                        "assets/cart.png",
+                        width: 20,
+                        height: 20,
                       ),
-                    )
-                ],
+                    ),
+                    if (totalItems != 0)
+                      Positioned(
+                        top: 5,
+                        right: 0,
+                        child: Container(
+                          child: Padding(
+                            padding: const EdgeInsets.all(4.0),
+                            child: Text(
+                              "$totalItems",
+                              style: TextStyle(fontSize: 8),
+                            ),
+                          ),
+                          decoration: BoxDecoration(
+                              color: Color(0xffdc0f21), shape: BoxShape.circle),
+                        ),
+                      )
+                  ],
+                ),
               ),
               onTap: () {
-                Navigator.pushNamed(context, "ShoppingBag");
+                Navigator.push(
+                    context,
+                    PageRouteBuilder(
+                        transitionDuration: Duration(seconds: 1),
+                        reverseTransitionDuration: Duration(milliseconds: 800),
+                        pageBuilder: (c, a, b) => ShoppingBag()));
               },
             ),
           ),

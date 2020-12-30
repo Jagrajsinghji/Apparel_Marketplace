@@ -53,7 +53,6 @@ class _Intro3State extends State<Intro3> {
                       style: TextStyle(
                         color: Color(0xff2c393f),
                         fontSize: 40,
-                        fontFamily: "Poppins",
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -81,7 +80,6 @@ class _Intro3State extends State<Intro3> {
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 14,
-                                fontFamily: "Poppins",
                                 fontWeight: FontWeight.w400,
                               ),
                             ),
