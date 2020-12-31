@@ -168,13 +168,14 @@ class CartBloc with ChangeNotifier {
       String couponCode,
       String couponDiscount,
       String couponId}) async {
-    Dio dio = Dio(Session.instance.baseOptions);
-    dio.interceptors.add(_dioInterceptor);
-    Response response = await dio.post(
-        "/api/cashon/delivery?personal_email=$personalEmail&personal_name=$personalName&personal_pass=$personalPass&user_id=$userId&totalQty=$totalQty&shipping=$shipping&pickup_location=$pickupLocation&email=$email&name=$name&tax=$tax&phone=$phone&total=$total&method=$method&personal_confirm=$personalConfirm&shipping_cost=$shippingCost&packing_cost=$packingCost&customer_country=$customerCountry&address=$address&city=$city&zip=$zip&vendor_shipping_id=$vendorShippingId&vendor_packing_id=$vendorPackingId&dp=$dp&coupon_code=$couponCode&coupon_discount=$couponDiscount&coupon_id=$couponId");
-    Session.instance.updateCookie(response);
-    await getCartItems();
-    notifyListeners();
-    return response;
+    // Dio dio = Dio(Session.instance.baseOptions);
+    // dio.interceptors.add(_dioInterceptor);
+    // Response response = await dio.post(
+    //     "/api/cashon/delivery?personal_email=$personalEmail&personal_name=$personalName&personal_pass=$personalPass&user_id=$userId&totalQty=$totalQty&shipping=$shipping&pickup_location=$pickupLocation&email=$email&name=$name&tax=$tax&phone=$phone&total=$total&method=$method&personal_confirm=$personalConfirm&shipping_cost=$shippingCost&packing_cost=$packingCost&customer_country=$customerCountry&address=$address&city=$city&zip=$zip&vendor_shipping_id=$vendorShippingId&vendor_packing_id=$vendorPackingId&dp=$dp&coupon_code=$couponCode&coupon_discount=$couponDiscount&coupon_id=$couponId");
+    // Session.instance.updateCookie(response);
+    // await getCartItems();
+    // notifyListeners();
+    // return response;
+    return null;
   }
 }

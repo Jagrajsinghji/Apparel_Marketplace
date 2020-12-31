@@ -98,7 +98,7 @@ class _ProductListWIthThumbnailState extends State<ProductListWIthThumbnail> {
                                         color: Colors.white,
                                         child: CachedNetworkImage(
                                           imageUrl:
-                                              "${Session.BASE_URL}/assets/images/thumbnails/${data['thumbnail']}",
+                                              "${Session.IMAGE_BASE_URL}/assets/images/thumbnails/${data['thumbnail']}",
                                         ),
                                       ),
                                     ),

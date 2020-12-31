@@ -90,14 +90,9 @@ class _CategoriesState extends State<Categories> {
                                   child: Container(
                                     color: Colors.white,
                                     child: CachedNetworkImage(
-                                      errorWidget: (c, w, e) {
-                                        ///TODO: change this to something else default
-                                        return Image.asset(
-                                          "assets/men.png",
-                                        );
-                                      },
                                       imageUrl:
-                                          "${Session.BASE_URL}/assets/images/categories/${data['photo'] ?? "1568878596home.jpg"}",
+                                      "${Session.IMAGE_BASE_URL}/assets/images/categories/${data['image']}",
+                                      fit: BoxFit.fill,
                                     ),
                                   ),
                                 ),

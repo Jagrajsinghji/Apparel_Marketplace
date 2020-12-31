@@ -158,14 +158,8 @@ class _HomeState extends State<Home> {
                                               BorderRadius.circular(100),
                                           child: Center(
                                             child: CachedNetworkImage(
-                                              errorWidget: (c, w, e) {
-                                                ///TODO: change this to something else default
-                                                return Image.asset(
-                                                  "assets/men.png",
-                                                );
-                                              },
                                               imageUrl:
-                                                  "${Session.BASE_URL}/assets/images/categories/${data['photo'] ?? "1568878596home.jpg"}",
+                                                  "${Session.IMAGE_BASE_URL}/assets/images/categories/${data['image']}",
                                               fit: BoxFit.fill,
                                             ),
                                           ),

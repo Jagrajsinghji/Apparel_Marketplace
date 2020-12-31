@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Session {
-  static const BASE_URL = "http://dev.wowfas.com/old";
+  static const BASE_URL = "https://wowfas.com/";
+  static const IMAGE_BASE_URL = "https://marketplace.wowfas.com";
   static GlobalKey<NavigatorState> navigatorKey = GlobalKey();
   static Session _constant = Session();
 
@@ -14,8 +15,6 @@ class Session {
 
   get baseOptions => BaseOptions(
         baseUrl: BASE_URL,
-        connectTimeout: 10000,
-        receiveTimeout: 12000,
       );
 
   Future<Map<String, String>> getHeaders() async {

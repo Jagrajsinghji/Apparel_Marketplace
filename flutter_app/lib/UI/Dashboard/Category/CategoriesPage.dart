@@ -331,143 +331,145 @@ class _CategoriesPageState extends State<CategoriesPage> {
                                   borderRadius: BorderRadius.circular(8),
                                   child: Hero(
                                     tag: tag,
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius:
-                                              BorderRadius.circular(8)),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Expanded(
-                                            flex: 1,
-                                            child: ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(8),
-                                              child: Container(
-                                                color: Colors.white,
-                                                child: CachedNetworkImage(
-                                                  imageUrl:
-                                                      "${Session.BASE_URL}/assets/images/thumbnails/${data['thumbnail']}",
+                                    child: Material(color: Colors.transparent,
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius:
+                                                BorderRadius.circular(8)),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Expanded(
+                                              flex: 1,
+                                              child: ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(8),
+                                                child: Container(
+                                                  color: Colors.white,
+                                                  child: CachedNetworkImage(
+                                                    imageUrl:
+                                                        "${Session.IMAGE_BASE_URL}/assets/images/thumbnails/${data['thumbnail']}",
+                                                  ),
                                                 ),
                                               ),
                                             ),
-                                          ),
-                                          Expanded(
-                                            flex: 0,
-                                            child: Padding(
-                                              padding: const EdgeInsets.only(
-                                                  left: 10.0),
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Expanded(
-                                                    child: Text(
-                                                      data['name'] ?? "",
-                                                      maxLines: 2,
-                                                      textAlign:
-                                                          TextAlign.start,
-                                                      style: TextStyle(
-                                                        color:
-                                                            Color(0xff515151),
-                                                        fontSize: 15,
-                                                        letterSpacing: 0.45,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            4.0),
-                                                    child: Row(
-                                                      children: [
-                                                        Text(
-                                                          "4.2",
-                                                          style: TextStyle(
-                                                            color: Color(
-                                                                0xff515151),
-                                                            fontSize: 12,
-                                                            letterSpacing: 0.24,
-                                                          ),
-                                                        ),
-                                                        Icon(
-                                                          Icons.star,
+                                            Expanded(
+                                              flex: 0,
+                                              child: Padding(
+                                                padding: const EdgeInsets.only(
+                                                    left: 10.0),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Expanded(
+                                                      child: Text(
+                                                        data['name'] ?? "",
+                                                        maxLines: 2,
+                                                        textAlign:
+                                                            TextAlign.start,
+                                                        style: TextStyle(
                                                           color:
-                                                              Color(0xffF2EB33),
-                                                          size: 16,
+                                                              Color(0xff515151),
+                                                          fontSize: 15,
+                                                          letterSpacing: 0.45,
                                                         ),
-                                                      ],
+                                                      ),
                                                     ),
-                                                  )
-                                                ],
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              4.0),
+                                                      child: Row(
+                                                        children: [
+                                                          Text(
+                                                            "4.2",
+                                                            style: TextStyle(
+                                                              color: Color(
+                                                                  0xff515151),
+                                                              fontSize: 12,
+                                                              letterSpacing: 0.24,
+                                                            ),
+                                                          ),
+                                                          Icon(
+                                                            Icons.star,
+                                                            color:
+                                                                Color(0xffF2EB33),
+                                                            size: 16,
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                          Expanded(
-                                            flex: 0,
-                                            child: Padding(
-                                              padding: const EdgeInsets.only(
-                                                  top: 10,
-                                                  left: 10.0,
-                                                  bottom: 10,
-                                                  right: 4),
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceEvenly,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.center,
-                                                children: [
-                                                  Expanded(
-                                                    child: Text(
-                                                      "\u20B9 ${data['price'].toString().substring(0, 4)}",
-                                                      maxLines: 1,
-                                                      style: TextStyle(
-                                                        fontSize: 15,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  if ((data['previous_price'] ??
-                                                          0) !=
-                                                      0)
+                                            Expanded(
+                                              flex: 0,
+                                              child: Padding(
+                                                padding: const EdgeInsets.only(
+                                                    top: 10,
+                                                    left: 10.0,
+                                                    bottom: 10,
+                                                    right: 4),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceEvenly,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
+                                                  children: [
                                                     Expanded(
                                                       child: Text(
-                                                        "\u20B9 ${data['previous_price'].toString().substring(0, 4)}",
+                                                        "\u20B9 ${data['price'].toString().substring(0, 4)}",
                                                         maxLines: 1,
                                                         style: TextStyle(
-                                                            fontSize: 15,
-                                                            color: Color(
-                                                                0xffA9A9A9),
-                                                            decoration:
-                                                                TextDecoration
-                                                                    .lineThrough),
+                                                          fontSize: 15,
+                                                        ),
                                                       ),
                                                     ),
-                                                  if ((data['is_discount'] ??
-                                                          0) >
-                                                      0)
-                                                    Expanded(
-                                                      child: Text(
-                                                        "${data['whole_sell_discount']}% Off",
-                                                        maxLines: 1,
-                                                        style: TextStyle(
-                                                            fontSize: 15,
-                                                            color: Color(
-                                                                0xffDC0F21)),
+                                                    if ((data['previous_price'] ??
+                                                            0) !=
+                                                        0)
+                                                      Expanded(
+                                                        child: Text(
+                                                          "\u20B9 ${data['previous_price'].toString().substring(0, 4)}",
+                                                          maxLines: 1,
+                                                          style: TextStyle(
+                                                              fontSize: 15,
+                                                              color: Color(
+                                                                  0xffA9A9A9),
+                                                              decoration:
+                                                                  TextDecoration
+                                                                      .lineThrough),
+                                                        ),
                                                       ),
-                                                    ),
-                                                ],
+                                                    if ((data['is_discount'] ??
+                                                            0) >
+                                                        0)
+                                                      Expanded(
+                                                        child: Text(
+                                                          "${data['whole_sell_discount']}% Off",
+                                                          maxLines: 1,
+                                                          style: TextStyle(
+                                                              fontSize: 15,
+                                                              color: Color(
+                                                                  0xffDC0F21)),
+                                                        ),
+                                                      ),
+                                                  ],
+                                                ),
                                               ),
-                                            ),
-                                          )
-                                        ],
+                                            )
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -580,8 +582,8 @@ class _CategoriesPageState extends State<CategoriesPage> {
     if (filtersGenerated) return;
     List brands = [], price = [], size = [], colors = [];
     prods.forEach((element) {
-      if (!brands.contains(element['user']['name'].toString()))
-        brands.add(element['user']['name'].toString());
+      if (!brands.contains(element['user']['shop_name'].toString()))
+        brands.add(element['user']['shop_name'].toString());
       if (!price.contains(element['price'])) price.add(element['price']);
       var color = element['color'].toString();
       if (color.trim().length > 0 && !colors.contains(color))

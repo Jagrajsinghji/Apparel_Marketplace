@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/Bloc/CartBloc.dart';
 import 'package:flutter_app/Bloc/ItemBloc.dart';
@@ -26,10 +25,25 @@ class _ItemPageState extends State<ItemPage> {
   String selectedSize = "";
   bool alreadyAdded = false, outOfStock = false;
   Map sizeMap = {};
+  PageController _galleryController = PageController();
+  GlobalKey _dotsKey = GlobalKey();
+
+  @override
+  void initState() {
+    super.initState();
+    _galleryController.addListener(() => _dotsKey.currentState);
+  }
+
+  @override
+  void dispose() {
+    _galleryController?.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     CartBloc _cartBloc = Provider.of<CartBloc>(context);
+    print("cdf");
     return Scaffold(
       backgroundColor: Color(0xffE5E5E5),
       appBar: AppBar(
@@ -125,8 +139,8 @@ class _ItemPageState extends State<ItemPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 20.0, bottom: 15),
+                              padding:
+                                  const EdgeInsets.only(left: 20.0, bottom: 15),
                               child: Container(
                                 decoration: BoxDecoration(
                                     color: Colors.grey,
@@ -136,8 +150,8 @@ class _ItemPageState extends State<ItemPage> {
                               ),
                             ),
                             Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 20.0),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20.0),
                               child: Wrap(
                                 alignment: WrapAlignment.start,
                                 crossAxisAlignment: WrapCrossAlignment.start,
@@ -146,32 +160,28 @@ class _ItemPageState extends State<ItemPage> {
                                 children: [
                                   Container(
                                     decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(4),
+                                        borderRadius: BorderRadius.circular(4),
                                         color: Colors.grey),
                                     width: 35,
                                     height: 35,
                                   ),
                                   Container(
                                     decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(4),
+                                        borderRadius: BorderRadius.circular(4),
                                         color: Colors.grey),
                                     width: 35,
                                     height: 35,
                                   ),
                                   Container(
                                     decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(4),
+                                        borderRadius: BorderRadius.circular(4),
                                         color: Colors.grey),
                                     width: 35,
                                     height: 35,
                                   ),
                                   Container(
                                     decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(4),
+                                        borderRadius: BorderRadius.circular(4),
                                         color: Colors.grey),
                                     width: 35,
                                     height: 35,
@@ -191,8 +201,8 @@ class _ItemPageState extends State<ItemPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 20.0, bottom: 10),
+                              padding:
+                                  const EdgeInsets.only(left: 20.0, bottom: 10),
                               child: Container(
                                 height: 25,
                                 width: 150,
@@ -268,8 +278,8 @@ class _ItemPageState extends State<ItemPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 20.0, bottom: 2),
+                              padding:
+                                  const EdgeInsets.only(left: 20.0, bottom: 2),
                               child: Text(
                                 "Easy 30 days return and exchange",
                                 style: TextStyle(
@@ -279,8 +289,8 @@ class _ItemPageState extends State<ItemPage> {
                               ),
                             ),
                             Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 20.0, right: 20),
+                              padding:
+                                  const EdgeInsets.only(left: 20.0, right: 20),
                               child: Text(
                                 "Choose to return or exchange for a different size (if available) within 30 days",
                               ),
@@ -318,56 +328,40 @@ class _ItemPageState extends State<ItemPage> {
             else {
               Map data = s.data.data ?? {};
               Map productData = data["product"];
-
               sizeMap = mapSizeToQty(productData);
               outOfStock =
                   ((sizeMap.values.every((element) => element == "0")) &&
                       (productData['stock'] == null));
               String itemId = productData['id'].toString() +
                   selectedSize.trim().replaceAll(" ", "-");
-              Map prods = (_cartBloc.cartData ?? {})['products'] ?? {};
-              alreadyAdded = prods.containsKey(itemId);
+              Map cartProds = (_cartBloc.cartData ?? {})['products'] ?? {};
+              alreadyAdded = cartProds.containsKey(itemId);
+              var vendorName = data['shop_name'];
+              double newPrice = double.parse(productData['price']?.toString());
+              double prevPrice = double.parse(
+                  productData['previous_price']?.toString() ?? "0");
+              int discount = 0;
+              if (prevPrice > 0)
+                discount = (((prevPrice - newPrice) / prevPrice) * 100).toInt();
+              double currency =
+                  double.parse(data['curr']['value']?.toString() ?? "68.5");
+              List gallery = data['galleries_images_array'];
               return ListView(
                 physics: BouncingScrollPhysics(),
                 shrinkWrap: true,
                 children: [
-                  Container(
-                    color: Colors.white,
-                    child: Stack(
-                      children: [
-                        Container(
-                          height: MediaQuery.of(context).size.height / 2.5,
-                          child: CachedNetworkImage(
-                            imageUrl:
-                                "${Session.BASE_URL}/assets/images/products/${productData['photo']}",
-                            fit: BoxFit.fitHeight,
-                            width: double.infinity,
-                          ),
-                        ),
-                        Positioned(
-                          bottom: 0,
-                          right: 10,
-                          child: Row(
-                            children: [
-                              Text(
-                                "4.2",
-                                style: TextStyle(
-                                  color: Color(0xff515151),
-                                  fontSize: 12,
-                                  letterSpacing: 0.24,
-                                ),
-                              ),
-                              Icon(
-                                Icons.star,
-                                color: Color(0xffF2EB33),
-                                size: 16,
-                              ),
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
+
+
+
+
+
+
+
+
+
+
+
+
                   Container(
                     color: Colors.white,
                     child: Column(
@@ -376,6 +370,17 @@ class _ItemPageState extends State<ItemPage> {
                         Padding(
                           padding: const EdgeInsets.only(
                               left: 20.0, top: 5, bottom: 5),
+                          child: Text(
+                            "$vendorName",
+                            style: TextStyle(
+                              color: Color(0xff515151),
+                              fontSize: 15,
+                              letterSpacing: 0.45,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 20.0, bottom: 5),
                           child: Text(
                             "${productData['name']}",
                             style: TextStyle(
@@ -389,36 +394,46 @@ class _ItemPageState extends State<ItemPage> {
                           padding: const EdgeInsets.only(
                               left: 20.0, top: 5, bottom: 5),
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Expanded(
+                                flex: 0,
                                 child: Text(
-                                  "\u20B9 ${productData['price'].toString().substring(0, 4)}",
+                                  "\u20B9 ${(newPrice * currency).ceil()}",
                                   maxLines: 1,
                                   style: TextStyle(
                                     fontSize: 15,
                                   ),
                                 ),
                               ),
-                              if ((productData['previous_price'] ?? 0) != 0)
+                              if (prevPrice != 0)
                                 Expanded(
-                                  child: Text(
-                                    "\u20B9 ${productData['previous_price'].toString().substring(0, 4)}",
-                                    maxLines: 1,
-                                    style: TextStyle(
-                                        fontSize: 15,
-                                        color: Color(0xffA9A9A9),
-                                        decoration: TextDecoration.lineThrough),
+                                  flex: 0,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left: 10.0),
+                                    child: Text(
+                                      "\u20B9 ${(prevPrice * currency).ceil()}",
+                                      maxLines: 1,
+                                      style: TextStyle(
+                                          fontSize: 15,
+                                          color: Color(0xffA9A9A9),
+                                          decoration:
+                                              TextDecoration.lineThrough),
+                                    ),
                                   ),
                                 ),
-                              if ((productData['is_discount'] ?? 0) > 0)
+                              if (discount > 0)
                                 Expanded(
-                                  child: Text(
-                                    "${productData['whole_sell_discount']}% Off",
-                                    maxLines: 1,
-                                    style: TextStyle(
-                                        fontSize: 15, color: Color(0xffDC0F21)),
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left: 10.0),
+                                    child: Text(
+                                      "$discount% Off",
+                                      maxLines: 1,
+                                      style: TextStyle(
+                                          fontSize: 15,
+                                          color: Color(0xffDC0F21)),
+                                    ),
                                   ),
                                 ),
                             ],
@@ -553,70 +568,74 @@ class _ItemPageState extends State<ItemPage> {
                         ),
                       ),
                     ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10),
-                    child: Container(
-                      color: Colors.white,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 10),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 20.0, bottom: 10),
-                              child: Text(
-                                "Check Delivery",
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 20),
-                              child: Container(
-                                height: 50,
-                                child: TextField(
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                  ),
-                                  decoration: InputDecoration(
-                                      hintText: "Enter PIN Code",
-                                      hintStyle: TextStyle(
-                                        color: Color(0xffdc0f21),
-                                        fontSize: 10,
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(4),
-                                          borderSide: BorderSide(
-                                              color: Color(0xff979797))),
-                                      enabledBorder: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(4),
-                                          borderSide: BorderSide(
-                                              color: Color(0xff979797)))),
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 20, right: 20, top: 10),
-                              child: Text(
-                                "Pay on delivery might be available\nTry & buy might be available",
-                                style: TextStyle(
-                                  color: Color(0xff969696),
-                                  fontSize: 10,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
+
+                  ///Check Delivery
+
+                  // Padding(
+                  //   padding: const EdgeInsets.only(top: 10),
+                  //   child: Container(
+                  //     color: Colors.white,
+                  //     child: Padding(
+                  //       padding: const EdgeInsets.symmetric(vertical: 10),
+                  //       child: Column(
+                  //         crossAxisAlignment: CrossAxisAlignment.start,
+                  //         children: [
+                  //           Padding(
+                  //             padding:
+                  //                 const EdgeInsets.only(left: 20.0, bottom: 10),
+                  //             child: Text(
+                  //               "Check Delivery",
+                  //               style: TextStyle(
+                  //                 color: Colors.black,
+                  //                 fontSize: 16,
+                  //               ),
+                  //             ),
+                  //           ),
+                  //           Padding(
+                  //             padding:
+                  //                 const EdgeInsets.symmetric(horizontal: 20),
+                  //             child: Container(
+                  //               height: 50,
+                  //               child: TextField(
+                  //                 style: TextStyle(
+                  //                   fontSize: 12,
+                  //                 ),
+                  //                 decoration: InputDecoration(
+                  //                     hintText: "Enter PIN Code",
+                  //                     hintStyle: TextStyle(
+                  //                       color: Color(0xffdc0f21),
+                  //                       fontSize: 10,
+                  //                     ),
+                  //                     focusedBorder: OutlineInputBorder(
+                  //                         borderRadius:
+                  //                             BorderRadius.circular(4),
+                  //                         borderSide: BorderSide(
+                  //                             color: Color(0xff979797))),
+                  //                     enabledBorder: OutlineInputBorder(
+                  //                         borderRadius:
+                  //                             BorderRadius.circular(4),
+                  //                         borderSide: BorderSide(
+                  //                             color: Color(0xff979797)))),
+                  //               ),
+                  //             ),
+                  //           ),
+                  //           Padding(
+                  //             padding: const EdgeInsets.only(
+                  //                 left: 20, right: 20, top: 10),
+                  //             child: Text(
+                  //               "Pay on delivery might be available\nTry & buy might be available",
+                  //               style: TextStyle(
+                  //                 color: Color(0xff969696),
+                  //                 fontSize: 10,
+                  //               ),
+                  //             ),
+                  //           ),
+                  //         ],
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
+
                   Padding(
                     padding: const EdgeInsets.only(top: 10.0),
                     child: Container(
@@ -627,27 +646,27 @@ class _ItemPageState extends State<ItemPage> {
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Expanded(
-                              child: Padding(
-                                padding: const EdgeInsets.only(right: 5.0),
-                                child: FlatButton(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                  color: Color(0xff7B8387),
-                                  height: 60,
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8)),
-                                  child: Text(
-                                    "Wishlist",
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 14,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
+                            // Expanded(
+                            //   child: Padding(
+                            //     padding: const EdgeInsets.only(right: 5.0),
+                            //     child: FlatButton(
+                            //       onPressed: () {
+                            //         Navigator.pop(context);
+                            //       },
+                            //       color: Color(0xff7B8387),
+                            //       height: 60,
+                            //       shape: RoundedRectangleBorder(
+                            //           borderRadius: BorderRadius.circular(8)),
+                            //       child: Text(
+                            //         "Wishlist",
+                            //         style: TextStyle(
+                            //           color: Colors.white,
+                            //           fontSize: 14,
+                            //         ),
+                            //       ),
+                            //     ),
+                            //   ),
+                            // ),
                             Expanded(
                               child: redButton(alreadyAdded, productData),
                             ),
@@ -656,6 +675,8 @@ class _ItemPageState extends State<ItemPage> {
                       ),
                     ),
                   ),
+
+                  ///Reviews
                   // Padding(
                   //   padding: const EdgeInsets.only(top: 10.0),
                   //   child: Container(
@@ -716,103 +737,17 @@ class _ItemPageState extends State<ItemPage> {
                   //     ),
                   //   ),
                   // ),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      top: 10.0,
-                    ),
-                    child: Container(
-                      color: Colors.white,
-                      child: Padding(
-                        padding: const EdgeInsets.only(
-                            left: 20.0, top: 10, bottom: 10),
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            "Seller's Products",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: Color(0xff727272),
-                              fontSize: 15,
-                              letterSpacing: 0.45,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
+
+                  ...products(
+                      data['similar_products'] ?? [], "Similar Products"),
+
+                  SizedBox(
+                    height: 20,
                   ),
-                  Container(
-                    height: 250,
-                    color: Colors.grey.shade200,
-                    child: ListView.builder(
-                        itemCount: data['vendors']?.length ?? 0,
-                        shrinkWrap: true,
-                        physics: BouncingScrollPhysics(),
-                        scrollDirection: Axis.horizontal,
-                        itemBuilder: (c, i) {
-                          Map prods = data['vendors'].elementAt(i) ?? {};
-                          String tag = prods['slug'] + "ItemsPage";
-                          return Padding(
-                            key: Key(prods['id']?.toString() ?? "$i"),
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 10, horizontal: 5),
-                            child: InkWell(
-                              onTap: () {
-                                Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (c) => ItemPage(
-                                          tag: tag,
-                                          itemSlug: prods['slug'],
-                                        )));
-                              },
-                              borderRadius: BorderRadius.circular(8),
-                              child: Container(
-                                width: 150,
-                                decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(8)),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Expanded(
-                                      flex: 1,
-                                      child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(8),
-                                        child: Container(
-                                          color: Colors.white,
-                                          child: CachedNetworkImage(
-                                            imageUrl:
-                                                "${Session.BASE_URL}/assets/images/thumbnails/${prods['thumbnail']}",
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    Expanded(
-                                        flex: 0,
-                                        child: Padding(
-                                          padding: const EdgeInsets.only(
-                                              left: 4.0,
-                                              right: 4,
-                                              top: 4,
-                                              bottom: 10),
-                                          child: Text(
-                                            "${prods['name']}",
-                                            maxLines: 2,
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                              color: Color(0xff727272),
-                                              fontSize: 12,
-                                              letterSpacing: 0.45,
-                                            ),
-                                          ),
-                                        )),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          );
-                        }),
-                  ),
+
+                  ...products(data['similar_brands'] ?? [],
+                      "More products by $vendorName"),
+
                   Padding(
                     padding: const EdgeInsets.only(top: 10.0),
                     child: Container(
@@ -959,5 +894,206 @@ class _ItemPageState extends State<ItemPage> {
         )
       ],
     );
+  }
+
+  List<Widget> products(List data, String name) {
+    return [
+      Padding(
+        padding: const EdgeInsets.only(
+          top: 10.0,
+        ),
+        child: Container(
+          color: Colors.white,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 20.0, top: 10, bottom: 10),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                "$name",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Color(0xff727272),
+                  fontSize: 15,
+                  letterSpacing: 0.45,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+      Container(
+        height: 250,
+        color: Colors.grey.shade200,
+        child: ListView.builder(
+            itemCount: data.length ?? 0,
+            shrinkWrap: true,
+            physics: BouncingScrollPhysics(),
+            scrollDirection: Axis.horizontal,
+            itemBuilder: (c, i) {
+              Map prods = data.elementAt(i) ?? {};
+              String tag = prods['slug'] + "ItemsPage";
+              return Padding(
+                key: Key(prods['id']?.toString() ?? "$i"),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
+                child: InkWell(
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (c) => ItemPage(
+                              tag: tag,
+                              itemSlug: prods['slug'],
+                            )));
+                  },
+                  borderRadius: BorderRadius.circular(8),
+                  child: Container(
+                    width: 150,
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(8)),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          flex: 1,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: Container(
+                              color: Colors.white,
+                              child: CachedNetworkImage(
+                                imageUrl:
+                                    "${Session.IMAGE_BASE_URL}/assets/images/thumbnails/${prods['thumbnail']}",
+                              ),
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                            flex: 0,
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 4.0, right: 4, top: 4, bottom: 10),
+                              child: Text(
+                                "${prods['name']}",
+                                maxLines: 2,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: Color(0xff727272),
+                                  fontSize: 12,
+                                  letterSpacing: 0.45,
+                                ),
+                              ),
+                            )),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            }),
+      ),
+    ];
+  }
+}
+
+class SliderDots extends StatefulWidget {
+  final int page, length;
+
+  const SliderDots({Key key, this.page, this.length}) : super(key: key);
+
+  @override
+  _SliderDotsState createState() => _SliderDotsState();
+}
+
+class _SliderDotsState extends State<SliderDots> {
+  @override
+  Widget build(BuildContext context) {
+
+   return  Container(
+      height: MediaQuery.of(context).size.height / 2.5,
+      color: Colors.white,
+      child: Stack(
+        children: [
+          PageView.builder(
+              controller: _galleryController,
+              itemCount: (gallery?.length ?? 0) + 1,
+              itemBuilder: (c, i) {
+                if (i == 0) {
+                  return CachedNetworkImage(
+                    imageUrl:
+                    "${Session.IMAGE_BASE_URL}/assets/images/products/${productData['photo']}",
+                    fit: BoxFit.fitHeight,
+                    width: double.infinity,
+                  );
+                }
+                i -= 1;
+                return CachedNetworkImage(
+                  imageUrl:
+                  "${Session.IMAGE_BASE_URL}/assets/images/galleries/${gallery.elementAt(i)}",
+                  fit: BoxFit.fitHeight,
+                  width: double.infinity,
+                );
+              }),
+          Positioned(
+            bottom: 20,
+            left: (MediaQuery.of(context).size.width / 2) -
+                (((widget.length) + 1) * 5),
+            child: Container(
+              height: 20,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemBuilder: (c, i) {
+                  if (widget.page == i)
+                    return Padding(
+                      padding: const EdgeInsets.all(2.0),
+                      child: Container(
+                        height: 6,
+                        width: 6,
+                        decoration: BoxDecoration(
+                            color: Colors.black, shape: BoxShape.circle),
+                      ),
+                    );
+                  else
+                    return Padding(
+                      padding: const EdgeInsets.all(2.0),
+                      child: Container(
+                        height: 6,
+                        width: 6,
+                        decoration: BoxDecoration(
+                            border: Border.all(
+                              color: Colors.black,
+                            ),
+                            shape: BoxShape.circle),
+                      ),
+                    );
+                },
+                itemCount: (widget.length) + 1,
+                shrinkWrap: true,
+              ),
+            ),
+          )
+          // Positioned(
+          //   bottom: 0,
+          //   right: 10,
+          //   child: Row(
+          //     children: [
+          //       Text(
+          //         "4.2",
+          //         style: TextStyle(
+          //           color: Color(0xff515151),
+          //           fontSize: 12,
+          //           letterSpacing: 0.24,
+          //         ),
+          //       ),
+          //       Icon(
+          //         Icons.star,
+          //         color: Color(0xffF2EB33),
+          //         size: 16,
+          //       ),
+          //     ],
+          //   ),
+          // )
+        ],
+      ),
+    );
+
   }
 }

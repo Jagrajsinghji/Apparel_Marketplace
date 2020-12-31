@@ -248,7 +248,7 @@ class _ShoppingBagState extends State<ShoppingBag> {
               height: double.maxFinite,
               child: CachedNetworkImage(
                 imageUrl:
-                    "${Session.BASE_URL}/assets/images/products/${details['item']['photo']}",
+                    "${Session.IMAGE_BASE_URL}/assets/images/products/${details['item']['photo']}",
                 fit: BoxFit.fitHeight,
               ),
               width: MediaQuery.of(context).size.width / 2.4,
