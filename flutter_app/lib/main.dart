@@ -14,6 +14,8 @@ import 'UI/Dashboard/Cart/ShoppingBag.dart';
 import 'UI/Dashboard/Dashboard.dart';
 import 'UI/Dashboard/Profile/Orders.dart';
 import "UI/SplashScreen.dart";
+import 'package:flutter_app/Bloc/OrdersBloc.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,6 +27,7 @@ void main() async {
       ChangeNotifierProvider<CartBloc>.value(value: CartBloc()),
       ChangeNotifierProvider<AuthBloc>.value(value: AuthBloc()),
       ChangeNotifierProvider<ScreenBloc>.value(value: ScreenBloc()),
+      ChangeNotifierProvider<OrdersBloc>.value(value: OrdersBloc()),
     ],
     child: MaterialApp(
       navigatorKey: Session.navigatorKey,

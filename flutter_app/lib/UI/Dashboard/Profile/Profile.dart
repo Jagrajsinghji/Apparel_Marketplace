@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/Bloc/AuthBloc.dart';
 import 'package:flutter_app/UI/SignInUp/SignIn.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Profile extends StatefulWidget {
   @override
@@ -68,7 +69,8 @@ class _ProfileState extends State<Profile> {
                   ),
                 ],
               );
-            else {
+            else
+              {
               return ListView(
                   physics: BouncingScrollPhysics(),
                   shrinkWrap: true,
@@ -102,7 +104,7 @@ class _ProfileState extends State<Profile> {
                                     )),
                               ),
                               Text(
-                                "Hello, ${snapshot.userData??""}",
+                                "Hello, ${snapshot.userData['name']??""}",
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 14,
@@ -135,8 +137,11 @@ class _ProfileState extends State<Profile> {
                       ),
                     ),
                     ListTile(
-                      onTap: () {
-                        Navigator.pushNamed(context, "HelpCenter");
+                      onTap: ()async {
+                        String url= "http://tickets.wowfas.com/help-center";
+                        if(await canLaunch(url)){
+                          await launch(url);
+                        }
                       },
                       title: Text(
                         "Help Center",
@@ -155,9 +160,14 @@ class _ProfileState extends State<Profile> {
                         ),
                       ),
                     ),
-                    ListTile(
+                    ListTile(onTap: ()async{
+                      String url= "https://wowfas.com/page/privacy-policy";
+                      if(await canLaunch(url)){
+                      await launch(url);
+                      }
+                    },
                       title: Text(
-                        "Wishlist",
+                        "Privacy Policy",
                         style: TextStyle(
                           color: Color(0xff9d9d9d),
                           fontSize: 14,
@@ -165,7 +175,7 @@ class _ProfileState extends State<Profile> {
                         ),
                       ),
                       subtitle: Text(
-                        "Your most loved style",
+                        "Have a look at our privacy policies",
                         style: TextStyle(
                           color: Color(0xff9d9d9d),
                           fontSize: 10,
@@ -173,9 +183,14 @@ class _ProfileState extends State<Profile> {
                         ),
                       ),
                     ),
-                    ListTile(
+                    ListTile(onTap: ()async {
+                      String url= "https://wowfas.com/page/terms-and-conditions";
+                      if(await canLaunch(url)){
+                        await launch(url);
+                      }
+                    },
                       title: Text(
-                        "Saved Cards",
+                        "Terms & Conditions",
                         style: TextStyle(
                           color: Color(0xff9d9d9d),
                           fontSize: 14,
@@ -183,7 +198,7 @@ class _ProfileState extends State<Profile> {
                         ),
                       ),
                       subtitle: Text(
-                        "Save your card for faster checkout",
+                        "Have you seen Our T&Cs ?",
                         style: TextStyle(
                           color: Color(0xff9d9d9d),
                           fontSize: 10,
@@ -191,48 +206,48 @@ class _ProfileState extends State<Profile> {
                         ),
                       ),
                     ),
-                    ListTile(
-                      title: Text(
-                        "Coupons",
-                        style: TextStyle(
-                          color: Color(0xff9d9d9d),
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                      subtitle: Text(
-                        "Manage Coupons for additional discounts",
-                        style: TextStyle(
-                          color: Color(0xff9d9d9d),
-                          fontSize: 10,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                    ),
-                    ListTile(
-                      onTap: () {
-
-                        // FirebaseAuth.instance.signOut();
-                        //
-                        // if (mounted) setState(() {});
-                      },
-                      title: Text(
-                        "LogOut",
-                        style: TextStyle(
-                          color: Color(0xff9d9d9d),
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                      subtitle: Text(
-                        "LogOut your account from this device.",
-                        style: TextStyle(
-                          color: Color(0xff9d9d9d),
-                          fontSize: 10,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                    ),
+                    // ListTile(
+                    //   title: Text(
+                    //     "Coupons",
+                    //     style: TextStyle(
+                    //       color: Color(0xff9d9d9d),
+                    //       fontSize: 14,
+                    //       fontWeight: FontWeight.w400,
+                    //     ),
+                    //   ),
+                    //   subtitle: Text(
+                    //     "Manage Coupons for additional discounts",
+                    //     style: TextStyle(
+                    //       color: Color(0xff9d9d9d),
+                    //       fontSize: 10,
+                    //       fontWeight: FontWeight.w400,
+                    //     ),
+                    //   ),
+                    // ),
+                    // ListTile(
+                    //   onTap: () {
+                    //
+                    //     // FirebaseAuth.instance.signOut();
+                    //     //
+                    //     // if (mounted) setState(() {});
+                    //   },
+                    //   title: Text(
+                    //     "LogOut",
+                    //     style: TextStyle(
+                    //       color: Color(0xff9d9d9d),
+                    //       fontSize: 14,
+                    //       fontWeight: FontWeight.w400,
+                    //     ),
+                    //   ),
+                    //   subtitle: Text(
+                    //     "LogOut your account from this device.",
+                    //     style: TextStyle(
+                    //       color: Color(0xff9d9d9d),
+                    //       fontSize: 10,
+                    //       fontWeight: FontWeight.w400,
+                    //     ),
+                    //   ),
+                    // ),
                   ]);
             }
           }),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:flutter_app/UI/Dashboard/Category/CategoriesPage.dart';
 
 class DealsPage extends StatefulWidget {
   @override
@@ -7,80 +7,246 @@ class DealsPage extends StatefulWidget {
 }
 
 class _DealsPageState extends State<DealsPage> {
-  List<String> banners = [
-    "1.jpg",
-    "2.jpg",
-    "3.jpg",
-    "4.jpg",
-    "5.jpg",
-    "6.jpg",
-    "800X250.jpg"
-  ];
+  Map<String, Widget> bannersLinks = {
+    "1.jpg": CategoriesPage(
+      tag: null, subCatName: "men-topwear",
+      categoryName: "men",
+    ),
+    "assets/Banners/Deal_Zone1.jpg": CategoriesPage(
+      tag: null,
+      subCatName: "womens-western-wear",
+      childCatName: "women-jackets-coats",
+      categoryName: "women",
+    ),
+    "assets/Banners/Deal_Zone2.jpg": CategoriesPage(
+      tag: null,
+      subCatName: "womens-western-wear",
+      childCatName: "cardigan",
+      categoryName: "women",
+    ),
+    "assets/Banners/Deal_Zone3.jpg": CategoriesPage(
+      tag: null,
+      subCatName: "boys-clothing",
+      childCatName: "jackets-sweater-and-sweatshirts",
+      categoryName: "kids",
+    ),
+    "assets/Banners/Deal_Zone4.jpg": CategoriesPage(
+      tag: null,
+      subCatName: "men-topwear",
+      childCatName: "men-t-shirts",
+      categoryName: "men",
+    ),
+    "2.jpg": CategoriesPage(
+      tag: null, subCatName: "men-topwear",
+      categoryName: "men",
+    ),
+    "assets/Banners/Deal_Zone5.jpg": CategoriesPage(
+      tag: null,
+      childCatName: "men-t-shirts",
+      subCatName: "men-topwear",
+      categoryName: "men",
+    ),
+    "assets/Banners/Deal_Zone6.jpg": CategoriesPage(
+      tag: null,
+      subCatName: "boys-clothing",
+      categoryName: "kids",
+    ),
+    "assets/Banners/Deal_Zone7.jpg": CategoriesPage(
+      tag: null,
+      subCatName: "boys-clothing",
+      categoryName: "kids",
+    ),
+    "assets/Banners/Deal_Zone8.jpg": CategoriesPage(
+      tag: null,
+      subCatName: "boys-clothing",
+      categoryName: "kids",
+    ),
+    "3.jpg": CategoriesPage(
+      tag: null,
+      subCatName: "men-topwear",
+      categoryName: "men",
+    ),
+    "assets/Banners/Deal_Zone9.jpg": CategoriesPage(
+      tag: null,
+      subCatName: "womens-western-wear",
+      childCatName: "dresses",
+      categoryName: "women",
+    ),
+    "assets/Banners/Deal_Zone10.jpg": CategoriesPage(
+      tag: null,
+      subCatName: "men-topwear",
+      childCatName: "men-t-shirts",
+      categoryName: "men",
+    ),
+    "assets/Banners/Deal_Zone11.jpg": CategoriesPage(
+      tag: null,
+      subCatName: "womens-sleepwear-and-lounge-wear",
+      childCatName: "womens-nightsuit-and-tracksuit",
+      categoryName: "women",
+    ),
+    "assets/Banners/Deal_Zone12.jpg": CategoriesPage(
+      tag: null,
+      subCatName: "womens-sleepwear-and-lounge-wear",
+      childCatName: "womens-nightsuit-and-tracksuit",
+      categoryName: "women",
+    ),
+    "4.jpg": CategoriesPage(
+      tag: null,
+      subCatName: "womens-western-wear",
+      categoryName: "women",
+    ),
+    "assets/Banners/Deal_Zone13.jpg": CategoriesPage(
+      tag: null,
+      subCatName: "womens-western-wear",
+      childCatName: "cardigan",
+      categoryName: "women",
+    ),
+    "assets/Banners/Deal_Zone14.jpg": CategoriesPage(
+      tag: null,
+      subCatName: "women-ethnic-wear",
+      childCatName: "women-saree",
+      categoryName: "women",
+    ),
+    "assets/Banners/Deal_Zone15.jpg": CategoriesPage(
+      tag: null,
+      categoryName: "kids",
+    ),
+    "assets/Banners/Deal_Zone16.jpg": CategoriesPage(
+      tag: null,
+      categoryName: "kids",
+    ),
+    "5.jpg": CategoriesPage(
+      tag: null,
+      subCatName: "womens-western-wear",
+      categoryName: "women",
+    ),
+    "assets/Banners/Deal_Zone17.jpg": CategoriesPage(
+      tag: null,
+      categoryName: "kids",
+    ),
+    "assets/Banners/Deal_Zone18.jpg": CategoriesPage(
+      tag: null,
+      categoryName: "kids",
+    ),
+    "assets/Banners/Deal_Zone19.jpg": CategoriesPage(
+      tag: null,
+      categoryName: "kids",
+    ),
+    "assets/Banners/Deal_Zone20.jpg": CategoriesPage(
+      tag: null,
+      categoryName: "kids",
+    ),
+    "6.jpg": CategoriesPage(
+      tag: null,
+
+      categoryName: "women",
+    ),
+    "assets/Banners/Deal_Zone21.jpg": CategoriesPage(
+      tag: null,
+      categoryName: "women",
+    ),
+    "assets/Banners/Deal_Zone22.jpg": CategoriesPage(
+      tag: null,
+      subCatName: "womens-western-wear",
+      categoryName: "women",
+    ),
+    "800X250.jpg": CategoriesPage(
+      tag: null,
+      categoryName: "kids",
+    )
+  };
+  int i = 0;
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Color(0xffE5E5E5),
-        body: ListView(
-          physics: BouncingScrollPhysics(),
-          shrinkWrap: true,
+    return ListView(
+      physics: BouncingScrollPhysics(),
+      shrinkWrap: true,
+      children: [
+        // InkWell(
+        //   onTap: () async {
+        //     PickedFile file = await ImagePicker().getImage(
+        //       source: ImageSource.camera,
+        //     );
+        //     if (file != null) {
+        //       showDialog(
+        //           context: context,
+        //           child: AlertDialog(
+        //             title: Text("Your request is being processed by us."),
+        //             content: Text(
+        //                 "Please wait! After processing your request your account will be credited with WOWFAS Points. "),
+        //           ));
+        //     }
+        //   },
+        //   child: Padding(
+        //     padding: const EdgeInsets.symmetric(vertical: 20),
+        //     child: Container(
+        //       color: Colors.white,
+        //       height: 80,
+        //       child: Row(
+        //         mainAxisAlignment: MainAxisAlignment.center,
+        //         children: [
+        //           Expanded(
+        //               flex: 0,
+        //               child: Padding(
+        //                 padding: const EdgeInsets.symmetric(horizontal: 20),
+        //                 child: Icon(Icons.camera),
+        //               )),
+        //           Expanded(
+        //               flex: 1,
+        //               child: Text(
+        //                 "Scan your bills\n&\nGet 10% upto \u20B9 100 ",
+        //                 style: TextStyle(fontSize: 16),
+        //               ))
+        //         ],
+        //       ),
+        //     ),
+        //   ),
+        // ),
+        Wrap(
+          crossAxisAlignment: WrapCrossAlignment.center,
+          alignment: WrapAlignment.center,
           children: [
-            InkWell(
-              onTap: () async {
-                PickedFile file = await ImagePicker().getImage(
-                  source: ImageSource.camera,
-                );
-                if (file != null) {
-                  showDialog(
-                      context: context,
-                      child: AlertDialog(
-                        title: Text("Your request is being processed by us."),
-                        content: Text(
-                            "Please wait! After processing your request your account will be credited with WOWFAS Points. "),
-                      ));
-                }
-              },
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 20),
-                child: Container(
-                  color: Colors.white,
-                  height: 80,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Expanded(
-                          flex: 0,
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 20),
-                            child: Icon(Icons.camera),
-                          )),
-                      Expanded(
-                          flex: 1,
-                          child: Text(
-                            "Scan your bills\n&\nGet 10% upto \u20B9 100 ",
-                            style: TextStyle(fontSize: 16),
-                          ))
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            ListView.builder(
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              itemCount: banners.length,
-              itemBuilder: (BuildContext context, int index) {
+            ...List.generate(bannersLinks.length, (index) {
+              String element = bannersLinks.entries.elementAt(index).key;
+              Widget widget = bannersLinks.entries.elementAt(index).value;
+              if (element.contains("Deal_Zone"))
                 return Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Image.asset(
-                      "assets/DealsBanners/${banners.elementAt(index)}"),
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (c) => widget));
+                    },
+                    child: Container(
+                      width: MediaQuery.of(context).size.width / 2.5,
+                      child: Image.asset("$element"),
+                    ),
+                  ),
                 );
-              },
-            ),
+              else
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (c) => widget));
+                    },
+                    child: Image.asset("assets/DealsBanners/$element"),
+                  ),
+                );
+            })
           ],
         ),
-      ),
+        // .builder(gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+        // shrinkWrap: true,
+        // physics: NeverScrollableScrollPhysics(),
+        // itemCount: 21,
+        // itemBuilder: (BuildContext context, int index) {
+        //
+        // },
+        // ),
+      ],
     );
   }
 }

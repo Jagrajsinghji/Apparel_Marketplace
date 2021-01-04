@@ -40,11 +40,11 @@ class ProductsBloc with ChangeNotifier {
   }
 
   Future<Response> getProductsByCategoryName(
-    String name,
+    String name,{int page}
   ) async {
     Dio dio = Dio(Session.instance.baseOptions);
     dio.interceptors.add(_dioInterceptor);
-    Response response = await dio.get("/api/category/$name/null/null");
+    Response response = await dio.get("/api/category/$name/null/null?page=$page");
     Session.instance.updateCookie(response);
     return response;
   }
@@ -52,11 +52,12 @@ class ProductsBloc with ChangeNotifier {
   Future<Response> getProductsBySubCategoryName(
     String categoryName,
     String subcategoryName,
+  {int page}
   ) async {
     Dio dio = Dio(Session.instance.baseOptions);
     dio.interceptors.add(_dioInterceptor);
     Response response =
-        await dio.get("/api/category/$categoryName/$subcategoryName/null");
+        await dio.get("/api/category/$categoryName/$subcategoryName/null?page=$page");
     Session.instance.updateCookie(response);
     return response;
   }
@@ -64,12 +65,12 @@ class ProductsBloc with ChangeNotifier {
   Future<Response> getProductsByChildCategoryName(
     String categoryName,
     String subcategoryName,
-    String childCategoryName,
+    String childCategoryName,{int page}
   ) async {
     Dio dio = Dio(Session.instance.baseOptions);
     dio.interceptors.add(_dioInterceptor);
     Response response = await dio
-        .get("/api/category/$categoryName/$subcategoryName/$childCategoryName");
+        .get("/api/category/$categoryName/$subcategoryName/$childCategoryName?page=$page");
     Session.instance.updateCookie(response);
     return response;
   }

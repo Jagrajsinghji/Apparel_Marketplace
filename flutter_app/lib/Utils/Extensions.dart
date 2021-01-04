@@ -3,6 +3,7 @@ import 'package:flutter_app/Bloc/AuthBloc.dart';
 import 'package:flutter_app/Bloc/CartBloc.dart';
 import 'package:flutter_app/Bloc/CategoryBloc.dart';
 import 'package:flutter_app/Bloc/ProductsBloc.dart';
+import 'package:flutter_app/Bloc/OrdersBloc.dart';
 import 'package:provider/provider.dart';
 
 extension intToBool on int {
@@ -14,9 +15,11 @@ void refreshBlocs(BuildContext context) {
   CategoryBloc categoryBloc = Provider.of<CategoryBloc>(context, listen: false);
   CartBloc cartBloc = Provider.of<CartBloc>(context, listen: false);
   AuthBloc authBloc = Provider.of<AuthBloc>(context, listen: false);
+  OrdersBloc orderBloc = Provider.of<OrdersBloc>(context, listen: false);
   productsBloc.getHomePage();
   productsBloc.getHomePageExtras();
   categoryBloc.getAllCategories();
   cartBloc.getCartItems();
-  // authBloc.getUserProfile();
+  authBloc.getUserProfile();
+  orderBloc.getMyOrders();
 }

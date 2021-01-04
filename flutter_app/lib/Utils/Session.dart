@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Session {
-  static const BASE_URL = "https://wowfas.com/";
+  static const BASE_URL = "https://wowfas.com";
   static const IMAGE_BASE_URL = "https://marketplace.wowfas.com";
   static GlobalKey<NavigatorState> navigatorKey = GlobalKey();
   static Session _constant = Session();

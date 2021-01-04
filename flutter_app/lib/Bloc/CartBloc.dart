@@ -34,7 +34,6 @@ class CartBloc with ChangeNotifier {
     dio.interceptors.add(_dioInterceptor);
     Response response = await dio.get("/api/addcart/$itemID");
     Session.instance.updateCookie(response);
-
     await getCartItems();
     return response;
   }
@@ -61,6 +60,7 @@ class CartBloc with ChangeNotifier {
     if (((response.data['data'] ?? {})['item'] ?? {})['id'] == itemId) {
       Fluttertoast.showToast(msg: "Item Added To Cart");
     }
+    notifyListeners();
     return response;
   }
 
@@ -91,10 +91,11 @@ class CartBloc with ChangeNotifier {
     await getCartItems();
     if (response.data['data'] is String) {
       if (response.data['data'].toString().contains("greater than size qty"))
-        Fluttertoast.showToast(msg: "Can not add more items.");
+        Fluttertoast.showToast(msg: "Item out of stock.");
     } else if (response.data['data'] is Map) {
       Fluttertoast.showToast(msg: "Item added successfully.");
     }
+    notifyListeners();
     return response;
   }
 
@@ -116,13 +117,15 @@ class CartBloc with ChangeNotifier {
     } else if (response.data['data'] is Map) {
       Fluttertoast.showToast(msg: "Item removed successfully.");
     }
+    notifyListeners();
     return response;
   }
 
   Future<Response> getCheckOutItems() async {
     Dio dio = Dio(Session.instance.baseOptions);
     dio.interceptors.add(_dioInterceptor);
-    Response response = await dio.get("/api/checkout/view");
+    String token =await Session.instance.getToken();
+    Response response = await dio.get("/api/checkout/view",options: Options(headers: {"Authorization":"Bearer $token"}));
     Session.instance.updateCookie(response);
     return response;
   }
@@ -168,14 +171,14 @@ class CartBloc with ChangeNotifier {
       String couponCode,
       String couponDiscount,
       String couponId}) async {
-    // Dio dio = Dio(Session.instance.baseOptions);
-    // dio.interceptors.add(_dioInterceptor);
-    // Response response = await dio.post(
-    //     "/api/cashon/delivery?personal_email=$personalEmail&personal_name=$personalName&personal_pass=$personalPass&user_id=$userId&totalQty=$totalQty&shipping=$shipping&pickup_location=$pickupLocation&email=$email&name=$name&tax=$tax&phone=$phone&total=$total&method=$method&personal_confirm=$personalConfirm&shipping_cost=$shippingCost&packing_cost=$packingCost&customer_country=$customerCountry&address=$address&city=$city&zip=$zip&vendor_shipping_id=$vendorShippingId&vendor_packing_id=$vendorPackingId&dp=$dp&coupon_code=$couponCode&coupon_discount=$couponDiscount&coupon_id=$couponId");
-    // Session.instance.updateCookie(response);
-    // await getCartItems();
-    // notifyListeners();
-    // return response;
-    return null;
+    Dio dio = Dio(Session.instance.baseOptions);
+    dio.interceptors.add(_dioInterceptor);
+    String token =await Session.instance.getToken();
+    Response response = await dio.post(
+          "/api/cashon/delivery?personal_email=$personalEmail&personal_name=$personalName&personal_pass=$personalPass&user_id=$userId&totalQty=$totalQty&shipping=$shipping&pickup_location=$pickupLocation&email=$email&name=$name&tax=$tax&phone=$phone&total=$total&method=$method&personal_confirm=$personalConfirm&shipping_cost=$shippingCost&packing_cost=$packingCost&customer_country=$customerCountry&address=$address&city=$city&zip=$zip&vendor_shipping_id=$vendorShippingId&vendor_packing_id=$vendorPackingId&dp=$dp&coupon_code=$couponCode&coupon_discount=$couponDiscount&coupon_id=$couponId",options: Options(headers: {"Authorization":"Bearer $token"}));
+    Session.instance.updateCookie(response);
+    await getCartItems();
+    notifyListeners();
+    return response;
   }
 }

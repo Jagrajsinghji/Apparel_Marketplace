@@ -3,12 +3,16 @@ import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/Bloc/CartBloc.dart';
+import 'package:flutter_app/Bloc/AuthBloc.dart';
 import 'package:flutter_app/Utils/Extensions.dart';
 import 'package:flutter_app/Utils/Session.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:flutter_app/UI/SignInUp/SignIn.dart';
 
 import 'CheckOut.dart';
+import 'package:flutter_app/UI/Dashboard/Item/ItemPage.dart';
 
 class ShoppingBag extends StatefulWidget {
   @override
@@ -18,7 +22,6 @@ class ShoppingBag extends StatefulWidget {
 class _ShoppingBagState extends State<ShoppingBag> {
   RefreshController _refreshController =
       RefreshController(initialRefresh: false);
-
   bool isLoading = false;
 
   @override
@@ -112,10 +115,30 @@ class _ShoppingBagState extends State<ShoppingBag> {
                         padding: const EdgeInsets.all(20.0),
                         child: InkWell(
                           borderRadius: BorderRadius.circular(600),
-                          onTap: () {
+                          onTap: ()async {
                             // Fluttertoast.showToast(msg: "Still in Development");
-                            Navigator.push(context,
-                                PageRouteBuilder(reverseTransitionDuration: Duration(milliseconds: 800),transitionDuration: Duration(milliseconds: 800),pageBuilder:  (c,a,b) => CheckOut()));
+                            if (mounted)
+                              setState(() {
+                                isLoading = true;
+                              });
+                            AuthBloc _authBloc = Provider.of<AuthBloc>(context, listen: false);
+                            if (_authBloc.userData.length > 0) {
+                                  Navigator.push(context,
+                                      PageRouteBuilder(reverseTransitionDuration: Duration(milliseconds: 800),transitionDuration: Duration(milliseconds: 800),pageBuilder:  (c,a,b) => CheckOut()));
+                            } else {
+                              await Navigator.push(
+                                  context, MaterialPageRoute(builder: (c) => SignIn()));
+                              AuthBloc _authBloc1 = Provider.of<AuthBloc>(context, listen: false);
+                              if (_authBloc1.userData.length > 0) {
+                                Navigator.push(context,
+                                    PageRouteBuilder(reverseTransitionDuration: Duration(milliseconds: 800),transitionDuration: Duration(milliseconds: 800),pageBuilder:  (c,a,b) => CheckOut()));
+                              } else
+                                Fluttertoast.showToast(msg: "Please Login To Proceed");
+                            }
+                            if (mounted)
+                              setState(() {
+                                isLoading = false;
+                              });
                           },
                           child: Hero(tag: "CheckOUtTag",
                             child: Material(color: Colors.transparent,
@@ -237,6 +260,12 @@ class _ShoppingBagState extends State<ShoppingBag> {
   }
 
   Widget productTile(String key, Map details, CartBloc snapshot) {
+    double newPrice =
+    double.parse(details['price']?.toString());
+    //TODO: ask ravjot to send currency value
+    double currency =
+    68.5;
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 10),
       child: Container(
@@ -244,14 +273,18 @@ class _ShoppingBagState extends State<ShoppingBag> {
         color: Colors.white,
         child: Row(
           children: [
-            Container(
-              height: double.maxFinite,
-              child: CachedNetworkImage(
-                imageUrl:
-                    "${Session.IMAGE_BASE_URL}/assets/images/products/${details['item']['photo']}",
-                fit: BoxFit.fitHeight,
+            InkWell(onTap: (){
+              Navigator.push(context, MaterialPageRoute(builder: (c)=>ItemPage(tag: details['item']['slug']+"shoppingBag",itemSlug: details['item']['slug'],)));
+            },
+              child: Container(
+                height: double.maxFinite,
+                child: CachedNetworkImage(
+                  imageUrl:
+                      "${Session.IMAGE_BASE_URL}/assets/images/products/${details['item']['photo']}",
+                  fit: BoxFit.fitHeight,
+                ),
+                width: MediaQuery.of(context).size.width / 2.4,
               ),
-              width: MediaQuery.of(context).size.width / 2.4,
             ),
             Expanded(
               child: Padding(
@@ -519,40 +552,12 @@ class _ShoppingBagState extends State<ShoppingBag> {
                     ),
                     Expanded(
                       flex: 0,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Expanded(
-                            child: Text(
-                              "\u20B9 ${details['price'].toString()}",
-                              maxLines: 1,
-                              style: TextStyle(
-                                fontSize: 15,
-                              ),
-                            ),
-                          ),
-                          if ((details['previous_price'] ?? 0) != 0)
-                            Expanded(
-                              child: Text(
-                                "\u20B9 ${details['previous_price'].toString()}",
-                                maxLines: 1,
-                                style: TextStyle(
-                                    fontSize: 15,
-                                    color: Color(0xffA9A9A9),
-                                    decoration: TextDecoration.lineThrough),
-                              ),
-                            ),
-                          if ((details['is_discount'] ?? 0) > 0)
-                            Expanded(
-                              child: Text(
-                                "${details['whole_sell_discount']}% Off",
-                                maxLines: 1,
-                                style: TextStyle(
-                                    fontSize: 15, color: Color(0xffDC0F21)),
-                              ),
-                            ),
-                        ],
+                      child: Text(
+                        "\u20B9 ${(newPrice * currency).ceil()}",
+                        maxLines: 1,
+                        style: TextStyle(
+                          fontSize: 15,
+                        ),
                       ),
                     ),
                     Expanded(

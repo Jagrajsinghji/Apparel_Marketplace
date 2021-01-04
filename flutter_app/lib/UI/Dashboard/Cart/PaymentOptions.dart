@@ -19,6 +19,7 @@ class _PaymentOptionsState extends State<PaymentOptions> {
   int paymentOption;
   double total;
   bool loading = false;
+double currency = 68.5;
 
   @override
   Widget build(BuildContext context) {
@@ -239,7 +240,7 @@ class _PaymentOptionsState extends State<PaymentOptions> {
                                         ),
                                       ),
                                       Text(
-                                        "\u20B9 ${data["totalMRP"]}",
+                                        "\u20B9 ${(data["totalMRP"] *currency).ceil()}",
                                         style: TextStyle(
                                           color: Color(0xff7f7f7f),
                                           fontSize: 14,
@@ -268,7 +269,7 @@ class _PaymentOptionsState extends State<PaymentOptions> {
                                           ),
                                         ),
                                         Text(
-                                          "-\u20B9 ${data["couponDiscount"]}",
+                                          "-\u20B9 ${(data["couponDiscount"]*currency).ceil()}",
                                           style: TextStyle(
                                             color: Color(0xff05B90D),
                                             fontSize: 14,
@@ -296,7 +297,7 @@ class _PaymentOptionsState extends State<PaymentOptions> {
                                         ),
                                       ),
                                       Text(
-                                        "\u20B9 ${data["shippingCost"]}",
+                                        "\u20B9 ${(data["shippingCost"]*currency).ceil()}",
                                         style: TextStyle(
                                           color: Color(0xff7f7f7f),
                                           fontSize: 14,
@@ -324,7 +325,7 @@ class _PaymentOptionsState extends State<PaymentOptions> {
                                         ),
                                       ),
                                       Text(
-                                        "\u20B9 ${data["packingCost"]}",
+                                        "\u20B9 ${(data["packingCost"]*currency).ceil()}",
                                         style: TextStyle(
                                           color: Color(0xff7f7f7f),
                                           fontSize: 14,
@@ -356,7 +357,7 @@ class _PaymentOptionsState extends State<PaymentOptions> {
                                         ),
                                       ),
                                       Text(
-                                        "\u20B9 $total",
+                                        "\u20B9 ${(total*currency).ceil()}",
                                         style: TextStyle(
                                           color: Color(0xff515151),
                                           fontSize: 14,
@@ -417,11 +418,11 @@ class _PaymentOptionsState extends State<PaymentOptions> {
     Response resp = await _cBloc.placeCashOnDeliveryOrder(
       address: data['address'],
       city: data['city'],
-      couponCode: data['couponCode'],
+      couponCode: data['couponCode'].toString(),
       couponDiscount: data['couponDiscount'].toString(),
-      couponId: data['couponId'],
+      couponId: data['couponId'].toString(),
       customerCountry: "India",
-      vendorPackingId: data['vendorPackingId'],
+      vendorPackingId: data['vendorPackingId'].toString(),
       dp: "0",
       email: data['personalEmail'],
       method: "cashondelivery",
@@ -431,7 +432,7 @@ class _PaymentOptionsState extends State<PaymentOptions> {
       personalEmail: data['personalEmail'],
       personalName: data['personalName'],
       personalPass: null,
-      phone: data['phone'],
+      phone: data['phone'].toString(),
       pickupLocation: null,
       shipping: "shipto",
       shippingCost: data['shippingCost'].toString(),
@@ -439,8 +440,8 @@ class _PaymentOptionsState extends State<PaymentOptions> {
       total: "$total",
       totalQty: data['totalQty'].toString(),
       userId: data['userId'].toString(),
-      vendorShippingId: data['vendorShippingId'],
-      zip: data['zip'],
+      vendorShippingId: data['vendorShippingId'].toString(),
+      zip: data['zip'].toString(),
     );
     if (mounted)
       setState(() {
@@ -448,7 +449,6 @@ class _PaymentOptionsState extends State<PaymentOptions> {
       });
     if (resp.data is Map && resp.data.containsKey('order')) {
       Map data = resp.data['order'] ?? {};
-
       Navigator.pushAndRemoveUntil(
           context,
           PageRouteBuilder(

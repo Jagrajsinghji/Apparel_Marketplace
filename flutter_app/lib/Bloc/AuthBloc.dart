@@ -69,7 +69,9 @@ Future<Response> login(
   dio.options.headers.addAll({"Accept": "application/json"});
   dio.interceptors.add(_dioInterceptor);
   Response response = await dio.post(
-    "${Session.BASE_URL}/api/user/login?email=$email&password=$password",
+    "${Session.BASE_URL}/api/user/login",data: {
+    "email":email,"password":password
+  }
   );
   Session.instance.updateCookie(response);
   if(response.data is Map &&response.data.length>0){

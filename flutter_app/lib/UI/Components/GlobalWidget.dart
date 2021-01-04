@@ -10,32 +10,90 @@ _bottomNav(BuildContext context, {VoidCallback voidCallback}) {
       padding: const EdgeInsets.only(bottom: 5),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          InkWell(
-            onTap: () {
-              screenBloc.setPage(0);
-              voidCallback();
-            },
-            child: Container(
-              width: 60,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                      flex: 0,
-                      child: Image.asset("assets/wowIcon.png",
-                          height: 35, width: 35)),
-                  Expanded(flex: 0,child: Text("Home"))
-                ],
+          Padding(
+            padding: const EdgeInsets.only(left:35.0),
+            child: InkWell(
+              onTap: () {
+                screenBloc.setPage(0);
+                voidCallback();
+              },
+              child: Container(
+                width: 60,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                        flex: 0,
+                        child: Image.asset("assets/wowIcon.png",
+                            height: 35, width: 35)),
+                    Expanded(flex: 0,child: Text("Home"))
+                  ],
+                ),
               ),
             ),
           ),
+          // Padding(
+          //   padding: const EdgeInsets.only(right: 20),
+          //   child: InkWell(
+          //     onTap: () {
+          //       screenBloc.setPage(1);
+          //       voidCallback();
+          //     },
+          //     child: Container(
+          //       width: 60,
+          //       child: Column(
+          //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //         children: [
+          //           Expanded(
+          //             flex: 0,
+          //             child: Padding(
+          //               padding: const EdgeInsets.only(top: 10),
+          //               child: Image.asset(
+          //                 "assets/shirtIcon.png",
+          //                 height: 25,
+          //                 width: 25,
+          //               ),
+          //             ),
+          //           ),
+          //           Expanded(flex: 0,child: Text("Fashion"))
+          //         ],
+          //       ),
+          //     ),
+          //   ),
+          // ),
+          // Padding(
+          //   padding: const EdgeInsets.only(left: 20.0),
+          //   child: InkWell(
+          //     onTap: () {
+          //       screenBloc.setPage(3);
+          //       voidCallback();
+          //     },
+          //     child: Container(
+          //       width: 60,
+          //       child: Column(
+          //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //         children: [
+          //           Expanded(
+          //             flex: 0,
+          //             child: Padding(
+          //               padding: const EdgeInsets.only(top: 8),
+          //               child: Image.asset("assets/explore.png",
+          //                   height: 27, width: 27),
+          //             ),
+          //           ),
+          //           Expanded(flex: 0,child: Text("Explore"))
+          //         ],
+          //       ),
+          //     ),
+          //   ),
+          // ),
           Padding(
-            padding: const EdgeInsets.only(right: 20),
+            padding: const EdgeInsets.only(right:35.0),
             child: InkWell(
               onTap: () {
-                screenBloc.setPage(1);
+                screenBloc.setPage(4);
                 voidCallback();
               },
               child: Container(
@@ -48,67 +106,15 @@ _bottomNav(BuildContext context, {VoidCallback voidCallback}) {
                       child: Padding(
                         padding: const EdgeInsets.only(top: 10),
                         child: Image.asset(
-                          "assets/shirtIcon.png",
-                          height: 25,
-                          width: 25,
+                          "assets/user.png",
+                          height: 22,
+                          width: 22,
                         ),
                       ),
                     ),
-                    Expanded(flex: 0,child: Text("Fashion"))
+                    Expanded(flex: 0,child: Text("Profile"))
                   ],
                 ),
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 20.0),
-            child: InkWell(
-              onTap: () {
-                screenBloc.setPage(3);
-                voidCallback();
-              },
-              child: Container(
-                width: 60,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      flex: 0,
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 8),
-                        child: Image.asset("assets/explore.png",
-                            height: 27, width: 27),
-                      ),
-                    ),
-                    Expanded(flex: 0,child: Text("Explore"))
-                  ],
-                ),
-              ),
-            ),
-          ),
-          InkWell(
-            onTap: () {
-              screenBloc.setPage(4);
-              voidCallback();
-            },
-            child: Container(
-              width: 60,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    flex: 0,
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 10),
-                      child: Image.asset(
-                        "assets/user.png",
-                        height: 22,
-                        width: 22,
-                      ),
-                    ),
-                  ),
-                  Expanded(flex: 0,child: Text("Profile"))
-                ],
               ),
             ),
           ),

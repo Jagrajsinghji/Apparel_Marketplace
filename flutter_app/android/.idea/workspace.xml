@@ -7,50 +7,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="62e79510-9853-41a3-a2ac-f031a598d163" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/app/src/main/ic_launcher-playstore.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../assets/appIcon.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../assets/backArrow.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../assets/cart.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../assets/chairIcon.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../assets/explore.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../assets/facebook.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../assets/favourite.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../assets/google.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../assets/hidePass.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../assets/intro1.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../assets/intro2.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../assets/intro3.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../assets/lock.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../assets/logo.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../assets/notification.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../assets/search.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../assets/seePass1.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../assets/shirtIcon.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../assets/user.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../assets/wowIcon.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../lib/Bloc/AuthBloc.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../lib/UI/Dashboard/DashDrawer.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../lib/UI/Dashboard/Dashboard.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../lib/UI/Dashboard/Profile/Profile.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../lib/UI/Intro/Intro1.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../lib/UI/Intro/Intro2.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../lib/UI/Intro/Intro3.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../lib/UI/SignInUp/ForgotPassword1.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../lib/UI/SignInUp/ForgotPassword2.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../lib/UI/SignInUp/ForgotPassword3.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../lib/UI/SignInUp/SignIn.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../lib/UI/SignInUp/SignUp.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../lib/UI/SplashScreen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/mipmap-hdpi/ic_launcher.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/mipmap-hdpi/ic_launcher.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/mipmap-mdpi/ic_launcher.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/mipmap-mdpi/ic_launcher.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/mipmap-xhdpi/ic_launcher.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/mipmap-xhdpi/ic_launcher.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/mipmap-xxhdpi/ic_launcher.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/mipmap-xxhdpi/ic_launcher.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../lib/main.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../pubspec.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/../pubspec.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test/widget_test.dart" beforeDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../featuredBanner.png" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -64,7 +21,7 @@
     </projectState>
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
   </component>
   <component name="ProjectId" id="1lKNAANusWNdwFKR3ZU9qTCFSFn" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -164,9 +121,9 @@
     <servers />
   </component>
   <component name="WindowStateProjectService">
-    <state x="463" y="119" key="FileChooserDialogImpl" timestamp="1607342258095">
+    <state x="463" y="119" key="FileChooserDialogImpl" timestamp="1609765493939">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="463" y="119" key="FileChooserDialogImpl/0.0.1366.728@0.0.1366.728" timestamp="1607342258095" />
+    <state x="463" y="119" key="FileChooserDialogImpl/0.0.1366.728@0.0.1366.728" timestamp="1609765493939" />
   </component>
 </project>

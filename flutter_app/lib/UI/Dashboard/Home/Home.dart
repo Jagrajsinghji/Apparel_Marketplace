@@ -133,7 +133,7 @@ class _HomeState extends State<Home> {
                                     transitionDuration: Duration(seconds: 1),
                                     reverseTransitionDuration:
                                         Duration(milliseconds: 800),
-                                    pageBuilder: (c, a, b) => CategoriesPage(
+                                    pageBuilder: (c, a, b) =>   CategoriesPage(
                                           tag: data['slug'] + "toptag",
                                           categoryName: data['slug'],
                                         )));
@@ -256,25 +256,25 @@ class _HomeState extends State<Home> {
                         slivers: [
                           if (slider)
                             Sliders(
-                              height: 200,
+                              height: 200,numb: 0,
                               duration: Duration(seconds: 3),
                               slidersData: resp1Data['sliders'],
                               picsPath: "sliders",
                             ),
 
-                          if (partners)
-                            Brands(
-                              scrollController: _scrollController,
-                              brandsData: resp2Data['partners'],
-                            ),
+                          // if (partners)
+                          //   Brands(
+                          //     scrollController: _scrollController,
+                          //     brandsData: resp2Data['partners'],
+                          //   ),
 
-                          if (topSmallBanner)
-                            Sliders(
-                              height: 250,
-                              duration: Duration(milliseconds: 500, seconds: 3),
-                              slidersData: resp1Data['top_small_banners'],
-                              picsPath: "banners",
-                            ),
+                          // if (topSmallBanner)
+                          //   Sliders(numb: 1,
+                          //     height: 250,
+                          //     duration: Duration(milliseconds: 500, seconds: 3),
+                          //     slidersData: resp1Data['top_small_banners'],
+                          //     picsPath: "banners",
+                          //   ),
 
                           /// Latest Products
                           ProductGridWIthThumbnail(
@@ -289,9 +289,17 @@ class _HomeState extends State<Home> {
                               Padding(
                                 padding:
                                     const EdgeInsets.only(top: 20, bottom: 10),
-                                child: CachedNetworkImage(
-                                  imageUrl:
-                                      "${Session.BASE_URL}/assets/images/banners/${(largeBannersData[0] ?? {})['photo']}",
+                                child: InkWell(onTap: (){
+                                  Navigator.push(
+                                      context, MaterialPageRoute(builder: (c) => CategoriesPage(
+                                    tag: null,
+                                    categoryName: "women",
+                                  )));
+                                },
+                                  child: CachedNetworkImage(
+                                    imageUrl:
+                                        "${Session.BASE_URL}/assets/images/banners/${(largeBannersData[0] ?? {})['photo']}",
+                                  ),
                                 ),
                               ),
                             ])),
@@ -318,9 +326,18 @@ class _HomeState extends State<Home> {
                               Padding(
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 10),
-                                child: CachedNetworkImage(
-                                  imageUrl:
-                                      "${Session.BASE_URL}/assets/images/$bigSaveBanner",
+                                child: InkWell(onTap: (){
+                                  Navigator.push(
+                                      context, MaterialPageRoute(builder: (c) => CategoriesPage(
+                                    tag: null,
+                                    categoryName: "men",subCatName: "mens-footwear",
+                                    childCatName: "mens-sport-shoes",
+                                  )));
+                                },
+                                  child: CachedNetworkImage(
+                                    imageUrl:
+                                        "${Session.BASE_URL}/assets/images/$bigSaveBanner",
+                                  ),
                                 ),
                               ),
                             ])),
@@ -344,9 +361,17 @@ class _HomeState extends State<Home> {
                               Padding(
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 10),
-                                child: CachedNetworkImage(
-                                  imageUrl:
-                                      "${Session.BASE_URL}/assets/images/$bigSaveBanner1",
+                                child: InkWell(onTap: (){
+                                  Navigator.push(
+                                      context, MaterialPageRoute(builder: (c) => CategoriesPage(
+                                    tag: null,
+                                    categoryName: "women",
+                                  )));
+                                },
+                                  child: CachedNetworkImage(
+                                    imageUrl:
+                                        "${Session.BASE_URL}/assets/images/$bigSaveBanner1",
+                                  ),
                                 ),
                               ),
                             ])),
@@ -365,7 +390,7 @@ class _HomeState extends State<Home> {
                             ),
 
                           if (bottomSmallBanner)
-                            Sliders(
+                            Sliders(numb: 2,
                               height: 400,
                               duration: Duration(seconds: 4),
                               slidersData: resp2Data['bottom_small_banners'],
@@ -391,9 +416,13 @@ class _HomeState extends State<Home> {
                               Padding(
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 10),
-                                child: CachedNetworkImage(
-                                  imageUrl:
-                                      "${Session.BASE_URL}/assets/images/banners/${(largeBannersData[1] ?? {})['photo']}",
+                                child: InkWell(onTap: (){
+
+                                },
+                                  child: CachedNetworkImage(
+                                    imageUrl:
+                                        "${Session.BASE_URL}/assets/images/banners/${(largeBannersData[1] ?? {})['photo']}",
+                                  ),
                                 ),
                               ),
                             ])),

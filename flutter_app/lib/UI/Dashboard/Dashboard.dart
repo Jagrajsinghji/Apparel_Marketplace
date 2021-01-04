@@ -69,29 +69,29 @@ class _DashboardState extends State<Dashboard> {
                         ),
                       ),
                 actions: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: InkWell(
-                      focusColor: Colors.transparent,
-                      splashColor: Colors.transparent,
-                      child: Hero(tag: "SearchTag",
-                        child: Image.asset(
-                          "assets/search.png",
-                          width: 20,
-                          height: 20,
-                        ),
-                      ),
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            PageRouteBuilder(
-                                transitionDuration: Duration(seconds: 1),
-                                reverseTransitionDuration:
-                                    Duration(milliseconds: 800),
-                                pageBuilder: (c, a, b) => SearchProds()));
-                      },
-                    ),
-                  ),
+                  // Padding(
+                  //   padding: const EdgeInsets.all(8.0),
+                  //   child: InkWell(
+                  //     focusColor: Colors.transparent,
+                  //     splashColor: Colors.transparent,
+                  //     child: Hero(tag: "SearchTag",
+                  //       child: Image.asset(
+                  //         "assets/search.png",
+                  //         width: 20,
+                  //         height: 20,
+                  //       ),
+                  //     ),
+                  //     onTap: () {
+                  //       Navigator.push(
+                  //           context,
+                  //           PageRouteBuilder(
+                  //               transitionDuration: Duration(seconds: 1),
+                  //               reverseTransitionDuration:
+                  //                   Duration(milliseconds: 800),
+                  //               pageBuilder: (c, a, b) => SearchProds()));
+                  //     },
+                  //   ),
+                  // ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: InkWell(
@@ -116,43 +116,43 @@ class _DashboardState extends State<Dashboard> {
                       },
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: InkWell(
-                      focusColor: Colors.transparent,
-                      splashColor: Colors.transparent,
-                      child: Hero(
-                        tag: "WishList",
-                        child: Image.asset(
-                          "assets/favourite.png",
-                          width: 20,
-                          height: 20,
-                        ),
-                      ),
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            PageRouteBuilder(
-                                transitionDuration: Duration(seconds: 1),
-                                reverseTransitionDuration:
-                                    Duration(milliseconds: 800),
-                                pageBuilder: (c, a, b) => WishList()));
-                      },
-                    ),
-                  ),
+                  // Padding(
+                  //   padding: const EdgeInsets.all(8.0),
+                  //   child: InkWell(
+                  //     focusColor: Colors.transparent,
+                  //     splashColor: Colors.transparent,
+                  //     child: Hero(
+                  //       tag: "WishList",
+                  //       child: Image.asset(
+                  //         "assets/favourite.png",
+                  //         width: 20,
+                  //         height: 20,
+                  //       ),
+                  //     ),
+                  //     onTap: () {
+                  //       Navigator.push(
+                  //           context,
+                  //           PageRouteBuilder(
+                  //               transitionDuration: Duration(seconds: 1),
+                  //               reverseTransitionDuration:
+                  //                   Duration(milliseconds: 800),
+                  //               pageBuilder: (c, a, b) => WishList()));
+                  //     },
+                  //   ),
+                  // ),
                   CartIcon()
                 ],
                 iconTheme: IconThemeData(color: Colors.black),
               ),
-        drawer: page == 0 ? DashDrawer() : null,
+        drawer: page != 4 ? DashDrawer() : null,
         body: page == 0
             ? Home()
-            : page == 1
-                ? Fashion()
+            // : page == 1
+            //     ? Fashion()
                 : page == 2
                     ? DealsPage()
-                    : page == 3
-                        ? Explore()
+                    // : page == 3
+                    //     ? Explore()
                         : Profile(),
         bottomNavigationBar: bottomNavigation(context, voidCallback: () {}),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/Utils/Session.dart';
-
+import 'package:dio/dio.dart';
+import 'package:flutter_app/Bloc/OrdersBloc.dart';
+import 'package:provider/provider.dart';
 class Orders extends StatefulWidget {
   @override
   _OrdersState createState() => _OrdersState();
@@ -9,6 +11,7 @@ class Orders extends StatefulWidget {
 class _OrdersState extends State<Orders> {
   @override
   Widget build(BuildContext context) {
+    OrdersBloc _orderBloc = Provider.of<OrdersBloc>(context);
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -22,7 +25,7 @@ class _OrdersState extends State<Orders> {
         iconTheme: IconThemeData(color: Colors.black),
       ),
       backgroundColor: Colors.white,
-      body: Column(
+      body: _orderBloc.myOrders.length==0?Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -85,7 +88,11 @@ class _OrdersState extends State<Orders> {
             ),
           ),
         ],
-      ),
+      ):
+      ListView.builder(itemCount: _orderBloc.myOrders.length,itemBuilder: (c,i){
+        Map order = _orderBloc.myOrders.elementAt(i);
+        return ListTile(title: Text("$order"),);
+      }),
     );
   }
 }

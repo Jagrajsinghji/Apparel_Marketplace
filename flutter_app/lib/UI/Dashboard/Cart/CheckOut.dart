@@ -13,8 +13,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-import 'ApplyCoupon.dart';
-
 class CheckOut extends StatefulWidget {
   @override
   _CheckOutState createState() => _CheckOutState();
@@ -83,7 +81,8 @@ class _CheckOutState extends State<CheckOut> {
                       double.parse(data['totalMRP']?.toString() ?? "0");
                   List shippingData = data['shipping_data'] ?? [];
                   List packageData = data['package_data'] ?? [];
-
+//TODO: ask ravjot to send currency
+                  double currency = 68.5;
                   if (_cartBloc.couponData.length > 0)
                     couponAmt = double.parse(
                         _cartBloc.couponData['coupon_amt']?.toString() ?? "0");
@@ -140,85 +139,85 @@ class _CheckOutState extends State<CheckOut> {
                               }).toList(),
 
                               /// Apply Coupon
-                              if (_cartBloc.couponData.length == 0)
-                                Padding(
-                                  padding: const EdgeInsets.only(bottom: 10.0),
-                                  child: Container(
-                                    color: Colors.white,
-                                    child: ListTile(
-                                      onTap: () {
-                                        Navigator.of(context).push(
-                                            PageRouteBuilder(
-                                                opaque: false,
-                                                pageBuilder: (c, a, b) =>
-                                                    ApplyCoupon(
-                                                      totalPrice:
-                                                          totalMRP.toString(),
-                                                    )));
-                                      },
-                                      leading: Container(
-                                          width: 25,
-                                          height: 25,
-                                          child: Image.asset(
-                                              "assets/freshTag.png")),
-                                      title: Text(
-                                        "Apply Coupons",
-                                        style: TextStyle(
-                                          color: Color(0xff515151),
-                                          fontSize: 15,
-                                          letterSpacing: 0.45,
-                                        ),
-                                      ),
-                                      trailing: Icon(
-                                        Icons.arrow_forward_ios,
-                                        size: 15,
-                                      ),
-                                    ),
-                                  ),
-                                )
-                              else
-                                Padding(
-                                  padding: const EdgeInsets.only(bottom: 10.0),
-                                  child: Container(
-                                    color: Colors.white,
-                                    child: ListTile(
-                                      onTap: () async {
-                                        Navigator.of(context).push(
-                                            PageRouteBuilder(
-                                                opaque: false,
-                                                pageBuilder: (c, a, b) =>
-                                                    ApplyCoupon(
-                                                      totalPrice:
-                                                          totalMRP.toString(),
-                                                    )));
-                                      },
-                                      leading: Container(
-                                          width: 25,
-                                          height: 25,
-                                          child: Image.asset(
-                                              "assets/freshTag.png")),
-                                      title: Text(
-                                        "${_cartBloc.couponData['coupon_code']}",
-                                        style: TextStyle(
-                                          color: Color(0xff515151),
-                                          fontSize: 15,
-                                          letterSpacing: 0.45,
-                                        ),
-                                      ),
-                                      subtitle: Text(
-                                        "Coupon Applied",
-                                        style: TextStyle(
-                                            color: Color(0xff515151),
-                                            letterSpacing: 0.45,
-                                            fontSize: 10),
-                                      ),
-                                      trailing: Icon(
-                                        Icons.arrow_forward_ios,
-                                        size: 15,
-                                      ),
-                                    ),
-                                  ),
-                                ),
+                              // if (_cartBloc.couponData.length == 0)
+                              //   Padding(
+                              //     padding: const EdgeInsets.only(bottom: 10.0),
+                              //     child: Container(
+                              //       color: Colors.white,
+                              //       child: ListTile(
+                              //         onTap: () {
+                              //           Navigator.of(context).push(
+                              //               PageRouteBuilder(
+                              //                   opaque: false,
+                              //                   pageBuilder: (c, a, b) =>
+                              //                       ApplyCoupon(
+                              //                         totalPrice:
+                              //                             totalMRP.toString(),
+                              //                       )));
+                              //         },
+                              //         leading: Container(
+                              //             width: 25,
+                              //             height: 25,
+                              //             child: Image.asset(
+                              //                 "assets/freshTag.png")),
+                              //         title: Text(
+                              //           "Apply Coupons",
+                              //           style: TextStyle(
+                              //             color: Color(0xff515151),
+                              //             fontSize: 15,
+                              //             letterSpacing: 0.45,
+                              //           ),
+                              //         ),
+                              //         trailing: Icon(
+                              //           Icons.arrow_forward_ios,
+                              //           size: 15,
+                              //         ),
+                              //       ),
+                              //     ),
+                              //   )
+                              // else
+                              //   Padding(
+                              //     padding: const EdgeInsets.only(bottom: 10.0),
+                              //     child: Container(
+                              //       color: Colors.white,
+                              //       child: ListTile(
+                              //         onTap: () async {
+                              //           Navigator.of(context).push(
+                              //               PageRouteBuilder(
+                              //                   opaque: false,
+                              //                   pageBuilder: (c, a, b) =>
+                              //                       ApplyCoupon(
+                              //                         totalPrice:
+                              //                             totalMRP.toString(),
+                              //                       )));
+                              //         },
+                              //         leading: Container(
+                              //             width: 25,
+                              //             height: 25,
+                              //             child: Image.asset(
+                              //                 "assets/freshTag.png")),
+                              //         title: Text(
+                              //           "${_cartBloc.couponData['coupon_code']}",
+                              //           style: TextStyle(
+                              //             color: Color(0xff515151),
+                              //             fontSize: 15,
+                              //             letterSpacing: 0.45,
+                              //           ),
+                              //         ),
+                              //         subtitle: Text(
+                              //           "Coupon Applied",
+                              //           style: TextStyle(
+                              //               color: Color(0xff515151),
+                              //               letterSpacing: 0.45,
+                              //               fontSize: 10),
+                              //         ),
+                              //         trailing: Icon(
+                              //           Icons.arrow_forward_ios,
+                              //           size: 15,
+                              //         ),
+                              //       ),
+                              //     ),
+                              //   ),
 
                               /// Shipping Data
                               if (shippingData.length > 0)
@@ -253,7 +252,7 @@ class _CheckOutState extends State<CheckOut> {
                                                 },
                                               ),
                                               trailing: Text(
-                                                "\u20B9 ${sd['price']}",
+                                                "\u20B9 ${(double.parse(sd['price'].toString()) * currency).ceil()}",
                                                 style: TextStyle(
                                                   color: Color(0xff515151),
                                                   fontSize: 15,
@@ -324,7 +323,7 @@ class _CheckOutState extends State<CheckOut> {
                                                 },
                                               ),
                                               trailing: Text(
-                                                "\u20B9 ${pd['price']}",
+                                                "\u20B9 ${(double.parse(pd['price'].toString()) * currency).ceil()}",
                                                 style: TextStyle(
                                                   color: Color(0xff515151),
                                                   fontSize: 15,
@@ -399,7 +398,7 @@ class _CheckOutState extends State<CheckOut> {
                                                 ),
                                               ),
                                               Text(
-                                                "\u20B9 $totalMRP",
+                                                "\u20B9 ${(totalMRP * currency).ceil()}",
                                                 style: TextStyle(
                                                   color: Color(0xff7f7f7f),
                                                   fontSize: 14,
@@ -409,59 +408,59 @@ class _CheckOutState extends State<CheckOut> {
                                             ],
                                           ),
                                         ),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 10),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: [
-                                              Text(
-                                                "Coupon Discount",
-                                                style: TextStyle(
-                                                  color: Color(0xff7f7f7f),
-                                                  fontSize: 14,
-                                                  letterSpacing: 0.42,
-                                                ),
-                                              ),
-                                              if (_cartBloc.couponData.length ==
-                                                  0)
-                                                InkWell(
-                                                  onTap: () async {
-                                                    Navigator.of(context).push(
-                                                        PageRouteBuilder(
-                                                            opaque: false,
-                                                            pageBuilder:
-                                                                (c, a, b) =>
-                                                                    ApplyCoupon(
-                                                                      totalPrice:
-                                                                          totalMRP
-                                                                              .toString(),
-                                                                    )));
-                                                  },
-                                                  child: Text(
-                                                    "Apply Coupon",
-                                                    style: TextStyle(
-                                                      color: Color(0xffFF1D1D),
-                                                      fontSize: 14,
-                                                      letterSpacing: 0.42,
-                                                    ),
-                                                  ),
-                                                )
-                                              else
-                                                Text(
-                                                  "-\u20B9 $couponAmt",
-                                                  style: TextStyle(
-                                                    color: Color(0xff05B90D),
-                                                    fontSize: 14,
-                                                    letterSpacing: 0.42,
-                                                  ),
-                                                ),
-                                            ],
-                                          ),
-                                        ),
+                                        // Padding(
+                                        //   padding: const EdgeInsets.symmetric(
+                                        //       vertical: 10),
+                                        //   child: Row(
+                                        //     mainAxisAlignment:
+                                        //         MainAxisAlignment.spaceBetween,
+                                        //     crossAxisAlignment:
+                                        //         CrossAxisAlignment.center,
+                                        //     children: [
+                                        //       Text(
+                                        //         "Coupon Discount",
+                                        //         style: TextStyle(
+                                        //           color: Color(0xff7f7f7f),
+                                        //           fontSize: 14,
+                                        //           letterSpacing: 0.42,
+                                        //         ),
+                                        //       ),
+                                        //       if (_cartBloc.couponData.length ==
+                                        //           0)
+                                        //         InkWell(
+                                        //           onTap: () async {
+                                        //             Navigator.of(context).push(
+                                        //                 PageRouteBuilder(
+                                        //                     opaque: false,
+                                        //                     pageBuilder:
+                                        //                         (c, a, b) =>
+                                        //                             ApplyCoupon(
+                                        //                               totalPrice:
+                                        //                                   totalMRP
+                                        //                                       .toString(),
+                                        //                             )));
+                                        //           },
+                                        //           child: Text(
+                                        //             "Apply Coupon",
+                                        //             style: TextStyle(
+                                        //               color: Color(0xffFF1D1D),
+                                        //               fontSize: 14,
+                                        //               letterSpacing: 0.42,
+                                        //             ),
+                                        //           ),
+                                        //         )
+                                        //       else
+                                        //         Text(
+                                        //           "-\u20B9 $couponAmt",
+                                        //           style: TextStyle(
+                                        //             color: Color(0xff05B90D),
+                                        //             fontSize: 14,
+                                        //             letterSpacing: 0.42,
+                                        //           ),
+                                        //         ),
+                                        //     ],
+                                        //   ),
+                                        // ),
                                         Padding(
                                           padding: const EdgeInsets.symmetric(
                                               vertical: 10),
@@ -480,7 +479,7 @@ class _CheckOutState extends State<CheckOut> {
                                                 ),
                                               ),
                                               Text(
-                                                "\u20B9 $shippingAmt",
+                                                "\u20B9 ${(shippingAmt * currency).ceil()}",
                                                 style: TextStyle(
                                                   color: Color(0xff7f7f7f),
                                                   fontSize: 14,
@@ -508,7 +507,7 @@ class _CheckOutState extends State<CheckOut> {
                                                 ),
                                               ),
                                               Text(
-                                                "\u20B9 $packingAmt",
+                                                "\u20B9 ${(packingAmt * currency).ceil()}",
                                                 style: TextStyle(
                                                   color: Color(0xff7f7f7f),
                                                   fontSize: 14,
@@ -540,7 +539,7 @@ class _CheckOutState extends State<CheckOut> {
                                                 ),
                                               ),
                                               Text(
-                                                "\u20B9 ${totalMRP + shippingAmt + packingAmt - couponAmt}",
+                                                "\u20B9 ${((totalMRP + shippingAmt + packingAmt - couponAmt) * currency).ceil()}",
                                                 style: TextStyle(
                                                   color: Color(0xff515151),
                                                   fontSize: 14,
@@ -680,6 +679,10 @@ class _CheckOutState extends State<CheckOut> {
   }
 
   Widget productTile(String key, Map details, CartBloc _cartBloc) {
+    double newPrice = double.parse(details['price']?.toString());
+    //TODO: ask ravjot to send currency value
+    double currency = 68.5;
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 10),
       child: Container(
@@ -962,40 +965,12 @@ class _CheckOutState extends State<CheckOut> {
                     ),
                     Expanded(
                       flex: 0,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Expanded(
-                            child: Text(
-                              "\u20B9 ${details['price'].toString()}",
-                              maxLines: 1,
-                              style: TextStyle(
-                                fontSize: 15,
-                              ),
-                            ),
-                          ),
-                          if ((details['previous_price'] ?? 0) != 0)
-                            Expanded(
-                              child: Text(
-                                "\u20B9 ${details['previous_price'].toString()}",
-                                maxLines: 1,
-                                style: TextStyle(
-                                    fontSize: 15,
-                                    color: Color(0xffA9A9A9),
-                                    decoration: TextDecoration.lineThrough),
-                              ),
-                            ),
-                          if ((details['is_discount'] ?? 0) > 0)
-                            Expanded(
-                              child: Text(
-                                "${details['whole_sell_discount']}% Off",
-                                maxLines: 1,
-                                style: TextStyle(
-                                    fontSize: 15, color: Color(0xffDC0F21)),
-                              ),
-                            ),
-                        ],
+                      child: Text(
+                        "\u20B9 ${(newPrice * currency).ceil()}",
+                        maxLines: 1,
+                        style: TextStyle(
+                          fontSize: 15,
+                        ),
                       ),
                     ),
                     Expanded(

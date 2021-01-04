@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/UI/Dashboard/Category/CategoriesPage.dart';
 import 'package:flutter_app/Utils/Session.dart';
 
 class Sliders extends StatefulWidget {
@@ -9,14 +10,16 @@ class Sliders extends StatefulWidget {
   final String picsPath;
   final double height;
   final Duration duration;
+  final int numb;
 
-  const Sliders(
-      {Key key,
-      this.slidersData = const [],
-      this.picsPath,
-      this.height,
-      this.duration = const Duration(seconds: 3)})
-      : super(key: key);
+  const Sliders({
+    Key key,
+    this.slidersData = const [],
+    this.picsPath,
+    this.height,
+    this.duration = const Duration(seconds: 3),
+    this.numb,
+  }) : super(key: key);
 
   @override
   _SlidersState createState() => _SlidersState();
@@ -78,15 +81,69 @@ class _SlidersState extends State<Sliders> with TickerProviderStateMixin {
             controller: _pageController,
             itemBuilder: (c, i) {
               Map data = widget.slidersData.elementAt(i) ?? {};
-              return CachedNetworkImage(
-                errorWidget: (c, e, d) {
-                  return Center(child: Text("Error Loading File"));
+              Widget _widget;
+              return InkWell(
+                onTap: () {
+                  switch (widget.numb) {
+                    case 0:
+                      _widget = CategoriesPage(
+                        tag: null,
+                        subCatName: "womens-western-wear",
+                        childCatName: "cardigan",
+                        categoryName: "women",
+                      );
+                      break;
+                    case 1:
+                      if(i==0)
+                        _widget = CategoriesPage(
+                          tag: null,
+                          categoryName: "women",
+                          subCatName: "womens-western-wear",
+                        );
+                     else
+                        _widget = CategoriesPage(
+                          tag: null,
+                          categoryName: "men",
+                          subCatName: "men-topwear",
+                          childCatName: "men-t-shirts",
+                        );
+                      break;
+                    default:
+                      if(i==0)
+                        _widget = CategoriesPage(
+                          tag: null,
+                          categoryName: "women",
+                          subCatName: "women-ethnic-wear",
+                          childCatName: "kurti-and-kurti-set",
+                        );
+
+                      else if(i==2)
+                      _widget = CategoriesPage(
+                        tag: null,
+                        categoryName: "women",
+                        subCatName: "womens-western-wear",
+                        childCatName: "cardigan",
+                      );else
+                        _widget = CategoriesPage(
+                          tag: null,
+                          categoryName: "men",
+                          subCatName: "men-topwear",
+                          childCatName: "men-t-shirts",
+                        );
+                  }
+                  Navigator.push(
+                      context, MaterialPageRoute(builder: (c) => _widget));
                 },
-                width: double.infinity,
-                height: widget.height,
-                imageUrl:
-                    "${Session.BASE_URL}/assets/images/${widget.picsPath}/${data['photo']}",
-                fit: BoxFit.fitHeight,
+                child: CachedNetworkImage(
+                  errorWidget: (c, e, d) {
+                    return Center(child: Text("Error Loading File"));
+                  },
+                  width: double.infinity,
+                  height: widget.height,
+                  imageUrl:
+                      "${Session.BASE_URL}/assets/images/${widget.picsPath}/${data['photo']}",
+                  fit: BoxFit.fitHeight,
+                ),
               );
             },
           ),
