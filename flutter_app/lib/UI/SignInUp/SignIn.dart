@@ -408,14 +408,14 @@ class _SignInState extends State<SignIn> {
          else
           throw DioError(
               type: DioErrorType.RESPONSE,
-              response: Response(data: {"message": "", "code": 102}));
+              response: Response(data: {"error": "", "code": 102}));
       } on DioError catch (error) {
         var data = error.response.data;
         print(data);
         if (data is Map) {
-          var msg = data['message'];
+          var msg = data['error'];
           var code = data['code'] ?? "";
-          if (msg.toString().toLowerCase().contains("Unauthorised"))
+          if (msg.toString().contains("Unauthorised"))
             errorMessage = "Invalid Credentials.";
           else
             errorMessage =

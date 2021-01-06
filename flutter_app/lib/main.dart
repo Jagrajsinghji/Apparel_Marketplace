@@ -12,7 +12,7 @@ import 'Bloc/CategoryBloc.dart';
 import 'Bloc/ScreenBloc.dart';
 import 'UI/Dashboard/Cart/ShoppingBag.dart';
 import 'UI/Dashboard/Dashboard.dart';
-import 'UI/Dashboard/Profile/Orders.dart';
+import 'UI/Dashboard/Profile/Orders/Orders.dart';
 import "UI/SplashScreen.dart";
 import 'package:flutter_app/Bloc/OrdersBloc.dart';
 

@@ -8,6 +8,7 @@ import 'package:flutter_app/UI/Dashboard/Category/FilterBy.dart';
 import 'package:flutter_app/UI/Dashboard/Item/ItemPage.dart';
 import 'package:flutter_app/Utils/Extensions.dart';
 import 'package:flutter_app/Utils/Session.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shimmer/shimmer.dart';
@@ -33,17 +34,19 @@ class CategoriesPage extends StatefulWidget {
 }
 
 class _CategoriesPageState extends State<CategoriesPage> {
-  Sort sort = Sort.WhatsNew;
+  Sort sort = Sort.NONE;
 
-  bool filtersGenerated = false;
-  Map generatedFilters = {};
+  Map<String, Set> generatedFilters = {};
+  Map<String, Set> appliedFilters = {};
 
-  Map appliedFilters = {};
   RefreshController _refreshController =
       RefreshController(initialRefresh: false);
 
-  List productsList;
-  Map productsData;
+  List mainAllProductsList;
+  Map apiProductsResponseData;
+
+  ///final show list which user will be.
+  List filteredProductsList;
 
   @override
   void initState() {
@@ -54,8 +57,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
   Future<bool> getProducts(bool fetchMore,
       {int currentPage = 1, int lastPage}) async {
     if (lastPage != null && currentPage > lastPage) return false;
-    if(fetchMore)
-      currentPage++;
+    if (fetchMore) currentPage++;
     ProductsBloc _pBloc = Provider.of<ProductsBloc>(context, listen: false);
     Future _future = _pBloc.getProductsByCategoryName(widget.categoryName,
         page: currentPage);
@@ -71,11 +73,35 @@ class _CategoriesPageState extends State<CategoriesPage> {
           page: currentPage);
     }
     Response response = await _future;
-    productsData = {}..addAll((response?.data ?? {})['prods'] ?? {});
+    apiProductsResponseData = {}..addAll((response?.data ?? {}));
     if (fetchMore) {
-      productsList.addAll(productsData['data'] ?? []);
+      /// adding fetched prods in main list.
+      mainAllProductsList.addAll(apiProductsResponseData['products'] ?? []);
+
+      ///generating new filters with new prods fetched
+      Map<String, Set> _filters =
+          generateFilters(apiProductsResponseData['products']);
+      _filters.forEach((key, value) {
+        generatedFilters[key].addAll(value);
+      });
+
+      ///adding flitered prods in show list
+      filteredProductsList
+          .addAll(filterProds(apiProductsResponseData['products']));
+      sort = Sort.NONE;
     } else {
-      productsList = []..addAll(productsData['data'] ?? []);
+      /// getting all prods
+      mainAllProductsList = []
+        ..addAll(apiProductsResponseData['products'] ?? []);
+
+      ///generating filters
+      generatedFilters = generateFilters(mainAllProductsList);
+
+      /// sort prods if refresh
+      filteredProductsList = []..addAll(sortProds(mainAllProductsList));
+
+      /// filter prods if refresh
+      filteredProductsList = []..addAll(filterProds(mainAllProductsList));
     }
     if (mounted) setState(() {});
     return true;
@@ -83,13 +109,6 @@ class _CategoriesPageState extends State<CategoriesPage> {
 
   @override
   Widget build(BuildContext context) {
-    if (productsList != null) {
-      generateFilters(productsList);
-      productsList = []..addAll(sortProds(productsList));
-
-      productsList = []..addAll(filterProds(productsList));
-    }
-
     return Scaffold(
         appBar: AppBar(
           elevation: 0,
@@ -159,6 +178,98 @@ class _CategoriesPageState extends State<CategoriesPage> {
             CartIcon()
           ],
           iconTheme: IconThemeData(color: Colors.black),
+          bottom: PreferredSize(
+            child: Container(
+              height: 50,
+              color: Color(0xff557187),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  InkWell(
+                    onTap: () async {
+                      if(generatedFilters?.length==0){
+                        Fluttertoast.showToast(msg: "No Filters Available.");
+                        return;
+                      }
+                      var filters =
+                          await Navigator.of(context).push(PageRouteBuilder(
+                              pageBuilder: (c, a, b) => FilterBy(
+                                    appliedFilters: appliedFilters,
+                                    allFilters: generatedFilters,
+                                  ),
+                              opaque: false));
+
+                      if (filters != null)
+                        setState(() {
+                          appliedFilters = filters;
+                          filteredProductsList = []
+                            ..addAll(filterProds(mainAllProductsList));
+                        });
+                    },
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Image.asset(
+                          "assets/fliter.png",
+                          height: 25,
+                          width: 25,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            "Filter",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () async {
+                      var sortCat =
+                          await Navigator.of(context).push(PageRouteBuilder(
+                              pageBuilder: (c, a, b) => SortBy(
+                                    sort: sort,
+                                  ),
+                              opaque: false));
+                      if (sortCat != null)
+                        setState(() {
+                          sort = sortCat;
+                          List st = sortProds(filteredProductsList);
+                          filteredProductsList = []..addAll(st);
+                        });
+                    },
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Image.asset(
+                          "assets/sortBy.png",
+                          height: 25,
+                          width: 25,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            "Sort By",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            preferredSize: Size(double.maxFinite, 40),
+          ),
         ),
         body: SmartRefresher(
           controller: _refreshController,
@@ -170,14 +281,17 @@ class _CategoriesPageState extends State<CategoriesPage> {
             _refreshController.refreshCompleted();
           },
           onLoading: () async {
-            // int currentPage = productsData['current_page'] ?? 1;
-            // print(currentPage);
-            // int lastPage = productsData['last_page'] ?? 1;
-            // bool complete = await getProducts(true,
-            //     currentPage: currentPage, lastPage: lastPage);
-            // if (complete)
-            //   _refreshController.loadComplete();
-            // else
+            int currentPage =
+                int.parse(apiProductsResponseData['current_page'].toString()) ??
+                    1;
+            int lastPage =
+                int.parse(apiProductsResponseData['total_pages'].toString()) ??
+                    1;
+            bool complete = await getProducts(true,
+                currentPage: currentPage, lastPage: lastPage);
+            if (complete)
+              _refreshController.loadComplete();
+            else
               _refreshController.loadNoData();
           },
           footer: ClassicFooter(),
@@ -189,7 +303,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
             distance: 100,
             backgroundColor: Color(0xffDC0F21),
           ),
-          child: productsList == null
+          child: mainAllProductsList == null
               ? Hero(
                   tag: widget.tag ?? "",
                   child: Shimmer.fromColors(
@@ -263,324 +377,243 @@ class _CategoriesPageState extends State<CategoriesPage> {
                     ),
                   ),
                 )
-              : ListView(
-                shrinkWrap: true,
-                physics: BouncingScrollPhysics(),
-                primary: false,
-                children: [
-                  Container(
-                    height: 50,
-                    color: Color(0xff557187),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        InkWell(
-                          onTap: () async {
-                            var filters = await Navigator.of(context)
-                                .push(PageRouteBuilder(
-                                    pageBuilder: (c, a, b) => FilterBy(
-                                          appliedFilters: appliedFilters,
-                                          allFilters: generatedFilters,
-                                        ),
-                                    opaque: false));
-
-                            if (filters != null)
-                              setState(() {
-                                appliedFilters = filters;
-                              });
-                          },
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Image.asset(
-                                "assets/fliter.png",
-                                height: 25,
-                                width: 25,
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  "Filter",
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 14,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        InkWell(
-                          onTap: () async {
-                            var sortCat = await Navigator.of(context)
-                                .push(PageRouteBuilder(
-                                    pageBuilder: (c, a, b) => SortBy(
-                                          sort: sort,
-                                        ),
-                                    opaque: false));
-                            if (sortCat != null)
-                              setState(() {
-                                sort = sortCat;
-                              });
-                          },
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Image.asset(
-                                "assets/sortBy.png",
-                                height: 25,
-                                width: 25,
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  "Sort By",
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 14,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  if ((productsList?.length ?? 0) == 0)
-                    Container(
+              : mainAllProductsList?.length == 0
+                  ? Container(
                       height: double.maxFinite,
                       child: Center(child: Text("No Products Found")),
                     )
-                  else
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          bottom: 10.0, right: 10, left: 10),
-                      child: GridView.builder(
-                          primary: false,
-                          itemCount: productsList?.length,
-                          shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
-                          gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
-                                  childAspectRatio: .6,
-                                  crossAxisCount: 2,
-                                  crossAxisSpacing: 10,
-                                  mainAxisSpacing: 10),
-                          itemBuilder: (c, i) {
-                            Map data = productsList.elementAt(i) ?? {};
-                            String tag = data['slug'] + "CategoriesPage";
-                            String shopName =
-                                (data['user'] ?? {})['shop_name'];
-                            double newPrice =
-                                double.parse(data['price']?.toString());
-                            double prevPrice = double.parse(
-                                data['previous_price']?.toString() ?? "0");
-                            int discount = 0;
-                            if (prevPrice > 0)
-                              discount =
-                                  (((prevPrice - newPrice) / prevPrice) *
-                                          100)
-                                      .toInt();
-                            //TODO: ask ravjot to send currency value
-                            double currency = 68.5;
-                            return InkWell(
-                              onTap: () {
-                                Navigator.of(context).push(PageRouteBuilder(
-                                    transitionDuration:
-                                        Duration(seconds: 1),
-                                    reverseTransitionDuration:
-                                        Duration(milliseconds: 800),
-                                    pageBuilder: (c, a, b) => ItemPage(
-                                          tag: tag,
-                                          itemSlug: data['slug'],
-                                        )));
-                              },
-                              key: Key(data['id']?.toString() ?? "$i"),
-                              borderRadius: BorderRadius.circular(8),
-                              child: Hero(
-                                tag: tag,
-                                child: Material(
-                                  color: Colors.transparent,
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius:
-                                            BorderRadius.circular(8)),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Expanded(
-                                          flex: 1,
-                                          child: ClipRRect(
+                  : filteredProductsList?.length == 0
+                      ? Container(
+                          height: double.maxFinite,
+                          child: Center(
+                              child: Text(
+                                  "No Products Found\nTry to clear filters")),
+                        )
+                      : Padding(
+                          padding: const EdgeInsets.only(
+                              bottom: 10.0, right: 10, left: 10),
+                          child: GridView.builder(
+                              primary: false,
+                              itemCount: filteredProductsList?.length,
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
+                              gridDelegate:
+                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                      childAspectRatio: .6,
+                                      crossAxisCount: 2,
+                                      crossAxisSpacing: 10,
+                                      mainAxisSpacing: 10),
+                              itemBuilder: (c, i) {
+                                Map data =
+                                    filteredProductsList.elementAt(i) ?? {};
+                                String tag = data['slug'] + "CategoriesPage";
+                                String shopName =
+                                    (data['user'] ?? {})['shop_name'];
+                                double newPrice =
+                                    double.parse(data['price']?.toString());
+                                double prevPrice = double.parse(
+                                    data['previous_price']?.toString() ?? "0");
+                                int discount = 0;
+                                if (prevPrice > 0)
+                                  discount =
+                                      (((prevPrice - newPrice) / prevPrice) *
+                                              100)
+                                          .toInt();
+                                //TODO: ask ravjot to send currency value
+                                double currency = 68.5;
+                                return InkWell(
+                                  onTap: () {
+                                    Navigator.of(context).push(PageRouteBuilder(
+                                        transitionDuration:
+                                            Duration(seconds: 1),
+                                        reverseTransitionDuration:
+                                            Duration(milliseconds: 800),
+                                        pageBuilder: (c, a, b) => ItemPage(
+                                              tag: tag,
+                                              itemSlug: data['slug'],
+                                            )));
+                                  },
+                                  key: Key(data['id']?.toString() ?? "$i"),
+                                  borderRadius: BorderRadius.circular(8),
+                                  child: Hero(
+                                    tag: tag,
+                                    child: Material(
+                                      color: Colors.transparent,
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                            color: Colors.white,
                                             borderRadius:
-                                                BorderRadius.circular(8),
-                                            child: Container(
-                                              color: Colors.white,
-                                              child: CachedNetworkImage(
-                                                imageUrl:
-                                                    "${Session.IMAGE_BASE_URL}/assets/images/thumbnails/${data['thumbnail']}",
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        Expanded(
-                                          flex: 0,
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 10.0),
-                                            child: Align(
-                                              alignment:
-                                                  Alignment.centerLeft,
-                                              child: Text(
-                                                shopName ?? "",
-                                                maxLines: 2,
-                                                textAlign: TextAlign.start,
-                                                style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 10,
-                                                  letterSpacing: 0.45,
+                                                BorderRadius.circular(8)),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Expanded(
+                                              flex: 1,
+                                              child: ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(8),
+                                                child: Container(
+                                                  color: Colors.white,
+                                                  child: CachedNetworkImage(
+                                                    imageUrl:
+                                                        "${Session.IMAGE_BASE_URL}/assets/images/thumbnails/${data['thumbnail']}",
+                                                  ),
                                                 ),
                                               ),
                                             ),
-                                          ),
-                                        ),
-                                        Expanded(
-                                          flex: 0,
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 10.0),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Expanded(
+                                            Expanded(
+                                              flex: 0,
+                                              child: Padding(
+                                                padding: const EdgeInsets.only(
+                                                    left: 10.0),
+                                                child: Align(
+                                                  alignment:
+                                                      Alignment.centerLeft,
                                                   child: Text(
-                                                    data['name'] ?? "",
+                                                    shopName ?? "",
                                                     maxLines: 2,
-                                                    textAlign:
-                                                        TextAlign.start,
+                                                    textAlign: TextAlign.start,
                                                     style: TextStyle(
-                                                      color:
-                                                          Color(0xff515151),
-                                                      fontSize: 14,
+                                                      color: Colors.black,
+                                                      fontSize: 10,
                                                       letterSpacing: 0.45,
                                                     ),
                                                   ),
                                                 ),
-                                                // Padding(
-                                                //   padding:
-                                                //       const EdgeInsets.all(
-                                                //           4.0),
-                                                //   child: Row(
-                                                //     children: [
-                                                //       Text(
-                                                //         "4.2",
-                                                //         style: TextStyle(
-                                                //           color: Color(
-                                                //               0xff515151),
-                                                //           fontSize: 12,
-                                                //           letterSpacing: 0.24,
-                                                //         ),
-                                                //       ),
-                                                //       Icon(
-                                                //         Icons.star,
-                                                //         color:
-                                                //             Color(0xffF2EB33),
-                                                //         size: 16,
-                                                //       ),
-                                                //     ],
-                                                //   ),
-                                                // )
-                                              ],
+                                              ),
                                             ),
-                                          ),
-                                        ),
-                                        Expanded(
-                                          flex: 0,
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(
-                                                top: 10,
-                                                left: 10.0,
-                                                bottom: 10,
-                                                right: 4),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              children: [
-                                                Expanded(
-                                                  flex: 0,
-                                                  child: Text(
-                                                    "\u20B9 ${(newPrice * currency).ceil()}",
-                                                    maxLines: 1,
-                                                    style: TextStyle(
-                                                      fontSize: 15,
+                                            Expanded(
+                                              flex: 0,
+                                              child: Padding(
+                                                padding: const EdgeInsets.only(
+                                                    left: 10.0),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Expanded(
+                                                      child: Text(
+                                                        data['name'] ?? "",
+                                                        maxLines: 2,
+                                                        textAlign:
+                                                            TextAlign.start,
+                                                        style: TextStyle(
+                                                          color:
+                                                              Color(0xff515151),
+                                                          fontSize: 14,
+                                                          letterSpacing: 0.45,
+                                                        ),
+                                                      ),
                                                     ),
-                                                  ),
+                                                    // Padding(
+                                                    //   padding:
+                                                    //       const EdgeInsets.all(
+                                                    //           4.0),
+                                                    //   child: Row(
+                                                    //     children: [
+                                                    //       Text(
+                                                    //         "4.2",
+                                                    //         style: TextStyle(
+                                                    //           color: Color(
+                                                    //               0xff515151),
+                                                    //           fontSize: 12,
+                                                    //           letterSpacing: 0.24,
+                                                    //         ),
+                                                    //       ),
+                                                    //       Icon(
+                                                    //         Icons.star,
+                                                    //         color:
+                                                    //             Color(0xffF2EB33),
+                                                    //         size: 16,
+                                                    //       ),
+                                                    //     ],
+                                                    //   ),
+                                                    // )
+                                                  ],
                                                 ),
-                                                if (prevPrice != 0)
-                                                  Expanded(
-                                                    flex: 0,
-                                                    child: Padding(
-                                                      padding:
-                                                          const EdgeInsets
-                                                                  .only(
-                                                              left: 10.0),
-                                                      child: Text(
-                                                        "\u20B9 ${(prevPrice * currency).ceil()}",
-                                                        maxLines: 1,
-                                                        style: TextStyle(
-                                                            fontSize: 15,
-                                                            color: Color(
-                                                                0xffA9A9A9),
-                                                            decoration:
-                                                                TextDecoration
-                                                                    .lineThrough),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                if (discount > 0)
-                                                  Expanded(
-                                                    flex: 0,
-                                                    child: Padding(
-                                                      padding:
-                                                          const EdgeInsets
-                                                                  .only(
-                                                              left: 10.0),
-                                                      child: Text(
-                                                        "$discount% Off",
-                                                        maxLines: 1,
-                                                        style: TextStyle(
-                                                            fontSize: 15,
-                                                            color: Color(
-                                                                0xffDC0F21)),
-                                                      ),
-                                                    ),
-                                                  ),
-                                              ],
+                                              ),
                                             ),
-                                          ),
-                                        )
-                                      ],
+                                            Expanded(
+                                              flex: 0,
+                                              child: Padding(
+                                                padding: const EdgeInsets.only(
+                                                    top: 10,
+                                                    left: 10.0,
+                                                    bottom: 10,
+                                                    right: 4),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
+                                                  children: [
+                                                    Expanded(
+                                                      flex: 0,
+                                                      child: Text(
+                                                        "\u20B9 ${(newPrice * currency).ceil()}",
+                                                        maxLines: 1,
+                                                        style: TextStyle(
+                                                          fontSize: 15,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    if (prevPrice != 0)
+                                                      Expanded(
+                                                        flex: 0,
+                                                        child: Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .only(
+                                                                  left: 10.0),
+                                                          child: Text(
+                                                            "\u20B9 ${(prevPrice * currency).ceil()}",
+                                                            maxLines: 1,
+                                                            style: TextStyle(
+                                                                fontSize: 15,
+                                                                color: Color(
+                                                                    0xffA9A9A9),
+                                                                decoration:
+                                                                    TextDecoration
+                                                                        .lineThrough),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    if (discount > 0)
+                                                      Expanded(
+                                                        flex: 0,
+                                                        child: Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .only(
+                                                                  left: 10.0),
+                                                          child: Text(
+                                                            "$discount% Off",
+                                                            maxLines: 1,
+                                                            style: TextStyle(
+                                                                fontSize: 15,
+                                                                color: Color(
+                                                                    0xffDC0F21)),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                  ],
+                                                ),
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ),
-                            );
-                          }),
-                    ),
-                ],
-              ),
+                                );
+                              }),
+                        ),
         ),
         bottomNavigationBar: bottomNavigation(context, voidCallback: () {
           Navigator.popUntil(context, (p) => p.isFirst);
@@ -600,10 +633,10 @@ class _CategoriesPageState extends State<CategoriesPage> {
               ?.compareTo(b['updated_at']?.toString());
           break;
         case Sort.PriceHighToLow:
-          return b['price']?.toString()?.compareTo(a['price']?.toString());
+          return b['price']?.compareTo(a['price']);
           break;
         case Sort.PriceLowToHigh:
-          return a['price']?.toString()?.compareTo(b['price']?.toString());
+          return a['price']?.compareTo(b['price']);
           break;
         case Sort.Popularity:
           return a['views']?.toString()?.compareTo(b['views']?.toString());
@@ -617,9 +650,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
           return a['views']?.toString()?.compareTo(b['views']?.toString());
           break;
         default:
-          return a['created_at']
-              ?.toString()
-              ?.compareTo(b['created_at']?.toString());
+          return 1;
       }
     });
     return prodsData;
@@ -628,14 +659,14 @@ class _CategoriesPageState extends State<CategoriesPage> {
   List filterProds(List prodsData) {
     print(prodsData.length);
     List filteredList = [];
-    List brands = appliedFilters['brands'] ?? [],
-        price = appliedFilters['price'] ?? [],
-        size = appliedFilters['size'] ?? [],
-        colors = appliedFilters['colors'] ?? [];
-    String star = appliedFilters['stars'],
-        discount = appliedFilters['discount'];
+    Set brands = appliedFilters['brands'] ?? Set(),
+        price = appliedFilters['price'] ?? Set(),
+        size = appliedFilters['size'] ?? Set(),
+        colors = appliedFilters['colors'] ?? Set(),
+        star = appliedFilters['stars'] ?? Set(),
+        discount = appliedFilters['discount'] ?? Set();
 
-    if (brands.length != 0) {
+    if (brands.length != 0&&brands.length != generatedFilters['brands'].length) {
       print('applying brand filter');
       brands.forEach((brand) {
         filteredList.addAll(prodsData
@@ -672,19 +703,41 @@ class _CategoriesPageState extends State<CategoriesPage> {
       filteredList.clear();
       filteredList.addAll(sizeFilList);
     }
+
+    if(colors.length !=0&&colors.length != generatedFilters['colors'].length){
+      List colorList = [];
+      colors.forEach((selectedColor) {
+        filteredList
+            .where((element) => element['color'] is List)
+            .forEach((element) {
+          List defColor = element['color'] ?? [];
+          if (defColor.any((defS) => defS == selectedColor))
+            colorList.add(element);
+        });
+      });
+      filteredList.clear();
+      filteredList.addAll(colorList);
+    }
     return filteredList;
   }
 
-  void generateFilters(List prods) {
-    if (filtersGenerated) return;
-    List brands = [], price = [], size = [], colors = [];
+  Map<String, Set> generateFilters(List prods) {
+    Set brands = Set(), price = Set(), size = Set(), colors = Set();
     prods.forEach((element) {
       if (!brands.contains(element['user']['shop_name'].toString()))
         brands.add(element['user']['shop_name'].toString());
-      if (!price.contains(element['price'])) price.add(element['price']);
-      var color = element['color'].toString();
-      if (color.trim().length > 0 && !colors.contains(color))
-        colors.add(element['color'].toString());
+      double newPrice = double.parse(element['price']?.toString());
+      //TODO: ask ravjot to send currency value
+      newPrice = newPrice * 68.5;
+      if (!price.contains(newPrice)) price.add(newPrice);
+
+      if(element['color'] is List){
+        List defColor = element['color'] ?? [];
+        defColor.forEach((element) {
+          if (element.toString().trim().length > 0 && !size.contains(element))
+            colors.add(element);
+        });
+      }
       if (element['size'] is List) {
         List defSize = element['size'] ?? [];
         defSize.forEach((element) {
@@ -693,14 +746,14 @@ class _CategoriesPageState extends State<CategoriesPage> {
         });
       }
     });
-    generatedFilters.addAll({
-      "brands": brands,
-      "price": price,
-      "colors": colors,
-      "size": size,
-      "stars": "",
-      "discount": ""
-    });
-    filtersGenerated = true;
+    Map<String, Set> generatedFilters = {}..addAll({
+        "brands": brands,
+        "price": price,
+        "colors": colors,
+        "size": size,
+        "stars": Set(),
+        "discount": Set()
+      });
+    return generatedFilters;
   }
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class FilterBy extends StatefulWidget {
-  final Map allFilters, appliedFilters;
+  final Map<String, Set> allFilters, appliedFilters;
 
   const FilterBy({Key key, this.allFilters, this.appliedFilters})
       : super(key: key);
@@ -11,11 +11,12 @@ class FilterBy extends StatefulWidget {
 }
 
 class _FilterByState extends State<FilterBy> {
-  List selectedBrands = [],
-      selectedPrice = [],
-      selectedSizes = [],
-      selectedColors = [];
-  String selectedStars = "", selectedDiscount = "";
+  Set selectedBrands = Set(),
+      selectedPrice = Set(),
+      selectedSizes = Set(),
+      selectedColors = Set(),
+      selectedStars = Set(),
+      selectedDiscount = Set();
 
   bool showAllBrands = false, brandsMoreThan6 = false;
 
@@ -26,23 +27,24 @@ class _FilterByState extends State<FilterBy> {
   @override
   void initState() {
     super.initState();
-    selectedBrands = []..addAll(widget.appliedFilters['brands'] ?? []);
-    selectedPrice = []..addAll(widget.appliedFilters['price'] ?? []);
-    selectedSizes = []..addAll(widget.appliedFilters['size'] ?? []);
-    selectedColors = []..addAll(widget.appliedFilters['colors'] ?? []);
-    selectedStars = widget.appliedFilters['stars'] ?? "";
-    selectedDiscount = widget.appliedFilters['discount'] ?? "";
-    if ((widget.allFilters['brands']?.length ?? 0) > 6) brandsMoreThan6 = true;
+    selectedBrands = Set()..addAll(widget.appliedFilters['brands'] ?? []);
+    selectedPrice = Set()..addAll(widget.appliedFilters['price'] ?? []);
 
-    maxPrice = (widget.allFilters['price'] as List)
+    selectedSizes = Set()..addAll(widget.appliedFilters['size'] ?? []);
+    selectedColors = Set()..addAll(widget.appliedFilters['colors'] ?? []);
+    selectedStars = Set()..addAll(widget.appliedFilters['stars'] ?? []);
+    selectedDiscount = Set()..addAll(widget.appliedFilters['discount'] ?? []);
+    if ((widget.allFilters['brands']?.length ?? 0) > 6) brandsMoreThan6 = true;
+    maxPrice = (widget.allFilters['price'])
         .reduce((curr, next) => curr > next ? curr : next);
-    minPrice = (widget.allFilters['price'] as List)
+    minPrice = (widget.allFilters['price'])
         .reduce((curr, next) => curr < next ? curr : next);
 
-    if (selectedPrice.length == 2)
+    if (selectedPrice.length == 2) {
       _priceValues = RangeValues(selectedPrice.first, selectedPrice.last);
-    else
+    } else {
       _priceValues = RangeValues(minPrice, maxPrice);
+    }
   }
 
   @override
@@ -71,14 +73,14 @@ class _FilterByState extends State<FilterBy> {
                       selectedPrice.clear();
                       selectedSizes.clear();
                       selectedColors.clear();
-                      selectedStars = "";
-                      selectedDiscount = "";
-                      maxPrice = (widget.allFilters['price'] as List)
+                      selectedStars.clear();
+                      selectedDiscount.clear();
+                      maxPrice = (widget.allFilters['price'])
                           .reduce((curr, next) => curr > next ? curr : next);
-                      minPrice = (widget.allFilters['price'] as List)
+                      minPrice = (widget.allFilters['price'])
                           .reduce((curr, next) => curr < next ? curr : next);
                       _priceValues = RangeValues(minPrice, maxPrice);
-                      Map appFilters = {}..addAll({
+                      Map<String, Set> appFilters = {}..addAll({
                           "brands": selectedBrands,
                           "price": selectedPrice,
                           "colors": selectedColors,
@@ -122,7 +124,8 @@ class _FilterByState extends State<FilterBy> {
                 runSpacing: 8,
                 spacing: 8,
                 children: [
-                  ...(widget.allFilters['brands'] as List)
+                  ...widget.allFilters['brands']
+                      .toList()
                       .sublist(
                           0,
                           brandsMoreThan6 && !showAllBrands
@@ -254,7 +257,7 @@ class _FilterByState extends State<FilterBy> {
                 ),
               ),
             ),
-            if ((widget.allFilters['size'] as List).length > 0) ...[
+            if ((widget.allFilters['size']).length > 0) ...[
               Padding(
                 padding: const EdgeInsets.only(left: 30.0, top: 10, bottom: 10),
                 child: Text(
@@ -273,7 +276,7 @@ class _FilterByState extends State<FilterBy> {
                   runSpacing: 8,
                   spacing: 8,
                   children: [
-                    ...(widget.allFilters['size'] as List).map((s) {
+                    ...(widget.allFilters['size']).map((s) {
                       bool selected = selectedSizes.contains(s) ?? false;
                       return InkWell(
                         borderRadius: BorderRadius.circular(4),
@@ -311,11 +314,11 @@ class _FilterByState extends State<FilterBy> {
                 ),
               ),
             ],
-            if ((widget.allFilters['colors'] as List).length > 0) ...[
+            if ((widget.allFilters['colors']).length > 0) ...[
               Padding(
                 padding: const EdgeInsets.only(left: 30.0, top: 10, bottom: 10),
                 child: Text(
-                  "Colour ${(widget.allFilters['colors'] as List).length}",
+                  "Colour",
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 14,
@@ -330,7 +333,7 @@ class _FilterByState extends State<FilterBy> {
                   runSpacing: 8,
                   spacing: 8,
                   children: [
-                    ...(widget.allFilters['colors'] as List).map((c) {
+                    ...(widget.allFilters['colors']).map((c) {
                       bool selected = selectedColors.contains(c) ?? false;
                       return InkWell(
                         borderRadius: BorderRadius.circular(4),
@@ -346,10 +349,16 @@ class _FilterByState extends State<FilterBy> {
                             Container(
                               width: 50,
                               height: 35,
+                              child: Center(
+                                  child: Text(
+                                "$c",
+                                style: TextStyle(fontSize: 14),
+                              )),
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(4),
-                                color: Color(int.parse("0xff" + c)),
-                              ),
+                                  borderRadius: BorderRadius.circular(4),
+                                  border: Border.all(color: Colors.black)
+                                  // color: Color(int.parse("0xff" + c)),
+                                  ),
                             ),
                             if (selected)
                               Container(
@@ -388,14 +397,14 @@ class _FilterByState extends State<FilterBy> {
                 spacing: 8,
                 children: [
                   ...List.generate(5, (index) {
-                    bool selected = selectedStars == "$index" ?? false;
+                    bool selected = selectedStars.contains(index) ?? false;
                     return InkWell(
                       borderRadius: BorderRadius.circular(4),
                       onTap: () {
                         if (selected)
-                          selectedStars = "";
+                          selectedStars.clear();
                         else
-                          selectedStars = "$index";
+                          selectedStars = [index].toSet();
                         if (mounted) setState(() {});
                       },
                       child: Container(
@@ -443,7 +452,7 @@ class _FilterByState extends State<FilterBy> {
                 spacing: 8,
                 children: [
                   ...List.generate(4, (index) {
-                    bool selected = selectedDiscount == "$index" ?? false;
+                    bool selected = selectedDiscount.contains(index) ?? false;
                     String text = "10% Or Above";
                     switch (index) {
                       case 1:
@@ -460,9 +469,9 @@ class _FilterByState extends State<FilterBy> {
                       borderRadius: BorderRadius.circular(4),
                       onTap: () {
                         if (selected)
-                          selectedDiscount = (index).toString();
+                          selectedDiscount.clear();
                         else
-                          selectedDiscount = (index).toString();
+                          selectedDiscount = [index].toSet();
                         if (mounted) setState(() {});
                       },
                       child: Container(
@@ -523,7 +532,7 @@ class _FilterByState extends State<FilterBy> {
                       padding: const EdgeInsets.only(left: 5.0),
                       child: FlatButton(
                         onPressed: () {
-                          Map appFilters = {}..addAll({
+                          Map<String, Set> appFilters = {}..addAll({
                               "brands": selectedBrands,
                               "price": selectedPrice,
                               "colors": selectedColors,

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/Utils/Session.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter_app/Bloc/OrdersBloc.dart';
+import 'package:flutter_app/Utils/Session.dart';
 import 'package:provider/provider.dart';
+
+import 'OrderDetails.dart';
+
 class Orders extends StatefulWidget {
   @override
   _OrdersState createState() => _OrdersState();
@@ -20,12 +22,13 @@ class _OrdersState extends State<Orders> {
           onPressed: () {
             Navigator.of(context).pop();
           },
-        ),
+        ),title: Text("My Orders",style: TextStyle(color: Colors.black),),
         backgroundColor: Colors.white,
         iconTheme: IconThemeData(color: Colors.black),
       ),
       backgroundColor: Colors.white,
-      body: _orderBloc.myOrders.length==0?Column(
+      body: _orderBloc.myOrders.length == 0
+          ? Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -88,11 +91,21 @@ class _OrdersState extends State<Orders> {
             ),
           ),
         ],
-      ):
-      ListView.builder(itemCount: _orderBloc.myOrders.length,itemBuilder: (c,i){
-        Map order = _orderBloc.myOrders.elementAt(i);
-        return ListTile(title: Text("$order"),);
-      }),
+      )
+          : ListView.builder(shrinkWrap: true,physics: BouncingScrollPhysics(),
+          itemCount: _orderBloc.myOrders.length,
+          itemBuilder: (c, i) {
+            Map order = _orderBloc.myOrders.elementAt(i);
+            return ListTile(onTap: (){
+              Navigator.push(context, MaterialPageRoute(builder: (c)=>OrderDetails(orderId: order['order_id'],)));
+            },
+                title: Text("Order Number: ${order['order_number']}\n Total Price: ${order['order_total']}"),
+            isThreeLine: true,
+            subtitle: Text(
+            "Date: ${order['order_date']}\n"
+            "Status: ${order['order_status']}"),
+            );
+            }),
     );
   }
 }

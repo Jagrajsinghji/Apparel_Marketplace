@@ -155,6 +155,7 @@ class _SortByState extends State<SortBy> {
 }
 
 enum Sort {
+  NONE,
   WhatsNew,
   PriceHighToLow,
   PriceLowToHigh,

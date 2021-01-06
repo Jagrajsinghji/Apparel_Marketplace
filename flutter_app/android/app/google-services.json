@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:929155793177:android:a5ab5e896a4138891d8588",
+        "mobilesdk_app_id": "1:929155793177:android:2647acb9aa9b9d7d1d8588",
         "android_client_info": {
-          "package_name": "in.weexpan.flutter_app"
+          "package_name": "in.weexpan.wowfas"
         }
       },
       "oauth_client": [

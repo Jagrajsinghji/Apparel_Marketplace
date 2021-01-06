@@ -1,4 +1,4 @@
-package in.weexpan.flutter_app;
+package in.weexpan.wowfas;
 
 import io.flutter.embedding.android.FlutterActivity;
 

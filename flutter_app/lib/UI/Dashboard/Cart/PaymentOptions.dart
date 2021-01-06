@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/Bloc/CartBloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
-
+import 'package:flutter_app/Bloc/OrdersBloc.dart';
 import 'OrderPlaced.dart';
 
 class PaymentOptions extends StatefulWidget {
@@ -19,7 +19,7 @@ class _PaymentOptionsState extends State<PaymentOptions> {
   int paymentOption;
   double total;
   bool loading = false;
-double currency = 68.5;
+  double currency = 68.5;
 
   @override
   Widget build(BuildContext context) {
@@ -240,7 +240,7 @@ double currency = 68.5;
                                         ),
                                       ),
                                       Text(
-                                        "\u20B9 ${(data["totalMRP"] *currency).ceil()}",
+                                        "\u20B9 ${(data["totalMRP"] * currency).ceil()}",
                                         style: TextStyle(
                                           color: Color(0xff7f7f7f),
                                           fontSize: 14,
@@ -269,7 +269,7 @@ double currency = 68.5;
                                           ),
                                         ),
                                         Text(
-                                          "-\u20B9 ${(data["couponDiscount"]*currency).ceil()}",
+                                          "-\u20B9 ${(data["couponDiscount"] * currency).ceil()}",
                                           style: TextStyle(
                                             color: Color(0xff05B90D),
                                             fontSize: 14,
@@ -297,7 +297,7 @@ double currency = 68.5;
                                         ),
                                       ),
                                       Text(
-                                        "\u20B9 ${(data["shippingCost"]*currency).ceil()}",
+                                        "\u20B9 ${(data["shippingCost"] * currency).ceil()}",
                                         style: TextStyle(
                                           color: Color(0xff7f7f7f),
                                           fontSize: 14,
@@ -325,7 +325,7 @@ double currency = 68.5;
                                         ),
                                       ),
                                       Text(
-                                        "\u20B9 ${(data["packingCost"]*currency).ceil()}",
+                                        "\u20B9 ${(data["packingCost"] * currency).ceil()}",
                                         style: TextStyle(
                                           color: Color(0xff7f7f7f),
                                           fontSize: 14,
@@ -357,7 +357,7 @@ double currency = 68.5;
                                         ),
                                       ),
                                       Text(
-                                        "\u20B9 ${(total*currency).ceil()}",
+                                        "\u20B9 ${(total * currency).ceil()}",
                                         style: TextStyle(
                                           color: Color(0xff515151),
                                           fontSize: 14,
@@ -414,7 +414,7 @@ double currency = 68.5;
         loading = true;
       });
     Map<String, dynamic> data = widget.checkOutData;
-    CartBloc _cBloc = Provider.of(context, listen: false);
+    CartBloc _cBloc = Provider.of<CartBloc>(context, listen: false);
     Response resp = await _cBloc.placeCashOnDeliveryOrder(
       address: data['address'],
       city: data['city'],
@@ -448,6 +448,8 @@ double currency = 68.5;
         loading = false;
       });
     if (resp.data is Map && resp.data.containsKey('order')) {
+      OrdersBloc _oBloc = Provider.of<OrdersBloc>(context, listen: false);
+      _oBloc.getMyOrders();
       Map data = resp.data['order'] ?? {};
       Navigator.pushAndRemoveUntil(
           context,
