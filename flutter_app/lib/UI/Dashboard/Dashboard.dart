@@ -69,41 +69,36 @@ class _DashboardState extends State<Dashboard> {
                         ),
                       ),
                 actions: [
-                  // Padding(
-                  //   padding: const EdgeInsets.all(8.0),
-                  //   child: InkWell(
-                  //     focusColor: Colors.transparent,
-                  //     splashColor: Colors.transparent,
-                  //     child: Hero(tag: "SearchTag",
-                  //       child: Image.asset(
-                  //         "assets/search.png",
-                  //         width: 20,
-                  //         height: 20,
-                  //       ),
-                  //     ),
-                  //     onTap: () {
-                  //       Navigator.push(
-                  //           context,
-                  //           PageRouteBuilder(
-                  //               transitionDuration: Duration(seconds: 1),
-                  //               reverseTransitionDuration:
-                  //                   Duration(milliseconds: 800),
-                  //               pageBuilder: (c, a, b) => SearchProds()));
-                  //     },
-                  //   ),
-                  // ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: InkWell(
                       focusColor: Colors.transparent,
                       splashColor: Colors.transparent,
-                      child: Hero(
-                        tag: "Notifications",
-                        child: Image.asset(
-                          "assets/notification.png",
-                          width: 20,
-                          height: 20,
-                        ),
+                      child: Image.asset(
+                        "assets/search.png",
+                        width: 20,
+                        height: 20,
+                      ),
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            PageRouteBuilder(
+                                transitionDuration: Duration(seconds: 1),
+                                reverseTransitionDuration:
+                                    Duration(milliseconds: 800),
+                                pageBuilder: (c, a, b) => SearchProds()));
+                      },
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: InkWell(
+                      focusColor: Colors.transparent,
+                      splashColor: Colors.transparent,
+                      child: Image.asset(
+                        "assets/notification.png",
+                        width: 20,
+                        height: 20,
                       ),
                       onTap: () {
                         Navigator.push(
@@ -116,30 +111,27 @@ class _DashboardState extends State<Dashboard> {
                       },
                     ),
                   ),
-                  // Padding(
-                  //   padding: const EdgeInsets.all(8.0),
-                  //   child: InkWell(
-                  //     focusColor: Colors.transparent,
-                  //     splashColor: Colors.transparent,
-                  //     child: Hero(
-                  //       tag: "WishList",
-                  //       child: Image.asset(
-                  //         "assets/favourite.png",
-                  //         width: 20,
-                  //         height: 20,
-                  //       ),
-                  //     ),
-                  //     onTap: () {
-                  //       Navigator.push(
-                  //           context,
-                  //           PageRouteBuilder(
-                  //               transitionDuration: Duration(seconds: 1),
-                  //               reverseTransitionDuration:
-                  //                   Duration(milliseconds: 800),
-                  //               pageBuilder: (c, a, b) => WishList()));
-                  //     },
-                  //   ),
-                  // ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: InkWell(
+                      focusColor: Colors.transparent,
+                      splashColor: Colors.transparent,
+                      child: Image.asset(
+                        "assets/favourite.png",
+                        width: 20,
+                        height: 20,
+                      ),
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            PageRouteBuilder(
+                                transitionDuration: Duration(seconds: 1),
+                                reverseTransitionDuration:
+                                    Duration(milliseconds: 800),
+                                pageBuilder: (c, a, b) => WishList()));
+                      },
+                    ),
+                  ),
                   CartIcon()
                 ],
                 iconTheme: IconThemeData(color: Colors.black),

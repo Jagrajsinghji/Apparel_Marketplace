@@ -5,7 +5,6 @@ import 'package:flutter_app/Bloc/CategoryBloc.dart';
 import 'package:flutter_app/Bloc/ProductsBloc.dart';
 import 'package:flutter_app/UI/Dashboard/Category/Categories.dart';
 import 'package:flutter_app/UI/Dashboard/Category/CategoriesPage.dart';
-import 'package:flutter_app/UI/Dashboard/Home/Brands.dart';
 import 'package:flutter_app/UI/Dashboard/Home/ProductGridWIthThumbnail.dart';
 import 'package:flutter_app/Utils/Extensions.dart';
 import 'package:flutter_app/Utils/Session.dart';
@@ -13,8 +12,7 @@ import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shimmer/shimmer.dart';
 
-
-
+import 'Product4GridWIthThumbnail.dart';
 import 'ProductListWIthThumbnail.dart';
 import 'Sliders.dart';
 
@@ -73,8 +71,9 @@ class _HomeState extends State<Home> {
                   ]),
                   child:
                       Consumer<CategoryBloc>(builder: (context, snapshot, w) {
-                    if ( snapshot.categoryData.length == 0)
-                      return Shimmer.fromColors(    baseColor: Colors.grey.shade400,
+                    if (snapshot.categoryData.length == 0)
+                      return Shimmer.fromColors(
+                        baseColor: Colors.grey.shade400,
                         highlightColor: Colors.redAccent,
                         child: ListView.builder(
                             shrinkWrap: true,
@@ -83,14 +82,14 @@ class _HomeState extends State<Home> {
                             itemCount: 10,
                             itemBuilder: (c, i) {
                               return Container(
-                                width: 95,
+                                width: 70,
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     Container(
-                                      height: 65,
-                                      width: 65,
+                                      height: 60,
+                                      width: 60,
                                       decoration: BoxDecoration(
                                           shape: BoxShape.circle,
                                           color: Colors.grey),
@@ -99,7 +98,9 @@ class _HomeState extends State<Home> {
                                       flex: 1,
                                       child: Padding(
                                         padding: const EdgeInsets.only(
-                                          left: 4.0,top: 6,bottom: 6,
+                                          left: 4.0,
+                                          top: 6,
+                                          bottom: 6,
                                           right: 4,
                                         ),
                                         child: Container(
@@ -124,22 +125,22 @@ class _HomeState extends State<Home> {
                         itemCount: categories.length,
                         itemBuilder: (c, i) {
                           Map data = categories.elementAt(i);
-                          return Container(
-                            width: 95,
-                            color: Colors.white,
-                            child: InkWell(
-                              onTap: () {
-                                Navigator.of(context).push(PageRouteBuilder(
-                                    transitionDuration: Duration(seconds: 1),
-                                    reverseTransitionDuration:
-                                        Duration(milliseconds: 800),
-                                    pageBuilder: (c, a, b) =>   CategoriesPage(
-                                          tag: data['slug'] + "toptag",
-                                          categoryName: data['slug'],
-                                        )));
-                              },
-                              child: Hero(
-                                tag: data['slug'] + "toptag",
+                          return Padding(
+                            padding: const EdgeInsets.all(.5),
+                            child: Container(
+                              width: 70,
+                              color: Colors.white,
+                              child: InkWell(
+                                onTap: () {
+                                  Navigator.of(context).push(PageRouteBuilder(
+                                      transitionDuration: Duration(seconds: 1),
+                                      reverseTransitionDuration:
+                                          Duration(milliseconds: 800),
+                                      pageBuilder: (c, a, b) => CategoriesPage(
+
+                                            categoryName: data['slug'],
+                                          )));
+                                },
                                 child: Material(
                                   color: Colors.transparent,
                                   child: Column(
@@ -148,8 +149,8 @@ class _HomeState extends State<Home> {
                                         CrossAxisAlignment.center,
                                     children: [
                                       Container(
-                                        height: 65,
-                                        width: 65,
+                                        height: 60,
+                                        width: 60,
                                         decoration: BoxDecoration(
                                             shape: BoxShape.circle,
                                             color: Colors.white),
@@ -177,8 +178,9 @@ class _HomeState extends State<Home> {
                                             maxLines: 2,
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
-                                              color:Colors.black,
+                                              color: Colors.black,
                                               fontSize: 12,
+                                              fontWeight: FontWeight.bold,
                                               letterSpacing: 0.45,
                                             ),
                                           ),
@@ -256,7 +258,8 @@ class _HomeState extends State<Home> {
                         slivers: [
                           if (slider)
                             Sliders(
-                              height: 200,numb: 0,
+                              height: 200,
+                              numb: 0,
                               duration: Duration(seconds: 3),
                               slidersData: resp1Data['sliders'],
                               picsPath: "sliders",
@@ -275,12 +278,18 @@ class _HomeState extends State<Home> {
                           //     slidersData: resp1Data['top_small_banners'],
                           //     picsPath: "banners",
                           //   ),
-
-                          /// Latest Products
-                          ProductGridWIthThumbnail(
-                            title: "Latest Products",
-                            productData: resp2Data['latest_products'],
+                          /// Trending Products
+                          Product4GridWIthThumbnail(
+                            productData: resp2Data['trending_products'],
+                            title: "Trending Products",
                           ),
+
+                          /// Best Products
+                          if (best)
+                            ProductListWIthThumbnail(
+                              productData: resp2Data['best_products'],
+                              title: "Best Buy",
+                            ),
 
                           /// Larger Banner if present
                           if (largeBanner && largeBannersData.length > 0)
@@ -289,16 +298,45 @@ class _HomeState extends State<Home> {
                               Padding(
                                 padding:
                                     const EdgeInsets.only(top: 20, bottom: 10),
-                                child: InkWell(onTap: (){
-                                  Navigator.push(
-                                      context, MaterialPageRoute(builder: (c) => CategoriesPage(
-                                    tag: null,
-                                    categoryName: "women",
-                                  )));
-                                },
-                                  child: CachedNetworkImage(
-                                    imageUrl:
-                                        "${Session.BASE_URL}/assets/images/banners/${(largeBannersData[0] ?? {})['photo']}",
+                                child: InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (c) => CategoriesPage(
+
+                                                  categoryName: "women",
+                                                )));
+                                  },
+                                  child: Stack(
+                                    children: [
+                                      CachedNetworkImage(
+                                        imageUrl:
+                                            "${Session.BASE_URL}/assets/images/banners/${(largeBannersData[0] ?? {})['photo']}",
+                                      ),
+                                      Positioned(
+                                          right: 5,
+                                          bottom: 0,
+                                          child: FlatButton.icon(
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          20)),
+                                              onPressed: () {
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (c) =>
+                                                            CategoriesPage(
+
+                                                              categoryName:
+                                                                  "women",
+                                                            )));
+                                              },
+                                              icon: Icon(
+                                                  Icons.touch_app_outlined),
+                                              label: Text("Explore")))
+                                    ],
                                   ),
                                 ),
                               ),
@@ -306,7 +344,7 @@ class _HomeState extends State<Home> {
 
                           /// Top Rated
                           if (topRated)
-                            ProductListWIthThumbnail(
+                            ProductGridWIthThumbnail(
                               title: "Top Rated",
                               productData: resp2Data['top_products'],
                             ),
@@ -326,14 +364,19 @@ class _HomeState extends State<Home> {
                               Padding(
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 10),
-                                child: InkWell(onTap: (){
-                                  Navigator.push(
-                                      context, MaterialPageRoute(builder: (c) => CategoriesPage(
-                                    tag: null,
-                                    categoryName: "men",subCatName: "mens-footwear",
-                                    childCatName: "mens-sport-shoes",
-                                  )));
-                                },
+                                child: InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (c) => CategoriesPage(
+
+                                                  categoryName: "men",
+                                                  subCatName: "mens-footwear",
+                                                  childCatName:
+                                                      "mens-sport-shoes",
+                                                )));
+                                  },
                                   child: CachedNetworkImage(
                                     imageUrl:
                                         "${Session.BASE_URL}/assets/images/$bigSaveBanner",
@@ -342,18 +385,11 @@ class _HomeState extends State<Home> {
                               ),
                             ])),
 
-                          /// Trending Products
+                          /// Latest Products
                           ProductGridWIthThumbnail(
-                            productData: resp2Data['trending_products'],
-                            title: "Trending Products",
+                            title: "Latest Products",
+                            productData: resp2Data['latest_products'],
                           ),
-
-                          /// Best Products
-                          if (best)
-                            ProductListWIthThumbnail(
-                              productData: resp2Data['best_products'],
-                              title: "Best Buy",
-                            ),
 
                           if (bigSaveBanner1 != null)
                             SliverList(
@@ -361,13 +397,16 @@ class _HomeState extends State<Home> {
                               Padding(
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 10),
-                                child: InkWell(onTap: (){
-                                  Navigator.push(
-                                      context, MaterialPageRoute(builder: (c) => CategoriesPage(
-                                    tag: null,
-                                    categoryName: "women",
-                                  )));
-                                },
+                                child: InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (c) => CategoriesPage(
+
+                                                  categoryName: "women",
+                                                )));
+                                  },
                                   child: CachedNetworkImage(
                                     imageUrl:
                                         "${Session.BASE_URL}/assets/images/$bigSaveBanner1",
@@ -390,7 +429,8 @@ class _HomeState extends State<Home> {
                             ),
 
                           if (bottomSmallBanner)
-                            Sliders(numb: 2,
+                            Sliders(
+                              numb: 2,
                               height: 400,
                               duration: Duration(seconds: 4),
                               slidersData: resp2Data['bottom_small_banners'],
@@ -416,9 +456,8 @@ class _HomeState extends State<Home> {
                               Padding(
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 10),
-                                child: InkWell(onTap: (){
-
-                                },
+                                child: InkWell(
+                                  onTap: () {},
                                   child: CachedNetworkImage(
                                     imageUrl:
                                         "${Session.BASE_URL}/assets/images/banners/${(largeBannersData[1] ?? {})['photo']}",

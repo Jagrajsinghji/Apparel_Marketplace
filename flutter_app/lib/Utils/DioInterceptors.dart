@@ -18,7 +18,7 @@ class DioInterceptor extends Interceptor {
   Future onError(DioError err) async {
     print("****************************************************");
     print(err);
-    print(err.request.path);
+    print(err.request.uri);
     print("****************************************************");
     // _appErrorBloc.updateError(err.message);
     return err;

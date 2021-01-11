@@ -18,7 +18,8 @@ class CartBloc with ChangeNotifier {
     Dio dio = Dio(Session.instance.baseOptions);
     dio.interceptors.add(_dioInterceptor);
     Response response = await dio.get("/api/carts/view");
-    Session.instance.updateCookie(response);
+    await Session.instance.updateCookie(response);
+
     if (response?.data is Map)
       cartData = response?.data ?? {};
     else
@@ -33,7 +34,8 @@ class CartBloc with ChangeNotifier {
     Dio dio = Dio(Session.instance.baseOptions);
     dio.interceptors.add(_dioInterceptor);
     Response response = await dio.get("/api/addcart/$itemID");
-    Session.instance.updateCookie(response);
+    await Session.instance.updateCookie(response);
+
     await getCartItems();
     return response;
   }
@@ -52,9 +54,9 @@ class CartBloc with ChangeNotifier {
     dio.interceptors.add(_dioInterceptor);
     Response response = await dio.get(
         "${Session.BASE_URL}/api/numcart/add?id=$itemId&qty=$qty&size=$size&color=$color&size_qty=$sizeQty&size_price=$sizePrice&size_key=$sizeKey&keys=$keys&values=$values&prices=$prices");
-    Session.instance.updateCookie(response);
+    await Session.instance.updateCookie(response);
+    print(response.data);
     await getCartItems();
-
     if (response.data != null && response.data['data'] is String)
       return response;
     if (((response.data['data'] ?? {})['item'] ?? {})['id'] == itemId) {
@@ -71,7 +73,7 @@ class CartBloc with ChangeNotifier {
     dio.interceptors.add(_dioInterceptor);
     Response response =
         await dio.get("${Session.BASE_URL}/api/removecart/$key");
-    Session.instance.updateCookie(response);
+    await Session.instance.updateCookie(response);
 
     await getCartItems();
     return response;
@@ -87,14 +89,17 @@ class CartBloc with ChangeNotifier {
     dio.interceptors.add(_dioInterceptor);
     Response response = await dio.get(
         "${Session.BASE_URL}/api/add/byone?id=$id&itemid=$itemId&size_qty=$sizeQty&size_price=$sizePrice");
-    Session.instance.updateCookie(response);
+    await Session.instance.updateCookie(response);
+
     await getCartItems();
+
     if (response.data['data'] is String) {
-      if (response.data['data'].toString().contains("greater than size qty"))
+      if (response.data['data'].toString().contains("Out of stock"))
         Fluttertoast.showToast(msg: "Item out of stock.");
     } else if (response.data['data'] is Map) {
       Fluttertoast.showToast(msg: "Item added successfully.");
     }
+
     notifyListeners();
     return response;
   }
@@ -109,7 +114,8 @@ class CartBloc with ChangeNotifier {
     dio.interceptors.add(_dioInterceptor);
     Response response = await dio.get(
         "${Session.BASE_URL}/api/reduce/byone?id=$id&itemid=$itemId&size_qty=$sizeQty&size_price=$sizePrice");
-    Session.instance.updateCookie(response);
+    await Session.instance.updateCookie(response);
+
     await getCartItems();
     if (response.data['data'] is String) {
       if (response.data['data'].toString().contains("greater than size qty"))
@@ -124,9 +130,11 @@ class CartBloc with ChangeNotifier {
   Future<Response> getCheckOutItems() async {
     Dio dio = Dio(Session.instance.baseOptions);
     dio.interceptors.add(_dioInterceptor);
-    String token =await Session.instance.getToken();
-    Response response = await dio.get("/api/checkout/view",options: Options(headers: {"Authorization":"Bearer $token"}));
-    Session.instance.updateCookie(response);
+    String token = await Session.instance.getToken();
+    Response response = await dio.get("/api/checkout/view",
+        options: Options(headers: {"Authorization": "Bearer $token"}));
+    await Session.instance.updateCookie(response);
+
     return response;
   }
 
@@ -135,7 +143,8 @@ class CartBloc with ChangeNotifier {
     dio.interceptors.add(_dioInterceptor);
     Response response =
         await dio.get("/api/carts/coupon?code=$coupon&total=$total");
-    Session.instance.updateCookie(response);
+    await Session.instance.updateCookie(response);
+
     if (response?.data is Map) {
       couponData = response.data;
     } else
@@ -173,10 +182,12 @@ class CartBloc with ChangeNotifier {
       String couponId}) async {
     Dio dio = Dio(Session.instance.baseOptions);
     dio.interceptors.add(_dioInterceptor);
-    String token =await Session.instance.getToken();
+    String token = await Session.instance.getToken();
     Response response = await dio.post(
-          "/api/cashon/delivery?personal_email=$personalEmail&personal_name=$personalName&personal_pass=$personalPass&user_id=$userId&totalQty=$totalQty&shipping=$shipping&pickup_location=$pickupLocation&email=$email&name=$name&tax=$tax&phone=$phone&total=$total&method=$method&personal_confirm=$personalConfirm&shipping_cost=$shippingCost&packing_cost=$packingCost&customer_country=$customerCountry&address=$address&city=$city&zip=$zip&vendor_shipping_id=$vendorShippingId&vendor_packing_id=$vendorPackingId&dp=$dp&coupon_code=$couponCode&coupon_discount=$couponDiscount&coupon_id=$couponId",options: Options(headers: {"Authorization":"Bearer $token"}));
-    Session.instance.updateCookie(response);
+        "/api/cashon/delivery?personal_email=$personalEmail&personal_name=$personalName&personal_pass=$personalPass&user_id=$userId&totalQty=$totalQty&shipping=$shipping&pickup_location=$pickupLocation&email=$email&name=$name&tax=$tax&phone=$phone&total=$total&method=$method&personal_confirm=$personalConfirm&shipping_cost=$shippingCost&packing_cost=$packingCost&customer_country=$customerCountry&address=$address&city=$city&zip=$zip&vendor_shipping_id=$vendorShippingId&vendor_packing_id=$vendorPackingId&dp=$dp&coupon_code=$couponCode&coupon_discount=$couponDiscount&coupon_id=$couponId",
+        options: Options(headers: {"Authorization": "Bearer $token"}));
+    await Session.instance.updateCookie(response);
+
     await getCartItems();
     notifyListeners();
     return response;

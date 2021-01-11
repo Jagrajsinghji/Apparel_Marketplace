@@ -227,8 +227,8 @@ class _FilterByState extends State<FilterBy> {
                   min: minPrice,
                   max: maxPrice,
                   labels: RangeLabels(
-                      _priceValues.start.toString().substring(0, 4),
-                      _priceValues.end.toString().substring(0, 4)),
+                      _priceValues.start.ceil().toString(),
+                      _priceValues.end.ceil().toString()),
                 ),
               ),
             ),
@@ -240,14 +240,14 @@ class _FilterByState extends State<FilterBy> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "Min",
+                      "\u20B9${minPrice.toInt()}",
                       style: TextStyle(
                         color: Color(0xff969696),
                         fontSize: 14,
                       ),
                     ),
                     Text(
-                      "Max",
+                      "\u20B9${maxPrice.toInt()}",
                       style: TextStyle(
                         color: Color(0xff969696),
                         fontSize: 14,

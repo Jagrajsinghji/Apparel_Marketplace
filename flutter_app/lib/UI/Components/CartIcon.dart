@@ -22,35 +22,32 @@ class _CartIconState extends State<CartIcon> {
             child: InkWell(
               focusColor: Colors.transparent,
               splashColor: Colors.transparent,
-              child: Hero(
-                tag: "ShoppingBag",
-                child: Stack(
-                  children: [
-                    Center(
-                      child: Image.asset(
-                        "assets/cart.png",
-                        width: 20,
-                        height: 20,
-                      ),
+              child: Stack(
+                children: [
+                  Center(
+                    child: Image.asset(
+                      "assets/cart.png",
+                      width: 20,
+                      height: 20,
                     ),
-                    if (totalItems != 0)
-                      Positioned(
-                        top: 5,
-                        right: 0,
-                        child: Container(
-                          child: Padding(
-                            padding: const EdgeInsets.all(4.0),
-                            child: Text(
-                              "$totalItems",
-                              style: TextStyle(fontSize: 8),
-                            ),
+                  ),
+                  if (totalItems != 0)
+                    Positioned(
+                      top: 5,
+                      right: 0,
+                      child: Container(
+                        child: Padding(
+                          padding: const EdgeInsets.all(4.0),
+                          child: Text(
+                            "$totalItems",
+                            style: TextStyle(fontSize: 8),
                           ),
-                          decoration: BoxDecoration(
-                              color: Color(0xffdc0f21), shape: BoxShape.circle),
                         ),
-                      )
-                  ],
-                ),
+                        decoration: BoxDecoration(
+                            color: Color(0xffdc0f21), shape: BoxShape.circle),
+                      ),
+                    )
+                ],
               ),
               onTap: () {
                 Navigator.push(

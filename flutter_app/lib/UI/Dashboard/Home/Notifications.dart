@@ -23,12 +23,10 @@ class _NotificationsState extends State<Notifications> {
       backgroundColor: Colors.white,
       body: ListView(shrinkWrap: true,
         children: [
-          Hero(tag: "Notifications",
-            child: Container(
-              child: Image.asset("assets/cross.png"),
-              height: 40,
-              width: 40,
-            ),
+          Container(
+            child: Image.asset("assets/cross.png"),
+            height: 40,
+            width: 40,
           ),
           SizedBox(
             height: 20,

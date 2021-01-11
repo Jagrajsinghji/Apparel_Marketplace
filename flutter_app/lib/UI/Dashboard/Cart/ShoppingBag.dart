@@ -2,17 +2,17 @@ import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app/Bloc/CartBloc.dart';
 import 'package:flutter_app/Bloc/AuthBloc.dart';
+import 'package:flutter_app/Bloc/CartBloc.dart';
+import 'package:flutter_app/UI/Dashboard/Item/ItemPage.dart';
+import 'package:flutter_app/UI/SignInUp/SignIn.dart';
 import 'package:flutter_app/Utils/Extensions.dart';
 import 'package:flutter_app/Utils/Session.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:flutter_app/UI/SignInUp/SignIn.dart';
 
 import 'CheckOut.dart';
-import 'package:flutter_app/UI/Dashboard/Item/ItemPage.dart';
 
 class ShoppingBag extends StatefulWidget {
   @override
@@ -40,16 +40,13 @@ class _ShoppingBagState extends State<ShoppingBag> {
       child: Scaffold(
         appBar: AppBar(
           elevation: 0,
-          title: Hero(
-            tag: "ShoppingBag",
-            child: Material(
-              color: Colors.transparent,
-              child: Text(
-                "Shopping Bag",
-                style: TextStyle(
-                  color: Color(0xff2c393f),
-                  fontSize: 18,
-                ),
+          title: Material(
+            color: Colors.transparent,
+            child: Text(
+              "Shopping Bag",
+              style: TextStyle(
+                color: Color(0xff2c393f),
+                fontSize: 18,
               ),
             ),
           ),
@@ -115,46 +112,60 @@ class _ShoppingBagState extends State<ShoppingBag> {
                         padding: const EdgeInsets.all(20.0),
                         child: InkWell(
                           borderRadius: BorderRadius.circular(600),
-                          onTap: ()async {
+                          onTap: () async {
                             // Fluttertoast.showToast(msg: "Still in Development");
                             if (mounted)
                               setState(() {
                                 isLoading = true;
                               });
-                            AuthBloc _authBloc = Provider.of<AuthBloc>(context, listen: false);
+                            AuthBloc _authBloc =
+                                Provider.of<AuthBloc>(context, listen: false);
                             if (_authBloc.userData.length > 0) {
-                                  Navigator.push(context,
-                                      PageRouteBuilder(reverseTransitionDuration: Duration(milliseconds: 800),transitionDuration: Duration(milliseconds: 800),pageBuilder:  (c,a,b) => CheckOut()));
+                              Navigator.push(
+                                  context,
+                                  PageRouteBuilder(
+                                      reverseTransitionDuration:
+                                          Duration(milliseconds: 800),
+                                      transitionDuration:
+                                          Duration(milliseconds: 800),
+                                      pageBuilder: (c, a, b) => CheckOut()));
                             } else {
-                              await Navigator.push(
-                                  context, MaterialPageRoute(builder: (c) => SignIn()));
-                              AuthBloc _authBloc1 = Provider.of<AuthBloc>(context, listen: false);
+                              await Navigator.push(context,
+                                  MaterialPageRoute(builder: (c) => SignIn()));
+                              AuthBloc _authBloc1 =
+                                  Provider.of<AuthBloc>(context, listen: false);
                               if (_authBloc1.userData.length > 0) {
-                                Navigator.push(context,
-                                    PageRouteBuilder(reverseTransitionDuration: Duration(milliseconds: 800),transitionDuration: Duration(milliseconds: 800),pageBuilder:  (c,a,b) => CheckOut()));
+                                Navigator.push(
+                                    context,
+                                    PageRouteBuilder(
+                                        reverseTransitionDuration:
+                                            Duration(milliseconds: 800),
+                                        transitionDuration:
+                                            Duration(milliseconds: 800),
+                                        pageBuilder: (c, a, b) => CheckOut()));
                               } else
-                                Fluttertoast.showToast(msg: "Please Login To Proceed");
+                                Fluttertoast.showToast(
+                                    msg: "Please Login To Proceed");
                             }
                             if (mounted)
                               setState(() {
                                 isLoading = false;
                               });
                           },
-                          child: Hero(tag: "CheckOUtTag",
-                            child: Material(color: Colors.transparent,
-                              child: Container(
-                                height: 60,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(600),
-                                  color: Color(0xffdc0f21),
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    "Check Out",
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 14,
-                                    ),
+                          child: Material(
+                            color: Colors.transparent,
+                            child: Container(
+                              height: 60,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(600),
+                                color: Color(0xffdc0f21),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  "Check Out",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 14,
                                   ),
                                 ),
                               ),
@@ -260,22 +271,26 @@ class _ShoppingBagState extends State<ShoppingBag> {
   }
 
   Widget productTile(String key, Map details, CartBloc snapshot) {
-    double newPrice =
-    double.parse(details['price']?.toString());
+    double newPrice = double.parse(details['price']?.toString());
     //TODO: ask ravjot to send currency value
-    double currency =
-    68.5;
-
+    double currency = 68.95;
+    int sizeKey = int.parse(details["size_key"]?.toString()??"0");
     return Padding(
       padding: const EdgeInsets.only(bottom: 10),
       child: Container(
-        height: 190,
+        height: 130,
         color: Colors.white,
         child: Row(
           children: [
-            InkWell(onTap: (){
-              Navigator.push(context, MaterialPageRoute(builder: (c)=>ItemPage(tag: details['item']['slug']+"shoppingBag",itemSlug: details['item']['slug'],)));
-            },
+            InkWell(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (c) => ItemPage(
+                              itemSlug: details['item']['slug'],
+                            )));
+              },
               child: Container(
                 height: double.maxFinite,
                 child: CachedNetworkImage(
@@ -446,6 +461,16 @@ class _ShoppingBagState extends State<ShoppingBag> {
                           children: [
                             Expanded(
                               flex: 0,
+                              child: Text(
+                                "\u20B9 ${(newPrice * currency).ceil()}",
+                                maxLines: 1,
+                                style: TextStyle(
+                                  fontSize: 15,
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              flex: 0,
                               child: Container(
                                 decoration: BoxDecoration(
                                     color: Color(0xffF2F2F2),
@@ -496,7 +521,8 @@ class _ShoppingBagState extends State<ShoppingBag> {
                                                 });
                                               await snapshot.reduceByOne(
                                                   details['item']['id'], key,
-                                                  sizePrice: details['price']);
+                                                  sizePrice: details['price'],
+                                                  sizeQty: details['size_qty']);
                                               if (mounted)
                                                 setState(() {
                                                   isLoading = false;
@@ -517,7 +543,8 @@ class _ShoppingBagState extends State<ShoppingBag> {
                                               });
                                             await snapshot.addByOne(
                                                 details['item']['id'], key,
-                                                sizePrice: details['price']);
+                                                sizePrice: details['price'],
+                                                sizeQty: details['size_qty']);
                                             if (mounted)
                                               setState(() {
                                                 isLoading = false;
@@ -547,27 +574,6 @@ class _ShoppingBagState extends State<ShoppingBag> {
                                         });
                                     }))
                           ],
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      flex: 0,
-                      child: Text(
-                        "\u20B9 ${(newPrice * currency).ceil()}",
-                        maxLines: 1,
-                        style: TextStyle(
-                          fontSize: 15,
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      flex: 0,
-                      child: Text(
-                        "30 days easy return",
-                        style: TextStyle(
-                          color: Color(0xff999999),
-                          fontSize: 10,
-                          letterSpacing: 0.30,
                         ),
                       ),
                     ),

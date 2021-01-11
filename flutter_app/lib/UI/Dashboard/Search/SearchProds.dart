@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/UI/Components/CartIcon.dart';
 import 'package:flutter_app/UI/Components/GlobalWidget.dart';
-import 'package:flutter_app/UI/Dashboard/Cart/WishList.dart';
 
 class SearchProds extends StatefulWidget {
-
   @override
   _SearchProdsState createState() => _SearchProdsState();
 }
@@ -24,10 +22,12 @@ class _SearchProdsState extends State<SearchProds> {
           ),
           backgroundColor: Colors.white,
           title: TextFormField(
-            decoration: InputDecoration(prefixIcon:  Hero(
-              tag: "SearchTag",
-              child: Icon(Icons.search,size: 30,color: Colors.black,),
-            ),
+            decoration: InputDecoration(
+              prefixIcon: Icon(
+                Icons.search,
+                size: 30,
+                color: Colors.black,
+              ),
               enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                   borderSide: BorderSide(color: Colors.transparent)),
@@ -56,7 +56,7 @@ class _SearchProdsState extends State<SearchProds> {
             //   child: InkWell(
             //     focusColor: Colors.transparent,
             //     splashColor: Colors.transparent,
-            //     child: Hero(
+            //     child: x(
             //       tag: "WishList",
             //       child: Image.asset(
             //         "assets/favourite.png",

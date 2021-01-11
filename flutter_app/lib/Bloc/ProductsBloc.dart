@@ -17,7 +17,8 @@ class ProductsBloc with ChangeNotifier {
     Dio dio = Dio(Session.instance.baseOptions);
     dio.interceptors.add(_dioInterceptor);
     Response response = await dio.get("/api");
-    Session.instance.updateCookie(response);
+    await Session.instance.updateCookie(response);
+
     if (response?.data is Map)
       homePageData = response?.data ?? {};
     else
@@ -30,7 +31,8 @@ class ProductsBloc with ChangeNotifier {
     Dio dio = Dio(Session.instance.baseOptions);
     dio.interceptors.add(_dioInterceptor);
     Response response = await dio.get("/api/extras");
-    Session.instance.updateCookie(response);
+    await Session.instance.updateCookie(response);
+
     if (response?.data is Map)
       homePageExtras = response?.data ?? {};
     else
@@ -45,7 +47,8 @@ class ProductsBloc with ChangeNotifier {
     Dio dio = Dio(Session.instance.baseOptions);
     dio.interceptors.add(_dioInterceptor);
     Response response = await dio.get("/api/category/$name/null/null?page=$page");
-    Session.instance.updateCookie(response);
+    await Session.instance.updateCookie(response);
+
     return response;
   }
 
@@ -58,7 +61,8 @@ class ProductsBloc with ChangeNotifier {
     dio.interceptors.add(_dioInterceptor);
     Response response =
         await dio.get("/api/category/$categoryName/$subcategoryName/null?page=$page");
-    Session.instance.updateCookie(response);
+    await Session.instance.updateCookie(response);
+
     return response;
   }
 
@@ -71,7 +75,8 @@ class ProductsBloc with ChangeNotifier {
     dio.interceptors.add(_dioInterceptor);
     Response response = await dio
         .get("/api/category/$categoryName/$subcategoryName/$childCategoryName?page=$page");
-    Session.instance.updateCookie(response);
+    await Session.instance.updateCookie(response);
+
     return response;
   }
 }

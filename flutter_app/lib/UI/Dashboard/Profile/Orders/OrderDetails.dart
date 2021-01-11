@@ -330,7 +330,7 @@ class _OrderDetailsState extends State<OrderDetails> {
   Widget productTile(String key, Map details) {
     double newPrice = double.parse(details['price']?.toString());
     //TODO: ask ravjot to send currency value
-    double currency = 68.5;
+    double currency = 68.95;
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 10),
@@ -345,7 +345,7 @@ class _OrderDetailsState extends State<OrderDetails> {
                     context,
                     MaterialPageRoute(
                         builder: (c) => ItemPage(
-                              tag: details['item']['slug'] + "shoppingBag",
+
                               itemSlug: details['item']['slug'],
                             )));
               },

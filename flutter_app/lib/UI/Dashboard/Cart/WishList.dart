@@ -11,15 +11,11 @@ class _WishListState extends State<WishList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title:  Hero(tag: "ShoppingBag",
-          child: Material(color: Colors.transparent,
-            child: Text(
-              "Shopping Bag",
-              style: TextStyle(
-                color: Color(0xff2c393f),
-                fontSize: 18,
-              ),
-            ),
+        appBar: AppBar(title:  Text(
+          "Shopping Bag",
+          style: TextStyle(
+            color: Color(0xff2c393f),
+            fontSize: 18,
           ),
         ),
           elevation: 0,

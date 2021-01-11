@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/Bloc/OrdersBloc.dart';
 import 'package:flutter_app/Utils/Session.dart';
@@ -96,14 +97,28 @@ class _OrdersState extends State<Orders> {
           itemCount: _orderBloc.myOrders.length,
           itemBuilder: (c, i) {
             Map order = _orderBloc.myOrders.elementAt(i);
-            return ListTile(onTap: (){
-              Navigator.push(context, MaterialPageRoute(builder: (c)=>OrderDetails(orderId: order['order_id'],)));
-            },
-                title: Text("Order Number: ${order['order_number']}\n Total Price: ${order['order_total']}"),
-            isThreeLine: true,
-            subtitle: Text(
-            "Date: ${order['order_date']}\n"
-            "Status: ${order['order_status']}"),
+            return Padding(
+              padding: const EdgeInsets.all(2.0),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 5),
+                child: Container(decoration: BoxDecoration(color: Colors.white38,border: Border.all(color: Colors.grey),
+                borderRadius: BorderRadius.circular(20)),
+                  child: ListTile(onTap: (){
+                    Navigator.push(context, MaterialPageRoute(builder: (c)=>OrderDetails(orderId: order['order_id'],)));
+                  },
+                      title: Text("Order Number: ${order['order_number']}"),
+                  isThreeLine: true,
+                  subtitle: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                      "Date: ${order['order_date']}\n"
+                      "Status: ${order['order_status']}"),
+                      Text(" Total Price: ${order['order_total']}")
+                    ],
+                  ),
+                  ),
+                ),
+              ),
             );
             }),
     );

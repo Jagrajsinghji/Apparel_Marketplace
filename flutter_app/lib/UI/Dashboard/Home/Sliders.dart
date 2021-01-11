@@ -28,6 +28,7 @@ class Sliders extends StatefulWidget {
 class _SlidersState extends State<Sliders> with TickerProviderStateMixin {
   AnimationController _controller;
   PageController _pageController;
+  int page =0;
 
   @override
   void initState() {
@@ -52,6 +53,9 @@ class _SlidersState extends State<Sliders> with TickerProviderStateMixin {
         _controller.forward();
       }
     });
+    _controller.addListener(() =>setState((){
+      page = _pageController.page.toInt();
+    }));
     Timer(Duration(seconds: 1), () {
       try {
         _controller?.forward();
@@ -71,7 +75,7 @@ class _SlidersState extends State<Sliders> with TickerProviderStateMixin {
     return SliverList(
         delegate: SliverChildListDelegate([
       Padding(
-        padding: const EdgeInsets.symmetric(vertical: 10),
+        padding: const EdgeInsets.only(top: 5),
         child: Container(
           height: widget.height,
           width: double.infinity,
@@ -87,45 +91,45 @@ class _SlidersState extends State<Sliders> with TickerProviderStateMixin {
                   switch (widget.numb) {
                     case 0:
                       _widget = CategoriesPage(
-                        tag: null,
+
                         subCatName: "womens-western-wear",
                         childCatName: "cardigan",
                         categoryName: "women",
                       );
                       break;
                     case 1:
-                      if(i==0)
+                      if (i == 0)
                         _widget = CategoriesPage(
-                          tag: null,
+
                           categoryName: "women",
                           subCatName: "womens-western-wear",
                         );
-                     else
+                      else
                         _widget = CategoriesPage(
-                          tag: null,
+
                           categoryName: "men",
                           subCatName: "men-topwear",
                           childCatName: "men-t-shirts",
                         );
                       break;
                     default:
-                      if(i==0)
+                      if (i == 0)
                         _widget = CategoriesPage(
-                          tag: null,
+
                           categoryName: "women",
                           subCatName: "women-ethnic-wear",
                           childCatName: "kurti-and-kurti-set",
                         );
-
-                      else if(i==2)
-                      _widget = CategoriesPage(
-                        tag: null,
-                        categoryName: "women",
-                        subCatName: "womens-western-wear",
-                        childCatName: "cardigan",
-                      );else
+                      else if (i == 2)
                         _widget = CategoriesPage(
-                          tag: null,
+
+                          categoryName: "women",
+                          subCatName: "womens-western-wear",
+                          childCatName: "cardigan",
+                        );
+                      else
+                        _widget = CategoriesPage(
+
                           categoryName: "men",
                           subCatName: "men-topwear",
                           childCatName: "men-t-shirts",
@@ -142,13 +146,48 @@ class _SlidersState extends State<Sliders> with TickerProviderStateMixin {
                   height: widget.height,
                   imageUrl:
                       "${Session.BASE_URL}/assets/images/${widget.picsPath}/${data['photo']}",
-                  fit: BoxFit.fitHeight,
+                  fit: BoxFit.cover,
                 ),
               );
             },
           ),
         ),
       ),
+      Center(
+        child: Container(
+          height: 20,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemBuilder: (c, i) {
+              if (page == i)
+                return Padding(
+                  padding: const EdgeInsets.all(2.0),
+                  child: Container(
+                    height: 6,
+                    width: 6,
+                    decoration: BoxDecoration(
+                        color: Colors.black, shape: BoxShape.circle),
+                  ),
+                );
+              else
+                return Padding(
+                  padding: const EdgeInsets.all(2.0),
+                  child: Container(
+                    height: 6,
+                    width: 6,
+                    decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.black,
+                        ),
+                        shape: BoxShape.circle),
+                  ),
+                );
+            },
+            itemCount: (widget.slidersData?.length??0),
+            shrinkWrap: true,
+          ),
+        ),
+      )
     ]));
   }
 }

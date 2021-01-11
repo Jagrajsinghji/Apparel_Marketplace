@@ -37,17 +37,11 @@ class _CheckOutState extends State<CheckOut> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        title: Hero(
-          tag: "CheckOUtTag",
-          child: Material(
-            color: Colors.transparent,
-            child: Text(
-              "Check Out",
-              style: TextStyle(
-                color: Color(0xff2c393f),
-                fontSize: 18,
-              ),
-            ),
+        title: Text(
+          "Check Out",
+          style: TextStyle(
+            color: Color(0xff2c393f),
+            fontSize: 18,
           ),
         ),
         leading: FlatButton(
@@ -82,7 +76,7 @@ class _CheckOutState extends State<CheckOut> {
                   List shippingData = data['shipping_data'] ?? [];
                   List packageData = data['package_data'] ?? [];
 //TODO: ask ravjot to send currency
-                  double currency = 68.5;
+                  double currency = 68.95;
                   if (_cartBloc.couponData.length > 0)
                     couponAmt = double.parse(
                         _cartBloc.couponData['coupon_amt']?.toString() ?? "0");
@@ -227,7 +221,7 @@ class _CheckOutState extends State<CheckOut> {
                                   ),
                                   child: Padding(
                                     padding:
-                                        EdgeInsets.only(bottom: 10, top: 10),
+                                        EdgeInsets.only(bottom: 2, top: 2),
                                     child: Container(
                                       color: Colors.white,
                                       child: ExpansionTile(
@@ -298,7 +292,7 @@ class _CheckOutState extends State<CheckOut> {
                                       ThemeData(accentColor: Color(0xffFF1D1D)),
                                   child: Padding(
                                     padding:
-                                        EdgeInsets.only(bottom: 10, top: 10),
+                                        EdgeInsets.only(bottom: 2, top: 2),
                                     child: Container(
                                       color: Colors.white,
                                       child: ExpansionTile(
@@ -363,7 +357,7 @@ class _CheckOutState extends State<CheckOut> {
                                 ),
 
                               Padding(
-                                padding: EdgeInsets.only(bottom: 10, top: 10),
+                                padding: EdgeInsets.only(bottom: 2, top: 2),
                                 child: Container(
                                   color: Colors.white,
                                   child: Padding(
@@ -681,12 +675,12 @@ class _CheckOutState extends State<CheckOut> {
   Widget productTile(String key, Map details, CartBloc _cartBloc) {
     double newPrice = double.parse(details['price']?.toString());
     //TODO: ask ravjot to send currency value
-    double currency = 68.5;
+    double currency = 68.95;
 
     return Padding(
-      padding: const EdgeInsets.only(bottom: 10),
+      padding: const EdgeInsets.only(bottom:5),
       child: Container(
-        height: 190,
+        height: 130,
         color: Colors.white,
         child: Row(
           children: [
@@ -714,7 +708,7 @@ class _CheckOutState extends State<CheckOut> {
                         maxLines: 2,
                         style: TextStyle(
                           color: Color(0xff515151),
-                          fontSize: 15,
+                          fontSize: 15,fontWeight: FontWeight.bold,
                           letterSpacing: 0.45,
                         ),
                       ),
@@ -842,7 +836,7 @@ class _CheckOutState extends State<CheckOut> {
                     //           //               ))
                     //           //           .toList(),
                     //           //   ],
-                    //           //   onChanged: (x) {},
+                    //           //   onChanged: (Material) {},
                     //           // )
                     //         ],
                     //       ),
@@ -857,6 +851,16 @@ class _CheckOutState extends State<CheckOut> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
+                            Expanded(
+                              flex: 0,
+                              child: Text(
+                                "\u20B9 ${(newPrice * currency).ceil()}",
+                                maxLines: 1,
+                                style: TextStyle(
+                                  fontSize: 15,
+                                ),
+                              ),
+                            ),
                             Expanded(
                               flex: 0,
                               child: Container(
@@ -938,7 +942,7 @@ class _CheckOutState extends State<CheckOut> {
                                           },
                                         )
                                       ],
-                                      onChanged: (x) {},
+                                      onChanged: (Material) {},
                                     )
                                   ],
                                 ),
@@ -960,27 +964,6 @@ class _CheckOutState extends State<CheckOut> {
                                         });
                                     }))
                           ],
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      flex: 0,
-                      child: Text(
-                        "\u20B9 ${(newPrice * currency).ceil()}",
-                        maxLines: 1,
-                        style: TextStyle(
-                          fontSize: 15,
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      flex: 0,
-                      child: Text(
-                        "30 days easy return",
-                        style: TextStyle(
-                          color: Color(0xff999999),
-                          fontSize: 10,
-                          letterSpacing: 0.30,
                         ),
                       ),
                     ),

@@ -14,7 +14,8 @@ class CategoryBloc with ChangeNotifier {
     Dio dio = Dio(Session.instance.baseOptions);
     dio.interceptors.add(DioInterceptor.getInstance());
     Response response = await dio.get("/api/categories/list");
-    Session.instance.updateCookie(response);
+    await Session.instance.updateCookie(response);
+
     if (response?.data is Map)
       categoryData = response?.data ?? {};
     else

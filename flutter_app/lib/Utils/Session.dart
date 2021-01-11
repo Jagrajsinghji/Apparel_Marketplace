@@ -10,7 +10,9 @@ class Session {
 
   static Session get instance => _constant;
 
-  Map<String, String> _headers = {};
+  Map<String, String> _headers = {
+    "Accept":"application/json"
+  };
   SharedPreferences _pref;
 
   get baseOptions => BaseOptions(

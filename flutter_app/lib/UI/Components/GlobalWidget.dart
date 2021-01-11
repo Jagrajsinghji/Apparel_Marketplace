@@ -28,7 +28,7 @@ _bottomNav(BuildContext context, {VoidCallback voidCallback}) {
                         flex: 0,
                         child: Image.asset("assets/wowIcon.png",
                             height: 35, width: 35)),
-                    Expanded(flex: 0,child: Text("Home"))
+                    // Expanded(flex: 0,child: Text("Home"))
                   ],
                 ),
               ),
@@ -112,7 +112,7 @@ _bottomNav(BuildContext context, {VoidCallback voidCallback}) {
                         ),
                       ),
                     ),
-                    Expanded(flex: 0,child: Text("Profile"))
+                    // Expanded(flex: 0,child: Text("Profile"))
                   ],
                 ),
               ),

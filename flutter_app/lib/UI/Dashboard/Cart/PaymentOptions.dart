@@ -19,7 +19,7 @@ class _PaymentOptionsState extends State<PaymentOptions> {
   int paymentOption;
   double total;
   bool loading = false;
-  double currency = 68.5;
+  double currency = 68.95;
 
   @override
   Widget build(BuildContext context) {
