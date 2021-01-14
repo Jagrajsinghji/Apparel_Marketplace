@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/Bloc/CartBloc.dart';
+import 'package:flutter_app/Bloc/RazorPayBloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_app/Bloc/OrdersBloc.dart';
@@ -240,7 +241,7 @@ class _PaymentOptionsState extends State<PaymentOptions> {
                                         ),
                                       ),
                                       Text(
-                                        "\u20B9 ${(data["totalMRP"] * currency).ceil()}",
+                                        "\u20B9 ${(data["totalMRP"] * currency).toInt()}",
                                         style: TextStyle(
                                           color: Color(0xff7f7f7f),
                                           fontSize: 14,
@@ -269,7 +270,7 @@ class _PaymentOptionsState extends State<PaymentOptions> {
                                           ),
                                         ),
                                         Text(
-                                          "-\u20B9 ${(data["couponDiscount"] * currency).ceil()}",
+                                          "-\u20B9 ${(data["couponDiscount"] * currency).toInt()}",
                                           style: TextStyle(
                                             color: Color(0xff05B90D),
                                             fontSize: 14,
@@ -297,7 +298,7 @@ class _PaymentOptionsState extends State<PaymentOptions> {
                                         ),
                                       ),
                                       Text(
-                                        "\u20B9 ${(data["shippingCost"] * currency).ceil()}",
+                                        "\u20B9 ${(data["shippingCost"] * currency).toInt()}",
                                         style: TextStyle(
                                           color: Color(0xff7f7f7f),
                                           fontSize: 14,
@@ -325,7 +326,7 @@ class _PaymentOptionsState extends State<PaymentOptions> {
                                         ),
                                       ),
                                       Text(
-                                        "\u20B9 ${(data["packingCost"] * currency).ceil()}",
+                                        "\u20B9 ${(data["packingCost"] * currency).toInt()}",
                                         style: TextStyle(
                                           color: Color(0xff7f7f7f),
                                           fontSize: 14,
@@ -357,7 +358,7 @@ class _PaymentOptionsState extends State<PaymentOptions> {
                                         ),
                                       ),
                                       Text(
-                                        "\u20B9 ${(total * currency).ceil()}",
+                                        "\u20B9 ${(total * currency).toInt()}",
                                         style: TextStyle(
                                           color: Color(0xff515151),
                                           fontSize: 14,
@@ -413,6 +414,14 @@ class _PaymentOptionsState extends State<PaymentOptions> {
       setState(() {
         loading = true;
       });
+    if(paymentOption==0)
+      cashOnDelivery();
+    else
+      razorpayPayment();
+  }
+
+
+  void cashOnDelivery()async{
     Map<String, dynamic> data = widget.checkOutData;
     CartBloc _cBloc = Provider.of<CartBloc>(context, listen: false);
     Response resp = await _cBloc.placeCashOnDeliveryOrder(
@@ -455,10 +464,36 @@ class _PaymentOptionsState extends State<PaymentOptions> {
           context,
           PageRouteBuilder(
               pageBuilder: (c, a, b) => OrderPlaced(
-                    data: data,
-                  )),
-          (route) => route.isFirst);
+                data: data,
+              )),
+              (route) => route.isFirst);
     } else
       Fluttertoast.showToast(msg: "An Error Occurred while placing your order");
+  }
+
+  void razorpayPayment()async{
+    try {
+      Map<String, dynamic> data = widget.checkOutData;
+      RazorPayBloc _razorPay=RazorPayBloc();
+      var options = {
+        'key':
+        _razorPay.TEST_KEY,
+        'amount':(total * currency).toInt(),
+        'name':data['name'],
+        'prefill': {
+          'email':
+          data['personalEmail'],
+          'mobile': data['phone']?.toString()
+        },
+      };
+      _razorPay.razorPay.open(options);
+    } catch (e) {
+      debugPrint(e.toString());
+      if (this.mounted)
+        setState(() {
+          loading = false;
+        });
+    }
+    
   }
 }

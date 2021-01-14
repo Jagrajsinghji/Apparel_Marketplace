@@ -538,7 +538,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
                                                 Expanded(
                                                   flex: 0,
                                                   child: Text(
-                                                    "\u20B9 ${(newPrice * currency).ceil()}",
+                                                    "\u20B9 ${(newPrice * currency).toInt()}",
                                                     maxLines: 1,
                                                     style: TextStyle(
                                                       fontSize: 15,
@@ -553,7 +553,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
                                                           const EdgeInsets.only(
                                                               left: 10.0),
                                                       child: Text(
-                                                        "\u20B9 ${(prevPrice * currency).ceil()}",
+                                                        "\u20B9 ${(prevPrice * currency).toInt()}",
                                                         maxLines: 1,
                                                         style: TextStyle(
                                                             fontSize: 15,

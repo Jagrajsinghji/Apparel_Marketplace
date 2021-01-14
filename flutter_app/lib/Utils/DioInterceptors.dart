@@ -11,6 +11,8 @@ class DioInterceptor extends Interceptor {
   @override
   Future onRequest(RequestOptions options) async {
     options.headers.addAll((await Session.instance.getHeaders()));
+    print(options.uri);
+    // print(options.headers);
     return options;
   }
 

@@ -95,7 +95,7 @@ class AuthBloc with ChangeNotifier {
     Dio dio = Dio(Session.instance.baseOptions);
     dio.interceptors.add(_dioInterceptor);
     String token = await Session.instance.getToken();
-    Response response = await dio.post("${Session.BASE_URL}/api/user/logout",
+    Response response = await dio.get("${Session.BASE_URL}/api/user/logout",
         options: Options(headers: {"Authorization": "Bearer $token"}));
     await Session.instance.updateCookie(response);
 

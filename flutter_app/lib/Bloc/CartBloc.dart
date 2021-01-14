@@ -19,7 +19,6 @@ class CartBloc with ChangeNotifier {
     dio.interceptors.add(_dioInterceptor);
     Response response = await dio.get("/api/carts/view");
     await Session.instance.updateCookie(response);
-
     if (response?.data is Map)
       cartData = response?.data ?? {};
     else
@@ -55,10 +54,10 @@ class CartBloc with ChangeNotifier {
     Response response = await dio.get(
         "${Session.BASE_URL}/api/numcart/add?id=$itemId&qty=$qty&size=$size&color=$color&size_qty=$sizeQty&size_price=$sizePrice&size_key=$sizeKey&keys=$keys&values=$values&prices=$prices");
     await Session.instance.updateCookie(response);
-    print(response.data);
     await getCartItems();
-    if (response.data != null && response.data['data'] is String)
-      return response;
+    if (response.data != null && response.data['data'] is String) {
+      Fluttertoast.showToast(msg: "An Error occurred!");
+    }
     if (((response.data['data'] ?? {})['item'] ?? {})['id'] == itemId) {
       Fluttertoast.showToast(msg: "Item Added To Cart");
     }
@@ -79,19 +78,19 @@ class CartBloc with ChangeNotifier {
     return response;
   }
 
-  Future<Response> addByOne(
-    int id,
-    String itemId, {
-    sizeQty = "",
-    sizePrice = "",
-  }) async {
+  Future<Response> addByOne(int id, String itemId,
+      {sizeQty = "", sizePrice = "", bool getCartItem = true}) async {
     Dio dio = Dio(Session.instance.baseOptions);
     dio.interceptors.add(_dioInterceptor);
     Response response = await dio.get(
         "${Session.BASE_URL}/api/add/byone?id=$id&itemid=$itemId&size_qty=$sizeQty&size_price=$sizePrice");
+
     await Session.instance.updateCookie(response);
 
-    await getCartItems();
+    if (getCartItem) {
+      await getCartItems();
+    } else
+      getCartItems();
 
     if (response.data['data'] is String) {
       if (response.data['data'].toString().contains("Out of stock"))
@@ -101,29 +100,24 @@ class CartBloc with ChangeNotifier {
     }
 
     notifyListeners();
+
     return response;
   }
 
-  Future<Response> reduceByOne(
-    int id,
-    String itemId, {
-    sizeQty = "",
-    sizePrice = "",
-  }) async {
+  Future<Response> reduceByOne(int id, String itemId,
+      {sizeQty = "", sizePrice = "",}) async {
     Dio dio = Dio(Session.instance.baseOptions);
     dio.interceptors.add(_dioInterceptor);
     Response response = await dio.get(
         "${Session.BASE_URL}/api/reduce/byone?id=$id&itemid=$itemId&size_qty=$sizeQty&size_price=$sizePrice");
     await Session.instance.updateCookie(response);
-
     await getCartItems();
     if (response.data['data'] is String) {
       if (response.data['data'].toString().contains("greater than size qty"))
         Fluttertoast.showToast(msg: "Can not remove item.");
     } else if (response.data['data'] is Map) {
       Fluttertoast.showToast(msg: "Item removed successfully.");
-    }
-    notifyListeners();
+    }notifyListeners();
     return response;
   }
 

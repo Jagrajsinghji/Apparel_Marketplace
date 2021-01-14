@@ -227,8 +227,8 @@ class _FilterByState extends State<FilterBy> {
                   min: minPrice,
                   max: maxPrice,
                   labels: RangeLabels(
-                      _priceValues.start.ceil().toString(),
-                      _priceValues.end.ceil().toString()),
+                      _priceValues.start.toInt().toString(),
+                      _priceValues.end.toInt().toString()),
                 ),
               ),
             ),

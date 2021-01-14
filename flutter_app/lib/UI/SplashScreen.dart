@@ -55,7 +55,7 @@ class _SplashScreenState extends State<SplashScreen>
             padding: const EdgeInsets.all(8.0),
             child: Align(
                 alignment: Alignment.bottomCenter,
-                child: Text("Version 0.0.1")),
+                child: Text("Version 1.0.2")),
           )
         ],
       ),

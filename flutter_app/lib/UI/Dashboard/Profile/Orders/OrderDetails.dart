@@ -407,7 +407,7 @@ class _OrderDetailsState extends State<OrderDetails> {
                     Expanded(
                       flex: 0,
                       child: Text(
-                        "\u20B9 ${(newPrice * currency).ceil()}",
+                        "\u20B9 ${(newPrice * currency).toInt()}",
                         maxLines: 1,
                         style: TextStyle(
                           fontSize: 15,

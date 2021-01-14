@@ -270,11 +270,14 @@ class _ShoppingBagState extends State<ShoppingBag> {
     );
   }
 
-  Widget productTile(String key, Map details, CartBloc snapshot) {
+  Widget productTile(String itemID, Map details, CartBloc snapshot) {
+    // print(details);
     double newPrice = double.parse(details['price']?.toString());
+    double itemPrice = double.parse(details['item']['price']?.toString());
+
     //TODO: ask ravjot to send currency value
     double currency = 68.95;
-    int sizeKey = int.parse(details["size_key"]?.toString()??"0");
+    double sizePrice = itemPrice + double.parse(details['size_price']?.toString()??"0");
     return Padding(
       padding: const EdgeInsets.only(bottom: 10),
       child: Container(
@@ -462,7 +465,7 @@ class _ShoppingBagState extends State<ShoppingBag> {
                             Expanded(
                               flex: 0,
                               child: Text(
-                                "\u20B9 ${(newPrice * currency).ceil()}",
+                                "\u20B9 ${(newPrice * currency).toInt()}",
                                 maxLines: 1,
                                 style: TextStyle(
                                   fontSize: 15,
@@ -520,8 +523,8 @@ class _ShoppingBagState extends State<ShoppingBag> {
                                                   isLoading = true;
                                                 });
                                               await snapshot.reduceByOne(
-                                                  details['item']['id'], key,
-                                                  sizePrice: details['price'],
+                                                  details['item']['id'], itemID,
+                                                  sizePrice: sizePrice,
                                                   sizeQty: details['size_qty']);
                                               if (mounted)
                                                 setState(() {
@@ -542,8 +545,8 @@ class _ShoppingBagState extends State<ShoppingBag> {
                                                 isLoading = true;
                                               });
                                             await snapshot.addByOne(
-                                                details['item']['id'], key,
-                                                sizePrice: details['price'],
+                                                details['item']['id'], itemID,
+                                                sizePrice: sizePrice,
                                                 sizeQty: details['size_qty']);
                                             if (mounted)
                                               setState(() {
@@ -567,7 +570,7 @@ class _ShoppingBagState extends State<ShoppingBag> {
                                         setState(() {
                                           isLoading = true;
                                         });
-                                      await snapshot.removeItemFromCart(key);
+                                      await snapshot.removeItemFromCart(itemID);
                                       if (mounted)
                                         setState(() {
                                           isLoading = false;

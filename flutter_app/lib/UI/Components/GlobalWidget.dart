@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 _bottomNav(BuildContext context, {VoidCallback voidCallback}) {
   ScreenBloc screenBloc = Provider.of<ScreenBloc>(context);
   return Container(
-    height: 70,
+    height: 50,
     child: Padding(
       padding: const EdgeInsets.only(bottom: 5),
       child: Row(
@@ -27,7 +27,7 @@ _bottomNav(BuildContext context, {VoidCallback voidCallback}) {
                     Expanded(
                         flex: 0,
                         child: Image.asset("assets/wowIcon.png",
-                            height: 35, width: 35)),
+                            height: 40, width: 40)),
                     // Expanded(flex: 0,child: Text("Home"))
                   ],
                 ),

@@ -79,6 +79,13 @@
             </list>
           </value>
         </entry>
+        <entry key="eventify">
+          <value>
+            <list>
+              <option value="C:/flutter/.pub-cache/hosted/pub.dartlang.org/eventify-0.1.4/lib" />
+            </list>
+          </value>
+        </entry>
         <entry key="fake_async">
           <value>
             <list>
@@ -198,13 +205,6 @@
             </list>
           </value>
         </entry>
-        <entry key="matrix_gesture_detector">
-          <value>
-            <list>
-              <option value="C:/flutter/.pub-cache/hosted/pub.dartlang.org/matrix_gesture_detector-0.1.0/lib" />
-            </list>
-          </value>
-        </entry>
         <entry key="meta">
           <value>
             <list>
@@ -314,6 +314,13 @@
           <value>
             <list>
               <option value="C:/flutter/.pub-cache/hosted/pub.dartlang.org/pull_to_refresh-1.6.3/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="razorpay_flutter">
+          <value>
+            <list>
+              <option value="C:/flutter/.pub-cache/hosted/pub.dartlang.org/razorpay_flutter-1.2.3/lib" />
             </list>
           </value>
         </entry>
@@ -534,6 +541,7 @@
       <root url="file://C:/flutter/.pub-cache/hosted/pub.dartlang.org/crypto-2.1.5/lib" />
       <root url="file://C:/flutter/.pub-cache/hosted/pub.dartlang.org/cupertino_icons-1.0.0/lib" />
       <root url="file://C:/flutter/.pub-cache/hosted/pub.dartlang.org/dio-3.0.10/lib" />
+      <root url="file://C:/flutter/.pub-cache/hosted/pub.dartlang.org/eventify-0.1.4/lib" />
       <root url="file://C:/flutter/.pub-cache/hosted/pub.dartlang.org/fake_async-1.2.0-nullsafety.1/lib" />
       <root url="file://C:/flutter/.pub-cache/hosted/pub.dartlang.org/ffi-0.1.3/lib" />
       <root url="file://C:/flutter/.pub-cache/hosted/pub.dartlang.org/file-5.2.1/lib" />
@@ -548,7 +556,6 @@
       <root url="file://C:/flutter/.pub-cache/hosted/pub.dartlang.org/image_picker_platform_interface-1.1.1/lib" />
       <root url="file://C:/flutter/.pub-cache/hosted/pub.dartlang.org/intl-0.16.1/lib" />
       <root url="file://C:/flutter/.pub-cache/hosted/pub.dartlang.org/matcher-0.12.10-nullsafety.1/lib" />
-      <root url="file://C:/flutter/.pub-cache/hosted/pub.dartlang.org/matrix_gesture_detector-0.1.0/lib" />
       <root url="file://C:/flutter/.pub-cache/hosted/pub.dartlang.org/meta-1.3.0-nullsafety.3/lib" />
       <root url="file://C:/flutter/.pub-cache/hosted/pub.dartlang.org/nested-0.0.4/lib" />
       <root url="file://C:/flutter/.pub-cache/hosted/pub.dartlang.org/octo_image-0.3.0/lib" />
@@ -565,6 +572,7 @@
       <root url="file://C:/flutter/.pub-cache/hosted/pub.dartlang.org/process-3.0.13/lib" />
       <root url="file://C:/flutter/.pub-cache/hosted/pub.dartlang.org/provider-4.3.2+3/lib" />
       <root url="file://C:/flutter/.pub-cache/hosted/pub.dartlang.org/pull_to_refresh-1.6.3/lib" />
+      <root url="file://C:/flutter/.pub-cache/hosted/pub.dartlang.org/razorpay_flutter-1.2.3/lib" />
       <root url="file://C:/flutter/.pub-cache/hosted/pub.dartlang.org/rxdart-0.24.1/lib" />
       <root url="file://C:/flutter/.pub-cache/hosted/pub.dartlang.org/shared_preferences-0.5.12+4/lib" />
       <root url="file://C:/flutter/.pub-cache/hosted/pub.dartlang.org/shared_preferences_linux-0.0.2+4/lib" />

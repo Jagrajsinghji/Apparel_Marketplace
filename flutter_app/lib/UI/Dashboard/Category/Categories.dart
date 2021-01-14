@@ -11,6 +11,13 @@ class Categories extends StatefulWidget {
 }
 
 class _CategoriesState extends State<Categories> {
+  Map moreCats = {
+    "assets/bottomWear.jpg": "men/men-bottomwear/null",
+    "assets/jackets.jpg": "women/women-ethnic-wear/kurti-and-kurti-set",
+    "assets/kurtis.jpg": "women/women-ethnic-wear/kurti-and-kurti-set",
+    "assets/winterWear.jpg": "women/womens-western-wear/women-sweaters",
+  };
+
   @override
   Widget build(BuildContext context) {
     return SliverList(
@@ -23,14 +30,27 @@ class _CategoriesState extends State<Categories> {
             padding: const EdgeInsets.only(left: 20.0, top: 10, bottom: 10),
             child: Align(
               alignment: Alignment.centerLeft,
-              child: Text(
-                "Categories to bag",
+              child: RichText(
+                text: TextSpan(
+                    text: "Categories",
+                    style: TextStyle(
+                      color: Color(0xffdc0f21),
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 0.45,
+                    ),
+                    children: [
+                      TextSpan(
+                        text: " To bag",
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.normal,
+                          fontSize: 15,
+                          letterSpacing: 0.45,
+                        ),
+                      ),
+                    ]),
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Color(0xff727272),
-                  fontSize: 15,
-                  letterSpacing: 0.45,
-                ),
               ),
             ),
           ),
@@ -48,14 +68,14 @@ class _CategoriesState extends State<Categories> {
             return GridView.builder(
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
-                itemCount: categories.length + 1,
+                itemCount: categories.length + 5,
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 3,
                     crossAxisSpacing: 5,
                     mainAxisSpacing: 5,
                     childAspectRatio: .9),
                 itemBuilder: (c, i) {
-                  if (i == categories.length) {
+                  if (i == categories.length+4) {
                     return InkWell(
                       onTap: () {
                         Navigator.of(context).push(PageRouteBuilder(
@@ -67,30 +87,61 @@ class _CategoriesState extends State<Categories> {
                                 )));
                       },
                       child: Padding(
-                        padding: const EdgeInsets.only(bottom:25.0),
-                        child:Column(
+                        padding: const EdgeInsets.only(bottom: 25.0),
+                        child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Expanded(
-                              flex: 1,
-                              child:  Container(
-                                decoration: BoxDecoration(
-                                    color: Colors.grey.shade300, shape: BoxShape.circle),
-                                child: Center(
-                                    child: Text(
-                                      "+ Explore\nMore",
-                                      maxLines: 2,
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        color: Color(0xff727272),
-                                        fontSize: 16,
-                                        letterSpacing: 0.45,
-                                      ),
-                                    )),
-                              )
-                            ),
+                                flex: 1,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      color: Colors.grey.shade300,
+                                      shape: BoxShape.circle),
+                                  child: Center(
+                                      child: Text(
+                                    "+\nExplore\nMore",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: Color(0xff727272),
+                                      fontSize: 16,
+                                      letterSpacing: 0.45,
+                                    ),
+                                  )),
+                                )),
                           ],
+                        ),
+                      ),
+                    );
+                  } else if (i >= categories.length) {
+                    i = i - categories.length;
+                    String asset = moreCats.entries.elementAt(i).key;
+                    String val = moreCats.entries.elementAt(i).value;
+                    return InkWell(
+                      onTap: () {
+                        Navigator.of(context).push(PageRouteBuilder(
+                            pageBuilder: (c, a, b) => CategoriesPage(
+                                  categoryName: val.split("/").first,
+                              subCatName: val.split("/")[1],
+                              childCatName: val.split("/").last,
+                                )));
+                      },
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              border: Border(
+                                  bottom:
+                                      BorderSide(color: Colors.grey.shade300),
+                                  left:
+                                      BorderSide(color: Colors.grey.shade300))),
+                          child: Center(
+                            child: Image.asset(
+                              asset,
+                              fit: BoxFit.fill,
+                            ),
+                          ),
                         ),
                       ),
                     );

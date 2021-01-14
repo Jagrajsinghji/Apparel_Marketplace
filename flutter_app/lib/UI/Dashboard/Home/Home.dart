@@ -35,6 +35,8 @@ class _HomeState extends State<Home> {
 
   ScrollController _scrollController = ScrollController();
 
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,7 +63,7 @@ class _HomeState extends State<Home> {
               SliverList(
                   delegate: SliverChildListDelegate([
                 Container(
-                  height: 95,
+                  height: 100,
                   decoration: BoxDecoration(color: Colors.white, boxShadow: [
                     BoxShadow(
                         color: Colors.black26,
@@ -122,8 +124,73 @@ class _HomeState extends State<Home> {
                         shrinkWrap: true,
                         scrollDirection: Axis.horizontal,
                         physics: BouncingScrollPhysics(),
-                        itemCount: categories.length,
+                        itemCount: (categories?.length??0)+1,
                         itemBuilder: (c, i) {
+                          if(i == 0){
+                            return Padding(
+                              padding: const EdgeInsets.all(.5),
+                              child: Container(
+                                width: 70,
+                                color: Colors.white,
+                                child: InkWell(
+                                  onTap: () {
+                                    Navigator.of(context).push(PageRouteBuilder(
+                                        transitionDuration: Duration(seconds: 1),
+                                        reverseTransitionDuration:
+                                        Duration(milliseconds: 800),
+                                        pageBuilder: (c, a, b) => CategoriesPage(
+                                        )));
+                                  },
+                                  child: Material(
+                                    color: Colors.transparent,
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                      CrossAxisAlignment.center,
+                                      children: [
+                                        Container(
+                                          height: 60,
+                                          width: 60,
+                                          decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              color: Colors.white),
+                                          child: ClipRRect(
+                                            borderRadius:
+                                            BorderRadius.circular(100),
+                                            child: Image.asset(
+                                              "assets/newArr.jpg",
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                        ),
+                                        Expanded(
+                                          flex: 1,
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(
+                                              left: 4.0,
+                                              right: 4,bottom: 4
+                                            ),
+                                            child: Text(
+                                              "New Arrivals",
+                                              maxLines: 2,
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.bold,
+                                                letterSpacing: 0.45,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          }
+                          i-=1;
                           Map data = categories.elementAt(i);
                           return Padding(
                             padding: const EdgeInsets.all(.5),
@@ -171,7 +238,7 @@ class _HomeState extends State<Home> {
                                         child: Padding(
                                           padding: const EdgeInsets.only(
                                             left: 4.0,
-                                            right: 4,
+                                            right: 4,bottom: 4
                                           ),
                                           child: Text(
                                             "${data['name']}",

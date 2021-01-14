@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/Bloc/AuthBloc.dart';
 import 'package:flutter_app/Bloc/CartBloc.dart';
+import 'package:flutter_app/UI/Dashboard/Item/ItemPage.dart';
 import 'package:flutter_app/UI/Dashboard/Profile/AddAddress.dart';
 import 'package:flutter_app/UI/SignInUp/SignIn.dart';
 import 'package:flutter_app/Utils/Extensions.dart';
@@ -246,7 +247,7 @@ class _CheckOutState extends State<CheckOut> {
                                                 },
                                               ),
                                               trailing: Text(
-                                                "\u20B9 ${(double.parse(sd['price'].toString()) * currency).ceil()}",
+                                                "\u20B9 ${(double.parse(sd['price'].toString()) * currency).toInt()}",
                                                 style: TextStyle(
                                                   color: Color(0xff515151),
                                                   fontSize: 15,
@@ -317,7 +318,7 @@ class _CheckOutState extends State<CheckOut> {
                                                 },
                                               ),
                                               trailing: Text(
-                                                "\u20B9 ${(double.parse(pd['price'].toString()) * currency).ceil()}",
+                                                "\u20B9 ${(double.parse(pd['price'].toString()) * currency).toInt()}",
                                                 style: TextStyle(
                                                   color: Color(0xff515151),
                                                   fontSize: 15,
@@ -392,7 +393,7 @@ class _CheckOutState extends State<CheckOut> {
                                                 ),
                                               ),
                                               Text(
-                                                "\u20B9 ${(totalMRP * currency).ceil()}",
+                                                "\u20B9 ${(totalMRP * currency).toInt()}",
                                                 style: TextStyle(
                                                   color: Color(0xff7f7f7f),
                                                   fontSize: 14,
@@ -473,7 +474,7 @@ class _CheckOutState extends State<CheckOut> {
                                                 ),
                                               ),
                                               Text(
-                                                "\u20B9 ${(shippingAmt * currency).ceil()}",
+                                                "\u20B9 ${(shippingAmt * currency).toInt()}",
                                                 style: TextStyle(
                                                   color: Color(0xff7f7f7f),
                                                   fontSize: 14,
@@ -501,7 +502,7 @@ class _CheckOutState extends State<CheckOut> {
                                                 ),
                                               ),
                                               Text(
-                                                "\u20B9 ${(packingAmt * currency).ceil()}",
+                                                "\u20B9 ${(packingAmt * currency).toInt()}",
                                                 style: TextStyle(
                                                   color: Color(0xff7f7f7f),
                                                   fontSize: 14,
@@ -533,7 +534,7 @@ class _CheckOutState extends State<CheckOut> {
                                                 ),
                                               ),
                                               Text(
-                                                "\u20B9 ${((totalMRP + shippingAmt + packingAmt - couponAmt) * currency).ceil()}",
+                                                "\u20B9 ${((totalMRP + shippingAmt + packingAmt - couponAmt) * currency).toInt()}",
                                                 style: TextStyle(
                                                   color: Color(0xff515151),
                                                   fontSize: 14,
@@ -672,26 +673,39 @@ class _CheckOutState extends State<CheckOut> {
     );
   }
 
-  Widget productTile(String key, Map details, CartBloc _cartBloc) {
+  Widget productTile(String itemID, Map details, CartBloc snapshot) {
+    // print(details);
     double newPrice = double.parse(details['price']?.toString());
+    double itemPrice = double.parse(details['item']['price']?.toString());
+
     //TODO: ask ravjot to send currency value
     double currency = 68.95;
-
+    double sizePrice = itemPrice + double.parse(details['size_price']?.toString()??"0");
     return Padding(
-      padding: const EdgeInsets.only(bottom:5),
+      padding: const EdgeInsets.only(bottom: 10),
       child: Container(
         height: 130,
         color: Colors.white,
         child: Row(
           children: [
-            Container(
-              height: double.maxFinite,
-              child: CachedNetworkImage(
-                imageUrl:
-                    "${Session.IMAGE_BASE_URL}/assets/images/products/${details['item']['photo']}",
-                fit: BoxFit.fitHeight,
+            InkWell(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (c) => ItemPage(
+                          itemSlug: details['item']['slug'],
+                        )));
+              },
+              child: Container(
+                height: double.maxFinite,
+                child: CachedNetworkImage(
+                  imageUrl:
+                  "${Session.IMAGE_BASE_URL}/assets/images/products/${details['item']['photo']}",
+                  fit: BoxFit.fitHeight,
+                ),
+                width: MediaQuery.of(context).size.width / 2.4,
               ),
-              width: MediaQuery.of(context).size.width / 2.4,
             ),
             Expanded(
               child: Padding(
@@ -708,7 +722,7 @@ class _CheckOutState extends State<CheckOut> {
                         maxLines: 2,
                         style: TextStyle(
                           color: Color(0xff515151),
-                          fontSize: 15,fontWeight: FontWeight.bold,
+                          fontSize: 15,
                           letterSpacing: 0.45,
                         ),
                       ),
@@ -836,7 +850,7 @@ class _CheckOutState extends State<CheckOut> {
                     //           //               ))
                     //           //           .toList(),
                     //           //   ],
-                    //           //   onChanged: (Material) {},
+                    //           //   onChanged: (x) {},
                     //           // )
                     //         ],
                     //       ),
@@ -854,7 +868,7 @@ class _CheckOutState extends State<CheckOut> {
                             Expanded(
                               flex: 0,
                               child: Text(
-                                "\u20B9 ${(newPrice * currency).ceil()}",
+                                "\u20B9 ${(newPrice * currency).toInt()}",
                                 maxLines: 1,
                                 style: TextStyle(
                                   fontSize: 15,
@@ -869,7 +883,7 @@ class _CheckOutState extends State<CheckOut> {
                                     borderRadius: BorderRadius.circular(8)),
                                 child: Row(
                                   mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
+                                  MainAxisAlignment.spaceEvenly,
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     Padding(
@@ -911,9 +925,10 @@ class _CheckOutState extends State<CheckOut> {
                                                 setState(() {
                                                   isLoading = true;
                                                 });
-                                              await _cartBloc.reduceByOne(
-                                                  details['item']['id'], key,
-                                                  sizePrice: details['price']);
+                                              await snapshot.reduceByOne(
+                                                  details['item']['id'], itemID,
+                                                  sizePrice: sizePrice,
+                                                  sizeQty: details['size_qty']);
                                               if (mounted)
                                                 setState(() {
                                                   isLoading = false;
@@ -932,9 +947,10 @@ class _CheckOutState extends State<CheckOut> {
                                               setState(() {
                                                 isLoading = true;
                                               });
-                                            await _cartBloc.addByOne(
-                                                details['item']['id'], key,
-                                                sizePrice: details['price']);
+                                            await snapshot.addByOne(
+                                                details['item']['id'], itemID,
+                                                sizePrice: sizePrice,getCartItem: false,
+                                                sizeQty: details['size_qty']);
                                             if (mounted)
                                               setState(() {
                                                 isLoading = false;
@@ -942,7 +958,7 @@ class _CheckOutState extends State<CheckOut> {
                                           },
                                         )
                                       ],
-                                      onChanged: (Material) {},
+                                      onChanged: (x) {},
                                     )
                                   ],
                                 ),
@@ -957,7 +973,7 @@ class _CheckOutState extends State<CheckOut> {
                                         setState(() {
                                           isLoading = true;
                                         });
-                                      await _cartBloc.removeItemFromCart(key);
+                                      await snapshot.removeItemFromCart(itemID);
                                       if (mounted)
                                         setState(() {
                                           isLoading = false;

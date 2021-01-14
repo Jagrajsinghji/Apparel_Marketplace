@@ -21,8 +21,10 @@ class ItemPage extends StatefulWidget {
 }
 
 class _ItemPageState extends State<ItemPage> {
-  String selectedSize = "", selectedSizeKey = "0";
+  String selectedSize = "", selectedSizeKey = "0", selectedSizeQty = "0";
+  String selectedColor = "";
   double selectedSizePrice = 0;
+
   bool alreadyAdded = false, outOfStock = false;
   Map<String, Map<String, String>> sizeMap = {};
   PageController _pageController = PageController();
@@ -81,8 +83,8 @@ class _ItemPageState extends State<ItemPage> {
         children: [
           FutureBuilder<Response>(
             future: ItemBloc().getItemBySlug(widget.itemSlug),
-            builder: (c, s) {
-              if (s.data == null)
+            builder: (c, snapshotItem) {
+              if (snapshotItem.data == null)
                 return Shimmer.fromColors(
                   baseColor: Colors.grey.shade400,
                   highlightColor: Colors.redAccent,
@@ -324,20 +326,20 @@ class _ItemPageState extends State<ItemPage> {
                   ),
                 );
               else {
-                Map data = s.data.data ?? {};
+                Map data = snapshotItem.data.data ?? {};
                 Map productData = data["product"];
-                outOfStock = false ??
-                    ((sizeMap.values
-                            .every((element) => element['qty'] == "0")) &&
-                        (productData['stock'] == null));
-                var colors = productData['color'] ?? [];
-                String selectedColors;
-                if (colors is List && colors.length > 0)
-                  selectedColors = colors.first;
-                else if (colors is String) selectedColors = colors;
+                sizeMap = mapSizeToQty(data);
+
+                outOfStock = ((sizeMap.values
+                        .every((element) => element['qty'] == "0")) &&
+                    (productData['stock'] == null));
+                var colorsList = productData['color'] ?? [];
+                if (colorsList is List && colorsList.length > 0)
+                  selectedColor = colorsList.first;
+                else if (colorsList is String) selectedColor = colorsList;
                 String itemId = productData['id'].toString() +
                     selectedSize.trim().replaceAll(" ", "-") +
-                    selectedColors;
+                    selectedColor;
 
                 Map cartProds = (_cartBloc.cartData ?? {})['products'] ?? {};
                 alreadyAdded = cartProds.containsKey(itemId);
@@ -354,12 +356,11 @@ class _ItemPageState extends State<ItemPage> {
                     double.parse(data['curr']['value']?.toString() ?? "68.95");
                 List gallery = data['galleries_images_array'];
                 if (!outOfStock) {
-                  sizeMap = mapSizeToQty(data);
                   if (selectedSize.trim().length == 0) {
                     selectedSize = (sizeMap.values.length > 0)
                         ? sizeMap.keys
-                        .where((element) => sizeMap[element]['qty'] != "0")
-                        .first
+                            .where((element) => sizeMap[element]['qty'] != "0")
+                            .first
                         : "";
                     selectedSizeKey = (sizeMap.values.length > 0)
                         ? sizeMap[selectedSize]['key']
@@ -367,7 +368,9 @@ class _ItemPageState extends State<ItemPage> {
                     selectedSizePrice = double.parse((sizeMap.values.length > 0)
                         ? sizeMap[selectedSize]['price']
                         : "0");
-                    selectedSizePrice=selectedSizePrice+newPrice;
+                    selectedSizeQty = (sizeMap.values.length > 0)
+                        ? sizeMap[selectedSize]['qty']
+                        : "0";
                   }
                 }
                 return ListView(
@@ -467,7 +470,7 @@ class _ItemPageState extends State<ItemPage> {
                                 Expanded(
                                   flex: 0,
                                   child: Text(
-                                    "\u20B9 ${(selectedSizePrice*currency).ceil()}",
+                                    "\u20B9 ${((newPrice + selectedSizePrice) * currency).toInt()}",
                                     maxLines: 1,
                                     style: TextStyle(
                                       fontSize: 15,
@@ -481,7 +484,7 @@ class _ItemPageState extends State<ItemPage> {
                                       padding:
                                           const EdgeInsets.only(left: 10.0),
                                       child: Text(
-                                        "\u20B9 ${(prevPrice * currency).ceil()}",
+                                        "\u20B9 ${(prevPrice * currency).toInt()}",
                                         maxLines: 1,
                                         style: TextStyle(
                                             fontSize: 15,
@@ -522,6 +525,8 @@ class _ItemPageState extends State<ItemPage> {
                         ],
                       ),
                     ),
+
+                    ///Size
                     if (sizeMap.length > 0)
                       Padding(
                         padding: const EdgeInsets.only(top: 10.0),
@@ -562,7 +567,8 @@ class _ItemPageState extends State<ItemPage> {
                                             if (s.value['qty'] == "0") return;
                                             selectedSize = s.key;
                                             selectedSizeKey = s.value['key'];
-                                            selectedSizePrice = newPrice+
+                                            selectedSizeQty = s.value['qty'];
+                                            selectedSizePrice =
                                                 double.parse(s.value['price']);
                                             if (mounted) setState(() {});
                                           },
@@ -638,6 +644,123 @@ class _ItemPageState extends State<ItemPage> {
                                           ),
                                         );
                                       }).toList(),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+
+                    ///Colors
+                    if (selectedColor.trim().length > 0)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10.0),
+                        child: Container(
+                          color: Colors.white,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 10),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 20.0, bottom: 15),
+                                  child: Text(
+                                    "Select Color",
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 20.0),
+                                  child: Wrap(
+                                    alignment: WrapAlignment.start,
+                                    crossAxisAlignment:
+                                        WrapCrossAlignment.start,
+                                    runSpacing: 8,
+                                    spacing: 8,
+                                    children: [
+                                      if (colorsList is List)
+                                        ...colorsList.map((s) {
+                                          bool selected = selectedColor == s;
+                                          return InkWell(
+                                            borderRadius:
+                                                BorderRadius.circular(4),
+                                            onTap: () {
+                                              selectedColor = s;
+                                              if (mounted) setState(() {});
+                                            },
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(4),
+                                                border: Border.all(
+                                                  color: Color(0xff969696),
+                                                  width: 1,
+                                                ),
+                                                color: selected
+                                                    ? Color(0xff686868)
+                                                    : Colors.white,
+                                              ),
+                                              child: Row(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  Padding(
+                                                    padding: EdgeInsets.only(
+                                                        left: 10.0,
+                                                        top: 10,
+                                                        bottom: 10,
+                                                        right: 10),
+                                                    child: Text(
+                                                      "$s",
+                                                      style: TextStyle(
+                                                        color: selected
+                                                            ? Colors.white
+                                                            : Color(0xff969696),
+                                                        fontSize: 14,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          );
+                                        }).toList()
+                                      else
+                                        Container(
+                                          decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(4),
+                                              border: Border.all(
+                                                color: Color(0xff969696),
+                                                width: 1,
+                                              ),
+                                              color: Color(0xff686868)),
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Padding(
+                                                padding: EdgeInsets.only(
+                                                    left: 10.0,
+                                                    top: 10,
+                                                    bottom: 10,
+                                                    right: 10),
+                                                child: Text(
+                                                  "$selectedColor",
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 14,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
                                     ],
                                   ),
                                 ),
@@ -908,13 +1031,12 @@ class _ItemPageState extends State<ItemPage> {
         isLoading = true;
       });
     CartBloc _cartBloc = Provider.of<CartBloc>(context, listen: false);
-    await _cartBloc.addItemToCart(
-      productData['id'],
-      1,
-      size: selectedSize,
-      sizePrice: selectedSizePrice,
-      sizeKey: selectedSizeKey,
-    );
+    await _cartBloc.addItemToCart(productData['id'], 1,
+        size: selectedSize,
+        sizePrice: selectedSizePrice,
+        sizeKey: selectedSizeKey,
+        sizeQty: selectedSizeQty,
+        color: selectedColor);
     if (mounted)
       setState(() {
         isLoading = false;
@@ -922,7 +1044,6 @@ class _ItemPageState extends State<ItemPage> {
   }
 
   Map<String, Map<String, String>> mapSizeToQty(Map data) {
-
     Map productData = data["product"];
     var size = productData['size'];
     var sizeQty = productData['size_qty'];
@@ -970,7 +1091,7 @@ class _ItemPageState extends State<ItemPage> {
               onPressed: () {
                 Navigator.pushNamed(context, "ShoppingBag");
               },
-              color: Colors.green,
+              color: Color(0xffDC0F21),
               height: 60,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(100)),
@@ -1057,7 +1178,6 @@ class _ItemPageState extends State<ItemPage> {
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (c) => ItemPage(
-
                               itemSlug: prods['slug'],
                             )));
                   },

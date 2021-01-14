@@ -41,8 +41,9 @@ dependencies:
   google_fonts: ^1.1.1
   image_picker: ^0.6.7+17
   shimmer: ^1.1.2
-  matrix_gesture_detector: ^0.1.0
   url_launcher: ^5.7.10
+  razorpay_flutter: ^1.2.2
+
 
 
 
