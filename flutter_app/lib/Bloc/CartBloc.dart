@@ -104,8 +104,12 @@ class CartBloc with ChangeNotifier {
     return response;
   }
 
-  Future<Response> reduceByOne(int id, String itemId,
-      {sizeQty = "", sizePrice = "",}) async {
+  Future<Response> reduceByOne(
+    int id,
+    String itemId, {
+    sizeQty = "",
+    sizePrice = "",
+  }) async {
     Dio dio = Dio(Session.instance.baseOptions);
     dio.interceptors.add(_dioInterceptor);
     Response response = await dio.get(
@@ -117,7 +121,8 @@ class CartBloc with ChangeNotifier {
         Fluttertoast.showToast(msg: "Can not remove item.");
     } else if (response.data['data'] is Map) {
       Fluttertoast.showToast(msg: "Item removed successfully.");
-    }notifyListeners();
+    }
+    notifyListeners();
     return response;
   }
 
@@ -183,6 +188,57 @@ class CartBloc with ChangeNotifier {
     await Session.instance.updateCookie(response);
 
     await getCartItems();
+    notifyListeners();
+    return response;
+  }
+
+  Future<Response> placeRazorPayOrder(
+      {String personalEmail,
+      String personalName,
+      String personalPass,
+      String userId,
+      String totalQty,
+      String shipping,
+      String email,
+      String name,
+      String tax,
+      String phone,
+      String total,
+      String personalConfirm,
+      String shippingCost,
+      String packingCost,
+      String customerCountry,
+      String address,
+      String city,
+      String zip,
+      String vendorShippingId,
+      String vendorPackingId,
+      String dp,
+      String couponCode,
+      String couponDiscount,
+      String couponId}) async {
+    Dio dio = Dio(Session.instance.baseOptions);
+    dio.interceptors.add(_dioInterceptor);
+    String token = await Session.instance.getToken();
+    Response response = await dio.post(
+        "/api/razorpay-submit?personal_email=$personalEmail&personal_name=$personalName&personal_pass=$personalPass&user_id=$userId&totalQty=$totalQty&shipping=$shipping&email=$email&name=$name&tax=$tax&phone=$phone&total=$total&method=Razorpay&personal_confirm=$personalConfirm&shipping_cost=$shippingCost&packing_cost=$packingCost&customer_country=$customerCountry&address=$address&city=$city&zip=$zip&vendor_shipping_id=$vendorShippingId&vendor_packing_id=$vendorPackingId&dp=$dp&coupon_code=$couponCode&coupon_discount=$couponDiscount&coupon_id=$couponId",
+        options: Options(headers: {"Authorization": "Bearer $token"}));
+    await Session.instance.updateCookie(response);
+
+    await getCartItems();
+    notifyListeners();
+    return response;
+  }
+
+  Future<Response> razorPayCallack(
+      {String orderId, String signature, String paymentId,String wowfasID}) async {
+    Dio dio = Dio(Session.instance.baseOptions);
+    dio.interceptors.add(_dioInterceptor);
+    String token = await Session.instance.getToken();
+    Response response = await dio.post(
+        "/api/razorpay-callback/?razorpay_order_id=$orderId&razorpay_payment_id=$paymentId&razorpay_signature=$signature&wow_fas_order_id=$wowfasID",
+        options: Options(headers: {"Authorization": "Bearer $token"}));
+    await Session.instance.updateCookie(response);
     notifyListeners();
     return response;
   }

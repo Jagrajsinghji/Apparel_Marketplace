@@ -1,10 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/Bloc/CartBloc.dart';
-import 'package:flutter_app/Bloc/RazorPayBloc.dart';
+import 'package:flutter_app/Bloc/OrdersBloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_app/Bloc/OrdersBloc.dart';
+import 'package:razorpay_flutter/razorpay_flutter.dart';
+
 import 'OrderPlaced.dart';
 
 class PaymentOptions extends StatefulWidget {
@@ -21,6 +22,15 @@ class _PaymentOptionsState extends State<PaymentOptions> {
   double total;
   bool loading = false;
   double currency = 68.95;
+  Razorpay _razorPay;
+
+  Map orderData={};
+
+  @override
+  void initState() {
+    super.initState();
+    initRazorPay();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -175,37 +185,37 @@ class _PaymentOptionsState extends State<PaymentOptions> {
                                       width: 20,
                                       height: 20,
                                     ))),
-                      // Container(
-                      //     color: Colors.white,
-                      //     child: ListTile(
-                      //         onTap: () {
-                      //           if (mounted)
-                      //             setState(() {
-                      //               paymentOption = 1;
-                      //             });
-                      //         },
-                      //         leading: Image.asset("assets/razorPay.png"),
-                      //         title: Text("RazorPay"),
-                      //         trailing: paymentOption == 1
-                      //             ? Container(
-                      //                 child: Center(
-                      //                     child: Icon(
-                      //                   Icons.check,
-                      //                   size: 12,
-                      //                 )),
-                      //                 decoration: BoxDecoration(
-                      //                     shape: BoxShape.circle,
-                      //                     color: Colors.green),
-                      //                 width: 20,
-                      //                 height: 20,
-                      //               )
-                      //             : Container(
-                      //                 decoration: BoxDecoration(
-                      //                     shape: BoxShape.circle,
-                      //                     color: Colors.grey.shade400),
-                      //                 width: 20,
-                      //                 height: 20,
-                      //               ))),
+                      Container(
+                          color: Colors.white,
+                          child: ListTile(
+                              onTap: () {
+                                if (mounted)
+                                  setState(() {
+                                    paymentOption = 1;
+                                  });
+                              },
+                              leading: Image.asset("assets/razorPay.png"),
+                              title: Text("RazorPay"),
+                              trailing: paymentOption == 1
+                                  ? Container(
+                                      child: Center(
+                                          child: Icon(
+                                        Icons.check,
+                                        size: 12,
+                                      )),
+                                      decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: Colors.green),
+                                      width: 20,
+                                      height: 20,
+                                    )
+                                  : Container(
+                                      decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: Colors.grey.shade400),
+                                      width: 20,
+                                      height: 20,
+                                    ))),
                       Padding(
                         padding: EdgeInsets.only(bottom: 10, top: 10),
                         child: Container(
@@ -216,7 +226,7 @@ class _PaymentOptionsState extends State<PaymentOptions> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  "Price Details (${data['totalQty'].toInt()}${data['totalQty'] > 1 ? " Items)" : " Item)"} ",
+                                  "Price Details (${data['totalQty'].round()}${data['totalQty'] > 1 ? " Items)" : " Item)"} ",
                                   style: TextStyle(
                                     color: Color(0xff515151),
                                     fontSize: 15,
@@ -241,7 +251,7 @@ class _PaymentOptionsState extends State<PaymentOptions> {
                                         ),
                                       ),
                                       Text(
-                                        "\u20B9 ${(data["totalMRP"] * currency).toInt()}",
+                                        "\u20B9 ${(data["totalMRP"] * currency).round()}",
                                         style: TextStyle(
                                           color: Color(0xff7f7f7f),
                                           fontSize: 14,
@@ -270,7 +280,7 @@ class _PaymentOptionsState extends State<PaymentOptions> {
                                           ),
                                         ),
                                         Text(
-                                          "-\u20B9 ${(data["couponDiscount"] * currency).toInt()}",
+                                          "-\u20B9 ${(data["couponDiscount"] * currency).round()}",
                                           style: TextStyle(
                                             color: Color(0xff05B90D),
                                             fontSize: 14,
@@ -298,7 +308,7 @@ class _PaymentOptionsState extends State<PaymentOptions> {
                                         ),
                                       ),
                                       Text(
-                                        "\u20B9 ${(data["shippingCost"] * currency).toInt()}",
+                                        "\u20B9 ${(data["shippingCost"] * currency).round()}",
                                         style: TextStyle(
                                           color: Color(0xff7f7f7f),
                                           fontSize: 14,
@@ -326,7 +336,7 @@ class _PaymentOptionsState extends State<PaymentOptions> {
                                         ),
                                       ),
                                       Text(
-                                        "\u20B9 ${(data["packingCost"] * currency).toInt()}",
+                                        "\u20B9 ${(data["packingCost"] * currency).round()}",
                                         style: TextStyle(
                                           color: Color(0xff7f7f7f),
                                           fontSize: 14,
@@ -358,7 +368,7 @@ class _PaymentOptionsState extends State<PaymentOptions> {
                                         ),
                                       ),
                                       Text(
-                                        "\u20B9 ${(total * currency).toInt()}",
+                                        "\u20B9 ${(total * currency).round()}",
                                         style: TextStyle(
                                           color: Color(0xff515151),
                                           fontSize: 14,
@@ -414,14 +424,13 @@ class _PaymentOptionsState extends State<PaymentOptions> {
       setState(() {
         loading = true;
       });
-    if(paymentOption==0)
+    if (paymentOption == 0)
       cashOnDelivery();
     else
-      razorpayPayment();
+      placeRazorPay();
   }
 
-
-  void cashOnDelivery()async{
+  void cashOnDelivery() async {
     Map<String, dynamic> data = widget.checkOutData;
     CartBloc _cBloc = Provider.of<CartBloc>(context, listen: false);
     Response resp = await _cBloc.placeCashOnDeliveryOrder(
@@ -464,29 +473,61 @@ class _PaymentOptionsState extends State<PaymentOptions> {
           context,
           PageRouteBuilder(
               pageBuilder: (c, a, b) => OrderPlaced(
-                data: data,
-              )),
-              (route) => route.isFirst);
-    } else
+                    data: data,
+                  )),
+          (route) => route.isFirst);
+    } else {
       Fluttertoast.showToast(msg: "An Error Occurred while placing your order");
+    }
   }
 
-  void razorpayPayment()async{
+  void placeRazorPay() async {
+    Map<String, dynamic> data = widget.checkOutData;
+    CartBloc _cBloc = Provider.of<CartBloc>(context, listen: false);
+    Response resp = await _cBloc.placeRazorPayOrder(
+      address: data['address'],
+      city: data['city'],
+      couponCode: data['couponCode'].toString(),
+      couponDiscount: data['couponDiscount'].toString(),
+      couponId: data['couponId'].toString(),
+      customerCountry: "India",
+      vendorPackingId: data['vendorPackingId'].toString(),
+      dp: "0",
+      email: data['personalEmail'],
+      name: data['name'],
+      packingCost: data['packingCost'].toString(),
+      personalConfirm: null,
+      personalEmail: data['personalEmail'],
+      personalName: data['personalName'],
+      personalPass: null,
+      phone: data['phone'].toString(),
+      shipping: "shipto",
+      shippingCost: data['shippingCost'].toString(),
+      tax: "0",
+      total: "$total",
+      totalQty: data['totalQty'].toString(),
+      userId: data['userId'].toString(),
+      vendorShippingId: data['vendorShippingId'].toString(),
+      zip: data['zip'].toString(),
+    );
+    if (resp.data is Map && resp.data.containsKey('order')) {
+      OrdersBloc _oBloc = Provider.of<OrdersBloc>(context, listen: false);
+      _oBloc.getMyOrders();
+      orderData= resp.data['order'] ?? {};
+      Map<String, dynamic> razorPayData = resp.data['razorpay_data'] ?? {};
+      razorpayPayment(razorPayData);
+    } else {
+      Fluttertoast.showToast(msg: "An Error Occurred while placing your order");
+      if (mounted)
+        setState(() {
+          loading = false;
+        });
+    }
+  }
+
+  void razorpayPayment(Map<String, dynamic> razorPayData) async {
     try {
-      Map<String, dynamic> data = widget.checkOutData;
-      RazorPayBloc _razorPay=RazorPayBloc();
-      var options = {
-        'key':
-        _razorPay.TEST_KEY,
-        'amount':(total * currency).toInt(),
-        'name':data['name'],
-        'prefill': {
-          'email':
-          data['personalEmail'],
-          'mobile': data['phone']?.toString()
-        },
-      };
-      _razorPay.razorPay.open(options);
+      _razorPay.open(razorPayData);
     } catch (e) {
       debugPrint(e.toString());
       if (this.mounted)
@@ -494,6 +535,61 @@ class _PaymentOptionsState extends State<PaymentOptions> {
           loading = false;
         });
     }
-    
+  }
+
+  // c07cdb3ffe812125c4789de53410bd3555c152fa481f6e01279ecad5e00d11c1
+  // order_GPclNLtKqWPeIs
+  // pay_GPclWVcH7XsUUD
+  // eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6ImQ5NjFkNjdhY2M5MjM4ZTk2NWM3N2MyMzc3MTE4YTcxZDZkZGRkNzM0NzkyZmE0OWFmMDgxMzViNDkwM2U4MDBhNjE2ODZiNmFlN2JkOWY3In0.eyJhdWQiOiIxIiwianRpIjoiZDk2MWQ2N2FjYzkyMzhlOTY1Yzc3YzIzNzcxMThhNzFkNmRkZGQ3MzQ3OTJmYTQ5YWYwODEzNWI0OTAzZTgwMGE2MTY4NmI2YWU3YmQ5ZjciLCJpYXQiOjE2MTA3MTkyMjksIm5iZiI6MTYxMDcxOTIyOSwiZXhwIjoxNjQyMjU1MjI5LCJzdWIiOiIyIiwic2NvcGVzIjpbXX0.sdDjcF6_ar3HS5FXb0zrTfI2zfdUlaqC6HIUmYz6Ay19pqZt5k8vQBBSYJvJtoMX7BYAI4OSL99OkcnGFM2ZWaTIM-GVMSKWsPGHBZF7iC5k43aOZvhDd4OzdrLssp_MIuWJKQeTwofgDnWpqlzgiLnTsuegx5Y1gspsHRSsErjEtRx8dFUTG2hH7bKb7NypZfZ5GkMFMX3ThXQnV0IeWJ78PNoHfA7V-fZNJRhz56JPdlNRQQ5rC_V6IG07LkAHJXxaadcsT1eTUibczgQ-m5GDMNlg9m0wAOhDgmGF6otp3KS6Mv1_wNWg94I1eNxdtET0JxAfH9nonfSGiIJlV4V3oIP-TDn-UQRtajQ5KIJP2Vc6OrAFvXELuzQMKpMP_foCZqXSqYTA04g8NnhPIfnnsWGY1qZGmyYvT-DT6a6xySa7Ce3SFnVV9MAPOb6TbTPVmwTu5PYJEsj_RJ2RmFJStv-rtyH6L_Wkik55KiDRltAIbXo5CJIKofI8oukKxYh-PMYcarKUcSfTkgSx3U92AHLJ2XTjlJdZ8ATEKxHtVI9KKSZza
+
+  initRazorPay() {
+    _razorPay = Razorpay();
+    _razorPay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
+    _razorPay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
+    _razorPay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
+  }
+
+  void _handlePaymentError(PaymentFailureResponse response) {
+    Navigator.pushAndRemoveUntil(
+        context,
+        PageRouteBuilder(
+            pageBuilder: (c, a, b) => OrderPlaced(
+              data: orderData,
+            )),
+            (route) => route.isFirst);
+    Fluttertoast.showToast(
+      msg: response.message,
+    );
+  }
+
+  void _handleExternalWallet(ExternalWalletResponse response) {
+    Navigator.pushAndRemoveUntil(
+        context,
+        PageRouteBuilder(
+            pageBuilder: (c, a, b) => OrderPlaced(
+              data: orderData,
+            )),
+            (route) => route.isFirst);
+    Fluttertoast.showToast(
+      msg: response.walletName,
+    );
+  }
+
+  void _handlePaymentSuccess(PaymentSuccessResponse paymentRes) async {
+    CartBloc _cBloc = Provider.of<CartBloc>(context, listen: false);
+    Response response = await _cBloc.razorPayCallack(orderId: paymentRes.orderId,
+    paymentId: paymentRes.paymentId,signature: paymentRes.signature,wowfasID: orderData['order_number']);
+    OrdersBloc _oBloc = Provider.of<OrdersBloc>(context, listen: false);
+    _oBloc.getMyOrders();
+    Map odata= response.data['order']??{};
+    Navigator.pushAndRemoveUntil(
+        context,
+        PageRouteBuilder(
+            pageBuilder: (c, a, b) => OrderPlaced(
+              data: odata,
+            )), (route) => route.isFirst);
+    Fluttertoast.showToast(
+      msg: "SUCCESS",
+    );
   }
 }

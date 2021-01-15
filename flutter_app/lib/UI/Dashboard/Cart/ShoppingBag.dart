@@ -465,7 +465,7 @@ class _ShoppingBagState extends State<ShoppingBag> {
                             Expanded(
                               flex: 0,
                               child: Text(
-                                "\u20B9 ${(newPrice * currency).toInt()}",
+                                "\u20B9 ${(newPrice * currency).round()}",
                                 maxLines: 1,
                                 style: TextStyle(
                                   fontSize: 15,

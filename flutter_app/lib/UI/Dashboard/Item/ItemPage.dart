@@ -7,9 +7,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/Bloc/CartBloc.dart';
 import 'package:flutter_app/Bloc/ItemBloc.dart';
 import 'package:flutter_app/UI/Components/CartIcon.dart';
+import 'package:flutter_app/UI/Dashboard/Cart/WishList.dart';
 import 'package:flutter_app/Utils/Session.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
+
+import 'SliderDots.dart';
 
 class ItemPage extends StatefulWidget {
   final String itemSlug;
@@ -52,29 +55,26 @@ class _ItemPageState extends State<ItemPage> {
         ),
         backgroundColor: Colors.white,
         actions: [
-          // Padding(
-          //   padding: const EdgeInsets.all(8.0),
-          //   child: InkWell(
-          //     focusColor: Colors.transparent,
-          //     splashColor: Colors.transparent,
-          //     child: x(
-          //       tag: "WishList",
-          //       child: Image.asset(
-          //         "assets/favourite.png",
-          //         width: 20,
-          //         height: 20,
-          //       ),
-          //     ),
-          //     onTap: () {
-          //       Navigator.push(
-          //           context,
-          //           PageRouteBuilder(
-          //               transitionDuration: Duration(seconds: 1),
-          //               reverseTransitionDuration: Duration(milliseconds: 800),
-          //               pageBuilder: (c, a, b) => WishList()));
-          //     },
-          //   ),
-          // ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: InkWell(
+              focusColor: Colors.transparent,
+              splashColor: Colors.transparent,
+              child: Image.asset(
+                "assets/favourite.png",
+                width: 20,
+                height: 20,
+              ),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    PageRouteBuilder(
+                        transitionDuration: Duration(seconds: 1),
+                        reverseTransitionDuration: Duration(milliseconds: 800),
+                        pageBuilder: (c, a, b) => WishList()));
+              },
+            ),
+          ),
           CartIcon()
         ],
         iconTheme: IconThemeData(color: Colors.black),
@@ -85,9 +85,24 @@ class _ItemPageState extends State<ItemPage> {
             future: ItemBloc().getItemBySlug(widget.itemSlug),
             builder: (c, snapshotItem) {
               if (snapshotItem.data == null)
-                return Shimmer.fromColors(
-                  baseColor: Colors.grey.shade400,
-                  highlightColor: Colors.redAccent,
+                return Shimmer(
+                  gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.centerRight,
+                      colors: <Color>[
+                        Colors.grey.shade400,
+                        Colors.white60,
+                        Colors.redAccent,
+                        Colors.grey.shade200,
+                        Colors.grey.shade400
+                      ],
+                      stops: const <double>[
+                        0.0,
+                        0.35,
+                        0.45,
+                        0.55,
+                        1.0
+                      ]),
                   child: ListView(
                     physics: BouncingScrollPhysics(),
                     shrinkWrap: true,
@@ -351,9 +366,9 @@ class _ItemPageState extends State<ItemPage> {
                 int discount = 0;
                 if (prevPrice > 0)
                   discount =
-                      (((prevPrice - newPrice) / prevPrice) * 100).toInt();
-                double currency =
-                    double.parse(data['curr']['value']?.toString() ?? "68.95");
+                      (((prevPrice - newPrice) / prevPrice) * 100).round();
+                double currency = double.parse(
+                    (data['curr'] ?? {})['value']?.toString() ?? "68.95");
                 List gallery = data['galleries_images_array'];
                 if (!outOfStock) {
                   if (selectedSize.trim().length == 0) {
@@ -402,10 +417,6 @@ class _ItemPageState extends State<ItemPage> {
                                   width: double.infinity,
                                 );
                               }),
-                          SliderDots(
-                            length: gallery.length ?? 0,
-                            pageController: _pageController,
-                          )
                           // Positioned(
                           //   bottom: 0,
                           //   right: 10,
@@ -430,7 +441,10 @@ class _ItemPageState extends State<ItemPage> {
                         ],
                       ),
                     ),
-
+                    SliderDots(
+                      length: gallery.length ?? 0,
+                      pageController: _pageController,
+                    ),
                     Container(
                       color: Colors.white,
                       child: Column(
@@ -470,7 +484,7 @@ class _ItemPageState extends State<ItemPage> {
                                 Expanded(
                                   flex: 0,
                                   child: Text(
-                                    "\u20B9 ${((newPrice + selectedSizePrice) * currency).toInt()}",
+                                    "\u20B9 ${((newPrice + selectedSizePrice) * currency).round()}",
                                     maxLines: 1,
                                     style: TextStyle(
                                       fontSize: 15,
@@ -484,7 +498,7 @@ class _ItemPageState extends State<ItemPage> {
                                       padding:
                                           const EdgeInsets.only(left: 10.0),
                                       child: Text(
-                                        "\u20B9 ${(prevPrice * currency).toInt()}",
+                                        "\u20B9 ${(prevPrice * currency).round()}",
                                         maxLines: 1,
                                         style: TextStyle(
                                             fontSize: 15,
@@ -1228,80 +1242,5 @@ class _ItemPageState extends State<ItemPage> {
             }),
       ),
     ];
-  }
-}
-
-class SliderDots extends StatefulWidget {
-  final length;
-  final PageController pageController;
-
-  const SliderDots({Key key, this.pageController, this.length})
-      : super(key: key);
-
-  @override
-  _SliderDotsState createState() => _SliderDotsState();
-}
-
-class _SliderDotsState extends State<SliderDots> {
-  int page = 0;
-  VoidCallback callback;
-
-  @override
-  void initState() {
-    super.initState();
-    callback = () {
-      setState(() {
-        page = widget.pageController.page.toInt();
-      });
-    };
-    widget.pageController.addListener(callback);
-  }
-
-  @override
-  void dispose() {
-    widget.pageController.removeListener(callback);
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Positioned(
-      bottom: 20,
-      left:
-          (MediaQuery.of(context).size.width / 2) - (((widget.length) + 1) * 5),
-      child: Container(
-        height: 20,
-        child: ListView.builder(
-          scrollDirection: Axis.horizontal,
-          itemBuilder: (c, i) {
-            if (page == i)
-              return Padding(
-                padding: const EdgeInsets.all(2.0),
-                child: Container(
-                  height: 6,
-                  width: 6,
-                  decoration: BoxDecoration(
-                      color: Colors.black, shape: BoxShape.circle),
-                ),
-              );
-            else
-              return Padding(
-                padding: const EdgeInsets.all(2.0),
-                child: Container(
-                  height: 6,
-                  width: 6,
-                  decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.black,
-                      ),
-                      shape: BoxShape.circle),
-                ),
-              );
-          },
-          itemCount: (widget.length) + 1,
-          shrinkWrap: true,
-        ),
-      ),
-    );
   }
 }

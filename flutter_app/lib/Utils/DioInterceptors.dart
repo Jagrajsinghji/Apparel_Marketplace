@@ -11,6 +11,7 @@ class DioInterceptor extends Interceptor {
   @override
   Future onRequest(RequestOptions options) async {
     options.headers.addAll((await Session.instance.getHeaders()));
+    // print(options.headers);
     print(options.uri);
     // print(options.headers);
     return options;
@@ -19,7 +20,7 @@ class DioInterceptor extends Interceptor {
   @override
   Future onError(DioError err) async {
     print("****************************************************");
-    print(err);
+    print(err.message);
     print(err.request.uri);
     print("****************************************************");
     // _appErrorBloc.updateError(err.message);

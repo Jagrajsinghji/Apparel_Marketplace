@@ -7,8 +7,9 @@ import 'package:flutter_app/Utils/Session.dart';
 class ProductGridWIthThumbnail extends StatefulWidget {
   final List productData;
   final String title;
+  final Widget navigateWidget;
 
-  const ProductGridWIthThumbnail({Key key, this.productData, this.title})
+  const ProductGridWIthThumbnail({Key key, this.productData, this.title, this.navigateWidget})
       : super(key: key);
 
   @override
@@ -36,30 +37,43 @@ class _ProductGridWIthThumbnailState extends State<ProductGridWIthThumbnail> {
                 child: Padding(
                   padding:
                       const EdgeInsets.only(left: 20.0, top: 10, bottom: 10),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: RichText(
-                      text: TextSpan(
-                          text: "${widget.title.split(" ").first}",
-                          style: TextStyle(
-                            color: Color(0xffdc0f21),
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 0.45,
-                          ),
-                          children: [
-                            TextSpan(
-                              text: " ${widget.title.split(" ").last}",
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.normal,
-                                fontSize: 15,
-                                letterSpacing: 0.45,
-                              ),
-                            ),
-                          ]),
-                      textAlign: TextAlign.center,
-                    ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Align(
+                          alignment: Alignment.centerLeft,
+                          child: RichText(
+                            text: TextSpan(
+                                text: "${widget.title.split(" ").first}",
+                                style: TextStyle(
+                                  color: Color(0xffdc0f21),
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                  letterSpacing: 0.45,
+                                ),
+                                children: [
+                                  TextSpan(
+                                    text: " ${widget.title.split(" ").last}",
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.normal,
+                                      fontSize: 15,
+                                      letterSpacing: 0.45,
+                                    ),
+                                  ),
+                                ]),
+                            textAlign: TextAlign.center,
+                          )),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 10.0),
+                        child: InkWell(
+                            onTap: () {
+                              // Navigator.of(context).push(MaterialPageRoute(
+                              //     builder: (c) => widget.navigateWidget));
+                            },
+                            child: Text("View More")),
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -79,9 +93,17 @@ class _ProductGridWIthThumbnailState extends State<ProductGridWIthThumbnail> {
                     ),
                     itemBuilder: (c, i) {
                       Map data = widget.productData.elementAt(i) ?? {};
-                      String tag = data['slug'] + widget.title;
+                      double newPrice = double.parse(data['price']?.toString());
+                      double prevPrice =
+                      double.parse(data['previous_price']?.toString() ?? "0");
+                      int discount = 0;
+                      if (prevPrice > 0)
+                        discount =
+                            (((prevPrice - newPrice) / prevPrice) * 100).round();
+                      double currency = double.parse(
+                          (data['curr'] ?? {})['value']?.toString() ?? "68.95");
                       return Padding(
-                        padding: const EdgeInsets.all(5.0),
+                        padding: const EdgeInsets.all(2.0),
                         child: InkWell(
                           onTap: () {
                             Navigator.of(context).push(PageRouteBuilder(
@@ -91,50 +113,104 @@ class _ProductGridWIthThumbnailState extends State<ProductGridWIthThumbnail> {
                           },
                           key: Key(data['id']?.toString() ?? "$i"),
                           borderRadius: BorderRadius.circular(8),
-                          child: Material(
-                            color: Colors.transparent,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  border:
-                                      Border.all(color: Colors.grey.shade300),
-                                  borderRadius: BorderRadius.circular(8)),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Expanded(
-                                    flex: 1,
-                                    child: Container(
-                                      color: Colors.white,
-                                      child: CachedNetworkImage(
-                                        imageUrl:
-                                            "${Session.IMAGE_BASE_URL}/assets/images/thumbnails/${data['thumbnail']}",
-                                      ),
+                          child: Container(
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                border:
+                                    Border.all(color: Colors.grey.shade300),
+                                borderRadius: BorderRadius.circular(8)),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment:
+                                  MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Expanded(
+                                  flex: 1,
+                                  child: Container(
+                                    color: Colors.white,
+                                    child: CachedNetworkImage(
+                                      imageUrl:
+                                      "${Session.IMAGE_BASE_URL}/assets/images/thumbnails/${data['thumbnail']}",
                                     ),
                                   ),
-                                  Expanded(
-                                      flex: 0,
-                                      child: Padding(
-                                        padding: const EdgeInsets.only(
-                                            left: 4,
-                                            right: 4,
-                                            top: 4,
-                                            bottom: 10),
-                                        child: Text(
-                                          "${data['name']}",
-                                          maxLines: 2,
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                            color: Color(0xff727272),
-                                            fontSize: 12,
-                                            letterSpacing: 0.45,
+                                ),
+                                Expanded(
+                                    flex: 0,
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 4,
+                                          right: 4,
+                                          top: 4,
+                                          bottom: 4),
+                                      child: Text(
+                                        "${data['name']}",
+                                        maxLines: 2,
+                                        textAlign: TextAlign.start,
+                                        style: TextStyle(
+                                          color: Color(0xff727272),
+                                          fontSize: 12,fontWeight: FontWeight.bold,
+                                          letterSpacing: 0.45,
+                                        ),
+                                      ),
+                                    )),
+                                Expanded(
+                                  flex: 0,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 5, bottom: 5),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                      MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                      CrossAxisAlignment.center,
+                                      children: [
+                                        Expanded(
+                                          flex: 0,
+                                          child: Text(
+                                            "\u20B9 ${((newPrice) * currency).round()}",
+                                            maxLines: 1,
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                            ),
                                           ),
                                         ),
-                                      )),
-                                ],
-                              ),
+                                        if (prevPrice != 0)
+                                          Expanded(
+                                            flex: 0,
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 5.0),
+                                              child: Text(
+                                                "\u20B9 ${(prevPrice * currency).round()}",
+                                                maxLines: 1,
+                                                style: TextStyle(
+                                                    fontSize: 14,
+                                                    color: Color(0xffA9A9A9),
+                                                    decoration: TextDecoration
+                                                        .lineThrough),
+                                              ),
+                                            ),
+                                          ),
+                                        if (discount > 0)
+                                          Expanded(
+                                            flex: 0,
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 5.0),
+                                              child: Text(
+                                                "$discount% Off",
+                                                maxLines: 1,
+                                                style: TextStyle(
+                                                    fontSize: 14,
+                                                    color: Color(0xffDC0F21)),
+                                              ),
+                                            ),
+                                          ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ),

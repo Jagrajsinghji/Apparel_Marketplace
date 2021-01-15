@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/Bloc/ScreenBloc.dart';
+import 'package:flutter_app/Bloc/RazorPayBloc.dart';
 import 'package:provider/provider.dart';
+
 
 _bottomNav(BuildContext context, {VoidCallback voidCallback}) {
   ScreenBloc screenBloc = Provider.of<ScreenBloc>(context);
@@ -152,6 +154,7 @@ floatingActionButton(BuildContext context, {VoidCallback voidCallback}) {
               onPressed: () {
                 screenBloc.setPage(2);
                 voidCallback();
+
               },
               child: Text(
                 "Deals",

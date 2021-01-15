@@ -48,7 +48,6 @@ class AuthBloc with ChangeNotifier {
       Response response = await dio.get("${Session.BASE_URL}/api/user/profile",
           options: Options(headers: {"Authorization": "Bearer $token"}));
       await Session.instance.updateCookie(response);
-
       if (response.data is Map)
         userData = response?.data ?? {};
       else

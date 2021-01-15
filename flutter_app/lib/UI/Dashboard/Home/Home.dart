@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_app/Bloc/CategoryBloc.dart';
 import 'package:flutter_app/Bloc/ProductsBloc.dart';
+import 'package:flutter_app/Bloc/ScreenBloc.dart';
 import 'package:flutter_app/UI/Dashboard/Category/Categories.dart';
 import 'package:flutter_app/UI/Dashboard/Category/CategoriesPage.dart';
 import 'package:flutter_app/UI/Dashboard/Home/ProductGridWIthThumbnail.dart';
@@ -12,6 +13,7 @@ import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shimmer/shimmer.dart';
 
+import 'PageShimmer.dart';
 import 'Product4GridWIthThumbnail.dart';
 import 'ProductListWIthThumbnail.dart';
 import 'Sliders.dart';
@@ -35,10 +37,67 @@ class _HomeState extends State<Home> {
 
   ScrollController _scrollController = ScrollController();
 
-
-
   @override
   Widget build(BuildContext context) {
+    Widget categoryShimmer() => Shimmer(
+          gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.centerRight,
+              colors: <Color>[
+                Colors.grey.shade400,
+                Colors.white60,
+                Colors.redAccent,
+                Colors.grey.shade200,
+                Colors.grey.shade400
+              ],
+              stops: const <double>[
+                0.0,
+                0.35,
+                0.45,
+                0.55,
+                1.0
+              ]),
+          child: ListView.builder(
+              shrinkWrap: true,
+              scrollDirection: Axis.horizontal,
+              physics: BouncingScrollPhysics(),
+              itemCount: 10,
+              itemBuilder: (c, i) {
+                return Container(
+                  width: 70,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        height: 60,
+                        width: 60,
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle, color: Colors.grey),
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                            left: 4.0,
+                            top: 6,
+                            bottom: 6,
+                            right: 4,
+                          ),
+                          child: Container(
+                            decoration: BoxDecoration(
+                                color: Colors.grey,
+                                borderRadius: BorderRadius.circular(10)),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }),
+        );
+
+
     return Scaffold(
         backgroundColor: Color(0xffE5E5E5),
         body: SmartRefresher(
@@ -74,59 +133,16 @@ class _HomeState extends State<Home> {
                   child:
                       Consumer<CategoryBloc>(builder: (context, snapshot, w) {
                     if (snapshot.categoryData.length == 0)
-                      return Shimmer.fromColors(
-                        baseColor: Colors.grey.shade400,
-                        highlightColor: Colors.redAccent,
-                        child: ListView.builder(
-                            shrinkWrap: true,
-                            scrollDirection: Axis.horizontal,
-                            physics: BouncingScrollPhysics(),
-                            itemCount: 10,
-                            itemBuilder: (c, i) {
-                              return Container(
-                                width: 70,
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Container(
-                                      height: 60,
-                                      width: 60,
-                                      decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          color: Colors.grey),
-                                    ),
-                                    Expanded(
-                                      flex: 1,
-                                      child: Padding(
-                                        padding: const EdgeInsets.only(
-                                          left: 4.0,
-                                          top: 6,
-                                          bottom: 6,
-                                          right: 4,
-                                        ),
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                              color: Colors.grey,
-                                              borderRadius:
-                                                  BorderRadius.circular(10)),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            }),
-                      );
+                      return categoryShimmer();
                     Map respData = snapshot?.categoryData ?? {};
                     List categories = respData['categories'] ?? [];
                     return ListView.builder(
                         shrinkWrap: true,
                         scrollDirection: Axis.horizontal,
                         physics: BouncingScrollPhysics(),
-                        itemCount: (categories?.length??0)+1,
+                        itemCount: (categories?.length ?? 0) + 1,
                         itemBuilder: (c, i) {
-                          if(i == 0){
+                          if (i == 0) {
                             return Padding(
                               padding: const EdgeInsets.all(.5),
                               child: Container(
@@ -135,18 +151,20 @@ class _HomeState extends State<Home> {
                                 child: InkWell(
                                   onTap: () {
                                     Navigator.of(context).push(PageRouteBuilder(
-                                        transitionDuration: Duration(seconds: 1),
+                                        transitionDuration:
+                                            Duration(seconds: 1),
                                         reverseTransitionDuration:
-                                        Duration(milliseconds: 800),
-                                        pageBuilder: (c, a, b) => CategoriesPage(
-                                        )));
+                                            Duration(milliseconds: 800),
+                                        pageBuilder: (c, a, b) =>
+                                            CategoriesPage()));
                                   },
                                   child: Material(
                                     color: Colors.transparent,
                                     child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       crossAxisAlignment:
-                                      CrossAxisAlignment.center,
+                                          CrossAxisAlignment.center,
                                       children: [
                                         Container(
                                           height: 60,
@@ -156,7 +174,7 @@ class _HomeState extends State<Home> {
                                               color: Colors.white),
                                           child: ClipRRect(
                                             borderRadius:
-                                            BorderRadius.circular(100),
+                                                BorderRadius.circular(100),
                                             child: Image.asset(
                                               "assets/newArr.jpg",
                                               fit: BoxFit.cover,
@@ -167,9 +185,7 @@ class _HomeState extends State<Home> {
                                           flex: 1,
                                           child: Padding(
                                             padding: const EdgeInsets.only(
-                                              left: 4.0,
-                                              right: 4,bottom: 4
-                                            ),
+                                                left: 4.0, right: 4, bottom: 4),
                                             child: Text(
                                               "New Arrivals",
                                               maxLines: 2,
@@ -190,7 +206,7 @@ class _HomeState extends State<Home> {
                               ),
                             );
                           }
-                          i-=1;
+                          i -= 1;
                           Map data = categories.elementAt(i);
                           return Padding(
                             padding: const EdgeInsets.all(.5),
@@ -204,7 +220,6 @@ class _HomeState extends State<Home> {
                                       reverseTransitionDuration:
                                           Duration(milliseconds: 800),
                                       pageBuilder: (c, a, b) => CategoriesPage(
-
                                             categoryName: data['slug'],
                                           )));
                                 },
@@ -237,9 +252,7 @@ class _HomeState extends State<Home> {
                                         flex: 1,
                                         child: Padding(
                                           padding: const EdgeInsets.only(
-                                            left: 4.0,
-                                            right: 4,bottom: 4
-                                          ),
+                                              left: 4.0, right: 4, bottom: 4),
                                           child: Text(
                                             "${data['name']}",
                                             maxLines: 2,
@@ -267,10 +280,7 @@ class _HomeState extends State<Home> {
                     Map resp1Data = s?.homePageData ?? {};
                     Map resp2Data = s?.homePageExtras ?? {};
                     if (resp1Data.length == 0 && resp2Data.length == 0)
-                      return Center(
-                          child: CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation(Color(0xffdc0f21)),
-                      ));
+                      return  PageShimmer();
                     else {
                       bool slider =
                           (resp1Data['slider'] as int).toBool() ?? false;
@@ -353,7 +363,7 @@ class _HomeState extends State<Home> {
 
                           /// Best Products
                           if (best)
-                            ProductListWIthThumbnail(
+                            ProductListWithThumbnail(
                               productData: resp2Data['best_products'],
                               title: "Best Buy",
                             ),
@@ -371,7 +381,6 @@ class _HomeState extends State<Home> {
                                         context,
                                         MaterialPageRoute(
                                             builder: (c) => CategoriesPage(
-
                                                   categoryName: "women",
                                                 )));
                                   },
@@ -395,7 +404,6 @@ class _HomeState extends State<Home> {
                                                     MaterialPageRoute(
                                                         builder: (c) =>
                                                             CategoriesPage(
-
                                                               categoryName:
                                                                   "women",
                                                             )));
@@ -420,7 +428,7 @@ class _HomeState extends State<Home> {
 
                           /// Big Products
                           if (big)
-                            ProductListWIthThumbnail(
+                            ProductListWithThumbnail(
                               productData: resp2Data['big_products'],
                               title: "Big Products",
                             ),
@@ -428,16 +436,14 @@ class _HomeState extends State<Home> {
                           if (bigSaveBanner != null)
                             SliverList(
                                 delegate: SliverChildListDelegate([
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 10),
+                              Container(
+                                height: 400,
                                 child: InkWell(
                                   onTap: () {
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
                                             builder: (c) => CategoriesPage(
-
                                                   categoryName: "men",
                                                   subCatName: "mens-footwear",
                                                   childCatName:
@@ -447,6 +453,7 @@ class _HomeState extends State<Home> {
                                   child: CachedNetworkImage(
                                     imageUrl:
                                         "${Session.BASE_URL}/assets/images/$bigSaveBanner",
+                                    fit: BoxFit.fill,
                                   ),
                                 ),
                               ),
@@ -461,29 +468,28 @@ class _HomeState extends State<Home> {
                           if (bigSaveBanner1 != null)
                             SliverList(
                                 delegate: SliverChildListDelegate([
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 10),
+                              Container(
+                                height: 400,
                                 child: InkWell(
                                   onTap: () {
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
                                             builder: (c) => CategoriesPage(
-
                                                   categoryName: "women",
                                                 )));
                                   },
                                   child: CachedNetworkImage(
                                     imageUrl:
                                         "${Session.BASE_URL}/assets/images/$bigSaveBanner1",
+                                    fit: BoxFit.fill,
                                   ),
                                 ),
                               ),
                             ])),
 
                           ///Hot Products
-                          ProductListWIthThumbnail(
+                          ProductListWithThumbnail(
                             title: "Hot Products",
                             productData: resp2Data['hot_products'],
                           ),
@@ -506,7 +512,7 @@ class _HomeState extends State<Home> {
 
                           /// Hot Sale Products
                           if (hotSale)
-                            ProductListWIthThumbnail(
+                            ProductListWithThumbnail(
                               title: "Hot Sale",
                               productData: resp2Data['sale_products'],
                             ),
@@ -532,6 +538,7 @@ class _HomeState extends State<Home> {
                                 ),
                               ),
                             ])),
+
                           // else if (bestSellerBanner != null ||
                           //     bestSellerBanner1 != null)
                           //   Sliders(
@@ -545,6 +552,39 @@ class _HomeState extends State<Home> {
                           //     ],
                           //     picsPath: "",
                           //   ),
+
+                          SliverList(
+                              delegate: SliverChildListDelegate([
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  bottom: 40.0, left: 10, right: 10, top: 10),
+                              child: InkWell(
+                                borderRadius: BorderRadius.circular(8),
+                                onTap: () {
+                                  ScreenBloc screenBloc =
+                                      Provider.of<ScreenBloc>(context,
+                                          listen: false);
+                                  screenBloc.setPage(2);
+                                },
+                                child: Container(
+                                  height: 50,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Icon(Icons.add_circle_outline),
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 10.0),
+                                        child: Text("Explore More"),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ])),
                         ],
                       );
                     }

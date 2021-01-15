@@ -247,7 +247,7 @@ class _CheckOutState extends State<CheckOut> {
                                                 },
                                               ),
                                               trailing: Text(
-                                                "\u20B9 ${(double.parse(sd['price'].toString()) * currency).toInt()}",
+                                                "\u20B9 ${(double.parse(sd['price'].toString()) * currency).round()}",
                                                 style: TextStyle(
                                                   color: Color(0xff515151),
                                                   fontSize: 15,
@@ -318,7 +318,7 @@ class _CheckOutState extends State<CheckOut> {
                                                 },
                                               ),
                                               trailing: Text(
-                                                "\u20B9 ${(double.parse(pd['price'].toString()) * currency).toInt()}",
+                                                "\u20B9 ${(double.parse(pd['price'].toString()) * currency).round()}",
                                                 style: TextStyle(
                                                   color: Color(0xff515151),
                                                   fontSize: 15,
@@ -393,7 +393,7 @@ class _CheckOutState extends State<CheckOut> {
                                                 ),
                                               ),
                                               Text(
-                                                "\u20B9 ${(totalMRP * currency).toInt()}",
+                                                "\u20B9 ${(totalMRP * currency).round()}",
                                                 style: TextStyle(
                                                   color: Color(0xff7f7f7f),
                                                   fontSize: 14,
@@ -474,7 +474,7 @@ class _CheckOutState extends State<CheckOut> {
                                                 ),
                                               ),
                                               Text(
-                                                "\u20B9 ${(shippingAmt * currency).toInt()}",
+                                                "\u20B9 ${(shippingAmt * currency).round()}",
                                                 style: TextStyle(
                                                   color: Color(0xff7f7f7f),
                                                   fontSize: 14,
@@ -502,7 +502,7 @@ class _CheckOutState extends State<CheckOut> {
                                                 ),
                                               ),
                                               Text(
-                                                "\u20B9 ${(packingAmt * currency).toInt()}",
+                                                "\u20B9 ${(packingAmt * currency).round()}",
                                                 style: TextStyle(
                                                   color: Color(0xff7f7f7f),
                                                   fontSize: 14,
@@ -534,7 +534,7 @@ class _CheckOutState extends State<CheckOut> {
                                                 ),
                                               ),
                                               Text(
-                                                "\u20B9 ${((totalMRP + shippingAmt + packingAmt - couponAmt) * currency).toInt()}",
+                                                "\u20B9 ${((totalMRP + shippingAmt + packingAmt - couponAmt) * currency).round()}",
                                                 style: TextStyle(
                                                   color: Color(0xff515151),
                                                   fontSize: 14,
@@ -868,7 +868,7 @@ class _CheckOutState extends State<CheckOut> {
                             Expanded(
                               flex: 0,
                               child: Text(
-                                "\u20B9 ${(newPrice * currency).toInt()}",
+                                "\u20B9 ${(newPrice * currency).round()}",
                                 maxLines: 1,
                                 style: TextStyle(
                                   fontSize: 15,

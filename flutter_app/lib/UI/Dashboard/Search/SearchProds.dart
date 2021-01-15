@@ -148,13 +148,10 @@ class _SearchProdsState extends State<SearchProds> {
             //   child: InkWell(
             //     focusColor: Colors.transparent,
             //     splashColor: Colors.transparent,
-            //     child: x(
-            //       tag: "WishList",
-            //       child: Image.asset(
-            //         "assets/favourite.png",
-            //         width: 20,
-            //         height: 20,
-            //       ),
+            //     child: Image.asset(
+            //       "assets/favourite.png",
+            //       width: 20,
+            //       height: 20,
             //     ),
             //     onTap: () {
             //       Navigator.push(
@@ -200,7 +197,9 @@ class _SearchProdsState extends State<SearchProds> {
                 physics: BouncingScrollPhysics(),
                 enablePullDown: false,
                 enablePullUp: true,
-                child: GridView.builder(
+                child:searchedProducts.length==0?
+                    Center(child: Text("Search Products"),)
+                    : GridView.builder(
                     primary: false,
                     itemCount: searchedProducts?.length??0,
                     shrinkWrap: true,
@@ -225,7 +224,7 @@ class _SearchProdsState extends State<SearchProds> {
                         discount =
                             (((prevPrice - newPrice) / prevPrice) *
                                 100)
-                                .toInt();
+                                .round();
                       //TODO: ask ravjot to send currency value
                       double currency = 68.95;
                       return InkWell(
@@ -350,10 +349,10 @@ class _SearchProdsState extends State<SearchProds> {
                                       Expanded(
                                         flex: 0,
                                         child: Text(
-                                          "\u20B9 ${(newPrice * currency).toInt()}",
+                                          "\u20B9 ${(newPrice * currency).round()}",
                                           maxLines: 1,
                                           style: TextStyle(
-                                            fontSize: 15,
+                                            fontSize: 14,
                                           ),
                                         ),
                                       ),
@@ -365,10 +364,10 @@ class _SearchProdsState extends State<SearchProds> {
                                             const EdgeInsets.only(
                                                 left: 10.0),
                                             child: Text(
-                                              "\u20B9 ${(prevPrice * currency).toInt()}",
+                                              "\u20B9 ${(prevPrice * currency).round()}",
                                               maxLines: 1,
                                               style: TextStyle(
-                                                  fontSize: 15,
+                                                  fontSize: 14,
                                                   color: Color(
                                                       0xffA9A9A9),
                                                   decoration:
@@ -388,7 +387,7 @@ class _SearchProdsState extends State<SearchProds> {
                                               "$discount% Off",
                                               maxLines: 1,
                                               style: TextStyle(
-                                                  fontSize: 15,
+                                                  fontSize: 14,
                                                   color: Color(
                                                       0xffDC0F21)),
                                             ),

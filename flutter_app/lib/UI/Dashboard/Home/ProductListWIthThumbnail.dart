@@ -4,23 +4,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/UI/Dashboard/Item/ItemPage.dart';
 import 'package:flutter_app/Utils/Session.dart';
 
-class ProductListWIthThumbnail extends StatefulWidget {
+class ProductListWithThumbnail extends StatefulWidget {
   final List productData;
   final String title;
+  final Widget navigateWidget;
 
-  const ProductListWIthThumbnail({Key key, this.productData, this.title})
+  const ProductListWithThumbnail(
+      {Key key, this.productData, this.title, this.navigateWidget})
       : super(key: key);
 
   @override
-  _ProductListWIthThumbnailState createState() =>
-      _ProductListWIthThumbnailState();
+  _ProductListWithThumbnailState createState() =>
+      _ProductListWithThumbnailState();
 }
 
-class _ProductListWIthThumbnailState extends State<ProductListWIthThumbnail> {
+class _ProductListWithThumbnailState extends State<ProductListWithThumbnail> {
   @override
   Widget build(BuildContext context) {
     int itemCount = widget.productData?.length ?? 0;
-
     return itemCount == 0
         ? SliverList(
             delegate: SliverChildListDelegate([]),
@@ -34,35 +35,49 @@ class _ProductListWIthThumbnailState extends State<ProductListWIthThumbnail> {
                 child: Padding(
                   padding:
                       const EdgeInsets.only(left: 20.0, top: 10, bottom: 10),
-                  child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: RichText(
-                        text: TextSpan(
-                            text: "${widget.title.split(" ").first}",
-                            style: TextStyle(
-                              color: Color(0xffdc0f21),
-                              fontSize: 15,
-                              fontWeight: FontWeight.bold,
-                              letterSpacing: 0.45,
-                            ),
-                            children: [
-                              TextSpan(
-                                text: " ${widget.title.split(" ").last}",
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Align(
+                          alignment: Alignment.centerLeft,
+                          child: RichText(
+                            text: TextSpan(
+                                text: "${widget.title.split(" ").first}",
                                 style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.normal,
+                                  color: Color(0xffdc0f21),
                                   fontSize: 15,
+                                  fontWeight: FontWeight.bold,
                                   letterSpacing: 0.45,
                                 ),
-                              ),
-                            ]),
-                        textAlign: TextAlign.center,
-                      )),
+                                children: [
+                                  TextSpan(
+                                    text: " ${widget.title.split(" ").last}",
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.normal,
+                                      fontSize: 15,
+                                      letterSpacing: 0.45,
+                                    ),
+                                  ),
+                                ]),
+                            textAlign: TextAlign.center,
+                          )),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 10.0),
+                        child: InkWell(
+                            onTap: () {
+                              // Navigator.of(context).push(MaterialPageRoute(
+                              //     builder: (c) => widget.navigateWidget));
+                            },
+                            child: Text("View More")),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
             Container(
-              height: 200,
+              height: 240,
               color: Colors.white,
               child: ListView.builder(
                   itemCount: itemCount,
@@ -71,6 +86,15 @@ class _ProductListWIthThumbnailState extends State<ProductListWIthThumbnail> {
                   scrollDirection: Axis.horizontal,
                   itemBuilder: (c, i) {
                     Map data = widget.productData.elementAt(i) ?? {};
+                    double newPrice = double.parse(data['price']?.toString());
+                    double prevPrice =
+                        double.parse(data['previous_price']?.toString() ?? "0");
+                    int discount = 0;
+                    if (prevPrice > 0)
+                      discount =
+                          (((prevPrice - newPrice) / prevPrice) * 100).round();
+                    double currency = double.parse(
+                        (data['curr'] ?? {})['value']?.toString() ?? "68.95");
                     return Padding(
                       key: Key(data['id']?.toString() ?? "$i"),
                       padding:
@@ -97,11 +121,15 @@ class _ProductListWIthThumbnailState extends State<ProductListWIthThumbnail> {
                               children: [
                                 Expanded(
                                   flex: 1,
-                                  child: Container(
-                                    color: Colors.white,
-                                    child: CachedNetworkImage(
-                                      imageUrl:
-                                          "${Session.IMAGE_BASE_URL}/assets/images/thumbnails/${data['thumbnail']}",
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.only(topLeft: Radius.circular(8),topRight: Radius.circular(8)),
+                                    child: Container(
+                                      color: Colors.white,
+                                      child: CachedNetworkImage(
+                                        imageUrl:
+                                            "${Session.IMAGE_BASE_URL}/assets/images/thumbnails/${data['thumbnail']}",
+                                        fit: BoxFit.fill,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -109,14 +137,14 @@ class _ProductListWIthThumbnailState extends State<ProductListWIthThumbnail> {
                                     flex: 0,
                                     child: Padding(
                                       padding: const EdgeInsets.only(
-                                          left: 4.0,
+                                          left: 4,
                                           right: 4,
                                           top: 4,
-                                          bottom: 10),
+                                          bottom: 4),
                                       child: Text(
                                         "${data['name']}",
                                         maxLines: 2,
-                                        textAlign: TextAlign.center,
+                                        textAlign: TextAlign.start,
                                         style: TextStyle(
                                           color: Color(0xff727272),
                                           fontSize: 12,
@@ -125,6 +153,63 @@ class _ProductListWIthThumbnailState extends State<ProductListWIthThumbnail> {
                                         ),
                                       ),
                                     )),
+                                Expanded(
+                                  flex: 0,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 5.0, bottom: 5),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Expanded(
+                                          flex: 0,
+                                          child: Text(
+                                            "\u20B9 ${((newPrice) * currency).round()}",
+                                            maxLines: 1,
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                            ),
+                                          ),
+                                        ),
+                                        if (prevPrice != 0)
+                                          Expanded(
+                                            flex: 0,
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 5.0),
+                                              child: Text(
+                                                "\u20B9 ${(prevPrice * currency).round()}",
+                                                maxLines: 1,
+                                                style: TextStyle(
+                                                    fontSize: 14,
+                                                    color: Color(0xffA9A9A9),
+                                                    decoration: TextDecoration
+                                                        .lineThrough),
+                                              ),
+                                            ),
+                                          ),
+                                        if (discount > 0)
+                                          Expanded(
+                                            flex: 0,
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 5.0),
+                                              child: Text(
+                                                "$discount% Off",
+                                                maxLines: 1,
+                                                style: TextStyle(
+                                                    fontSize: 14,
+                                                    color: Color(0xffDC0F21)),
+                                              ),
+                                            ),
+                                          ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
                               ],
                             ),
                           ),
