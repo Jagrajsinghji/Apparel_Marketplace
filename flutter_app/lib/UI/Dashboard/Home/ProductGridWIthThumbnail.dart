@@ -1,15 +1,19 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/UI/Components/AddToCartIcon.dart';
+import 'package:flutter_app/UI/Components/AddToWishListIcon.dart';
+import 'package:flutter_app/UI/Components/ProductRateIcon.dart';
 import 'package:flutter_app/UI/Dashboard/Item/ItemPage.dart';
 import 'package:flutter_app/Utils/Session.dart';
 
+import 'ViewAll.dart';
+
 class ProductGridWIthThumbnail extends StatefulWidget {
   final List productData;
-  final String title;
-  final Widget navigateWidget;
+  final String title, filter;
 
-  const ProductGridWIthThumbnail({Key key, this.productData, this.title, this.navigateWidget})
+  const ProductGridWIthThumbnail(
+      {Key key, this.productData, this.title, @required this.filter})
       : super(key: key);
 
   @override
@@ -68,8 +72,12 @@ class _ProductGridWIthThumbnailState extends State<ProductGridWIthThumbnail> {
                         padding: const EdgeInsets.only(right: 10.0),
                         child: InkWell(
                             onTap: () {
-                              // Navigator.of(context).push(MaterialPageRoute(
-                              //     builder: (c) => widget.navigateWidget));
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (c) => ViewAllPage(title: widget.title,
+                                            filters: widget.filter,
+                                          )));
                             },
                             child: Text("View More")),
                       ),
@@ -88,18 +96,18 @@ class _ProductGridWIthThumbnailState extends State<ProductGridWIthThumbnail> {
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      childAspectRatio: .8,
+                      childAspectRatio: .7,
                       crossAxisCount: 2,
                     ),
                     itemBuilder: (c, i) {
                       Map data = widget.productData.elementAt(i) ?? {};
                       double newPrice = double.parse(data['price']?.toString());
-                      double prevPrice =
-                      double.parse(data['previous_price']?.toString() ?? "0");
+                      double prevPrice = double.parse(
+                          data['previous_price']?.toString() ?? "0");
                       int discount = 0;
                       if (prevPrice > 0)
-                        discount =
-                            (((prevPrice - newPrice) / prevPrice) * 100).round();
+                        discount = (((prevPrice - newPrice) / prevPrice) * 100)
+                            .round();
                       double currency = double.parse(
                           (data['curr'] ?? {})['value']?.toString() ?? "68.95");
                       return Padding(
@@ -116,13 +124,11 @@ class _ProductGridWIthThumbnailState extends State<ProductGridWIthThumbnail> {
                           child: Container(
                             decoration: BoxDecoration(
                                 color: Colors.white,
-                                border:
-                                    Border.all(color: Colors.grey.shade300),
+                                border: Border.all(color: Colors.grey.shade300),
                                 borderRadius: BorderRadius.circular(8)),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment:
-                                  MainAxisAlignment.spaceEvenly,
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
                                 Expanded(
                                   flex: 1,
@@ -130,7 +136,7 @@ class _ProductGridWIthThumbnailState extends State<ProductGridWIthThumbnail> {
                                     color: Colors.white,
                                     child: CachedNetworkImage(
                                       imageUrl:
-                                      "${Session.IMAGE_BASE_URL}/assets/images/thumbnails/${data['thumbnail']}",
+                                          "${Session.IMAGE_BASE_URL}/assets/images/thumbnails/${data['thumbnail']}",
                                     ),
                                   ),
                                 ),
@@ -138,17 +144,15 @@ class _ProductGridWIthThumbnailState extends State<ProductGridWIthThumbnail> {
                                     flex: 0,
                                     child: Padding(
                                       padding: const EdgeInsets.only(
-                                          left: 4,
-                                          right: 4,
-                                          top: 4,
-                                          bottom: 4),
+                                          left: 4, right: 4, top: 4, bottom: 4),
                                       child: Text(
                                         "${data['name']}",
                                         maxLines: 2,
                                         textAlign: TextAlign.start,
                                         style: TextStyle(
-                                          color: Color(0xff727272),
-                                          fontSize: 12,fontWeight: FontWeight.bold,
+                                          color: Colors.black,
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.bold,
                                           letterSpacing: 0.45,
                                         ),
                                       ),
@@ -160,9 +164,9 @@ class _ProductGridWIthThumbnailState extends State<ProductGridWIthThumbnail> {
                                         left: 5, bottom: 5),
                                     child: Row(
                                       mainAxisAlignment:
-                                      MainAxisAlignment.start,
+                                          MainAxisAlignment.start,
                                       crossAxisAlignment:
-                                      CrossAxisAlignment.center,
+                                          CrossAxisAlignment.center,
                                       children: [
                                         Expanded(
                                           flex: 0,
@@ -174,7 +178,8 @@ class _ProductGridWIthThumbnailState extends State<ProductGridWIthThumbnail> {
                                             ),
                                           ),
                                         ),
-                                        if (prevPrice != 0)
+                                        if (prevPrice != 0 &&
+                                            prevPrice != newPrice)
                                           Expanded(
                                             flex: 0,
                                             child: Padding(
@@ -184,7 +189,7 @@ class _ProductGridWIthThumbnailState extends State<ProductGridWIthThumbnail> {
                                                 "\u20B9 ${(prevPrice * currency).round()}",
                                                 maxLines: 1,
                                                 style: TextStyle(
-                                                    fontSize: 14,
+                                                    fontSize: 12,
                                                     color: Color(0xffA9A9A9),
                                                     decoration: TextDecoration
                                                         .lineThrough),
@@ -206,6 +211,32 @@ class _ProductGridWIthThumbnailState extends State<ProductGridWIthThumbnail> {
                                               ),
                                             ),
                                           ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 0,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 5, bottom: 5),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Expanded(flex: 0,child: ProductRateIcon(productData: data,),),
+                                        Expanded(
+                                          child: AddToWishListIcon(
+                                            productsData: data,
+                                          ),
+                                        ),
+                                        Expanded(
+                                          child: AddToCartIcon(
+                                            productData: data,
+                                          ),
+                                        )
                                       ],
                                     ),
                                   ),

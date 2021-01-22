@@ -28,7 +28,7 @@ class Sliders extends StatefulWidget {
 class _SlidersState extends State<Sliders> with TickerProviderStateMixin {
   AnimationController _controller;
   PageController _pageController;
-  int page =0;
+  int page = 0;
 
   @override
   void initState() {
@@ -53,9 +53,9 @@ class _SlidersState extends State<Sliders> with TickerProviderStateMixin {
         _controller.forward();
       }
     });
-    _controller.addListener(() =>setState((){
-      page = _pageController.page.toInt();
-    }));
+    _controller.addListener(() => setState(() {
+          page = _pageController.page.toInt();
+        }));
     Timer(Duration(seconds: 1), () {
       try {
         _controller?.forward();
@@ -85,28 +85,21 @@ class _SlidersState extends State<Sliders> with TickerProviderStateMixin {
             controller: _pageController,
             itemBuilder: (c, i) {
               Map data = widget.slidersData.elementAt(i) ?? {};
+              String link = data['link'];
               Widget _widget;
               return InkWell(
                 onTap: () {
                   switch (widget.numb) {
                     case 0:
-                      _widget = CategoriesPage(
-
-                        subCatName: "womens-western-wear",
-                        childCatName: "cardigan",
-                        categoryName: "women",
-                      );
                       break;
                     case 1:
                       if (i == 0)
                         _widget = CategoriesPage(
-
                           categoryName: "women",
                           subCatName: "womens-western-wear",
                         );
                       else
                         _widget = CategoriesPage(
-
                           categoryName: "men",
                           subCatName: "men-topwear",
                           childCatName: "men-t-shirts",
@@ -115,25 +108,26 @@ class _SlidersState extends State<Sliders> with TickerProviderStateMixin {
                     default:
                       if (i == 0)
                         _widget = CategoriesPage(
-
                           categoryName: "women",
                           subCatName: "women-ethnic-wear",
                           childCatName: "kurti-and-kurti-set",
                         );
                       else if (i == 2)
                         _widget = CategoriesPage(
-
                           categoryName: "women",
                           subCatName: "womens-western-wear",
                           childCatName: "cardigan",
                         );
                       else
                         _widget = CategoriesPage(
-
                           categoryName: "men",
                           subCatName: "men-topwear",
                           childCatName: "men-t-shirts",
                         );
+                  }
+                  if (_widget == null) {
+                    Navigator.pushNamed(context, link);
+                    return;
                   }
                   Navigator.push(
                       context, MaterialPageRoute(builder: (c) => _widget));
@@ -145,7 +139,7 @@ class _SlidersState extends State<Sliders> with TickerProviderStateMixin {
                   width: double.infinity,
                   height: widget.height,
                   imageUrl:
-                      "${Session.BASE_URL}/assets/images/${widget.picsPath}/${data['photo']}",
+                      "${Session.IMAGE_BASE_URL}/assets/images/${widget.picsPath}/${data['photo']}",
                   fit: BoxFit.cover,
                 ),
               );
@@ -183,7 +177,7 @@ class _SlidersState extends State<Sliders> with TickerProviderStateMixin {
                   ),
                 );
             },
-            itemCount: (widget.slidersData?.length??0),
+            itemCount: (widget.slidersData?.length ?? 0),
             shrinkWrap: true,
           ),
         ),

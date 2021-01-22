@@ -9,149 +9,121 @@ class DealsPage extends StatefulWidget {
 class _DealsPageState extends State<DealsPage> {
   Map<String, Widget> bannersLinks = {
     "1.jpg": CategoriesPage(
-       subCatName: "men-topwear",
+      subCatName: "men-topwear",
       categoryName: "men",
     ),
     "assets/Banners/Deal_Zone1.jpg": CategoriesPage(
-
       subCatName: "womens-western-wear",
       childCatName: "women-jackets-coats",
       categoryName: "women",
     ),
     "assets/Banners/Deal_Zone2.jpg": CategoriesPage(
-
       subCatName: "womens-western-wear",
       childCatName: "cardigan",
       categoryName: "women",
     ),
     "assets/Banners/Deal_Zone3.jpg": CategoriesPage(
-
       subCatName: "boys-clothing",
       childCatName: "jackets-sweater-and-sweatshirts",
       categoryName: "kids",
     ),
     "assets/Banners/Deal_Zone4.jpg": CategoriesPage(
-
       subCatName: "men-topwear",
       childCatName: "men-t-shirts",
       categoryName: "men",
     ),
     "2.jpg": CategoriesPage(
-       subCatName: "men-topwear",
+      subCatName: "men-topwear",
       categoryName: "men",
     ),
     "assets/Banners/Deal_Zone5.jpg": CategoriesPage(
-
       childCatName: "men-t-shirts",
       subCatName: "men-topwear",
       categoryName: "men",
     ),
     "assets/Banners/Deal_Zone6.jpg": CategoriesPage(
-
       subCatName: "boys-clothing",
       categoryName: "kids",
     ),
     "assets/Banners/Deal_Zone7.jpg": CategoriesPage(
-
       subCatName: "boys-clothing",
       categoryName: "kids",
     ),
     "assets/Banners/Deal_Zone8.jpg": CategoriesPage(
-
       subCatName: "boys-clothing",
       categoryName: "kids",
     ),
     "3.jpg": CategoriesPage(
-
       subCatName: "men-topwear",
       categoryName: "men",
     ),
     "assets/Banners/Deal_Zone9.jpg": CategoriesPage(
-
       subCatName: "womens-western-wear",
       childCatName: "dresses",
       categoryName: "women",
     ),
     "assets/Banners/Deal_Zone10.jpg": CategoriesPage(
-
       subCatName: "men-topwear",
       childCatName: "men-t-shirts",
       categoryName: "men",
     ),
     "assets/Banners/Deal_Zone11.jpg": CategoriesPage(
-
       subCatName: "womens-sleepwear-and-lounge-wear",
       childCatName: "womens-nightsuit-and-tracksuit",
       categoryName: "women",
     ),
     "assets/Banners/Deal_Zone12.jpg": CategoriesPage(
-
       subCatName: "womens-sleepwear-and-lounge-wear",
       childCatName: "womens-nightsuit-and-tracksuit",
       categoryName: "women",
     ),
     "4.jpg": CategoriesPage(
-
       subCatName: "womens-western-wear",
       categoryName: "women",
     ),
     "assets/Banners/Deal_Zone13.jpg": CategoriesPage(
-
       subCatName: "womens-western-wear",
       childCatName: "cardigan",
       categoryName: "women",
     ),
     "assets/Banners/Deal_Zone14.jpg": CategoriesPage(
-
       subCatName: "women-ethnic-wear",
       childCatName: "women-saree",
       categoryName: "women",
     ),
     "assets/Banners/Deal_Zone15.jpg": CategoriesPage(
-
       categoryName: "kids",
     ),
     "assets/Banners/Deal_Zone16.jpg": CategoriesPage(
-
       categoryName: "kids",
     ),
     "5.jpg": CategoriesPage(
-
       subCatName: "womens-western-wear",
       categoryName: "women",
     ),
     "assets/Banners/Deal_Zone17.jpg": CategoriesPage(
-
       categoryName: "kids",
     ),
     "assets/Banners/Deal_Zone18.jpg": CategoriesPage(
-
       categoryName: "kids",
     ),
     "assets/Banners/Deal_Zone19.jpg": CategoriesPage(
-
       categoryName: "kids",
     ),
     "assets/Banners/Deal_Zone20.jpg": CategoriesPage(
-
       categoryName: "kids",
     ),
     "6.jpg": CategoriesPage(
-
-
       categoryName: "women",
     ),
     "assets/Banners/Deal_Zone21.jpg": CategoriesPage(
-
       categoryName: "women",
     ),
     "assets/Banners/Deal_Zone22.jpg": CategoriesPage(
-
       subCatName: "womens-western-wear",
       categoryName: "women",
     ),
     "800X250.jpg": CategoriesPage(
-
       categoryName: "kids",
     )
   };
@@ -215,8 +187,8 @@ class _DealsPageState extends State<DealsPage> {
                   padding: const EdgeInsets.all(8.0),
                   child: InkWell(
                     onTap: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (c) => widget));
+                      Navigator.push(
+                          context, MaterialPageRoute(builder: (c) => widget));
                     },
                     child: Container(
                       width: MediaQuery.of(context).size.width / 2.5,
@@ -229,8 +201,8 @@ class _DealsPageState extends State<DealsPage> {
                   padding: const EdgeInsets.all(8.0),
                   child: InkWell(
                     onTap: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (c) => widget));
+                      Navigator.push(
+                          context, MaterialPageRoute(builder: (c) => widget));
                     },
                     child: Image.asset("assets/DealsBanners/$element"),
                   ),

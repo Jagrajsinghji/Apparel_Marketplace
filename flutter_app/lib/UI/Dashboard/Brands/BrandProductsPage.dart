@@ -12,30 +12,25 @@ import 'package:flutter_app/UI/Components/SearchIcon.dart';
 import 'package:flutter_app/UI/Components/WishListIcon.dart';
 import 'package:flutter_app/UI/Dashboard/Cart/ShoppingBag.dart';
 import 'package:flutter_app/UI/Dashboard/Category/FilterBy.dart';
+import 'package:flutter_app/UI/Dashboard/Category/SortBy.dart';
 import 'package:flutter_app/UI/Dashboard/Item/ItemPage.dart';
-import 'package:flutter_app/UI/Dashboard/Search/SearchProds.dart';
 import 'package:flutter_app/Utils/Session.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shimmer/shimmer.dart';
 
-import 'SortBy.dart';
+class BrandProductsPage extends StatefulWidget {
+  final String brandName;
 
-class CategoriesPage extends StatefulWidget {
-  final String categoryName;
-  final String subCatName;
-  final String childCatName;
-
-  const CategoriesPage(
-      {Key key, this.categoryName, this.subCatName, this.childCatName})
+  const BrandProductsPage({Key key, @required this.brandName})
       : super(key: key);
 
   @override
-  _CategoriesPageState createState() => _CategoriesPageState();
+  _BrandProductsPageState createState() => _BrandProductsPageState();
 }
 
-class _CategoriesPageState extends State<CategoriesPage> {
+class _BrandProductsPageState extends State<BrandProductsPage> {
   Sort sort = Sort.NONE;
 
   Map<String, Set> generatedFilters = {};
@@ -50,6 +45,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
   ///final show list which user will be.
   List filteredProductsList;
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
   @override
   void initState() {
     super.initState();
@@ -57,23 +53,12 @@ class _CategoriesPageState extends State<CategoriesPage> {
   }
 
   Future<bool> getProducts(bool fetchMore,
-      {int currentPage = 1, int lastPage,bool forceRefresh=false}) async {
+      {int currentPage = 1, int lastPage, bool forceRefresh = false}) async {
     if (lastPage != null && currentPage > lastPage) return false;
     if (fetchMore) currentPage++;
     ProductsBloc _pBloc = Provider.of<ProductsBloc>(context, listen: false);
-    Future _future = _pBloc.getProductsByCategoryName(widget.categoryName,
-        page: currentPage,forceRefresh: forceRefresh);
-    if (widget.categoryName != null && widget.subCatName != null) {
-      _future = _pBloc.getProductsBySubCategoryName(
-          widget.categoryName, widget.subCatName,
-          page: currentPage,forceRefresh: forceRefresh);
-    } else if (widget.categoryName != null &&
-        widget.subCatName != null &&
-        widget.childCatName != null) {
-      _future = _pBloc.getProductsByChildCategoryName(
-          widget.categoryName, widget.subCatName, widget.childCatName,
-          page: currentPage,forceRefresh: forceRefresh);
-    }
+    Future _future = _pBloc.getBrandProducts(widget.brandName,
+        page: currentPage, forceRefresh: forceRefresh);
     Response response = await _future;
     apiProductsResponseData = {}..addAll((response?.data ?? {}));
     if (fetchMore) {
@@ -82,14 +67,14 @@ class _CategoriesPageState extends State<CategoriesPage> {
 
       ///generating new filters with new prods fetched
       Map<String, Set> _filters =
-          generateFilters(apiProductsResponseData['products']??[]);
+          generateFilters(apiProductsResponseData['products'] ?? []);
       _filters.forEach((key, value) {
         generatedFilters[key].addAll(value);
       });
 
       ///adding flitered prods in show list
       filteredProductsList
-          .addAll(filterProds(apiProductsResponseData['products']??[]));
+          .addAll(filterProds(apiProductsResponseData['products'] ?? []));
       sort = Sort.NONE;
     } else {
       /// getting all prods
@@ -97,13 +82,13 @@ class _CategoriesPageState extends State<CategoriesPage> {
         ..addAll(apiProductsResponseData['products'] ?? []);
 
       ///generating filters
-      generatedFilters = generateFilters(mainAllProductsList??[]);
+      generatedFilters = generateFilters(mainAllProductsList ?? []);
 
       /// sort prods if refresh
       filteredProductsList = []..addAll(sortProds(mainAllProductsList));
 
       /// filter prods if refresh
-      filteredProductsList = []..addAll(filterProds(mainAllProductsList??[]));
+      filteredProductsList = []..addAll(filterProds(mainAllProductsList ?? []));
     }
     if (mounted) setState(() {});
     return true;
@@ -129,7 +114,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
           ),
           backgroundColor: Colors.white,
           title: Text(
-            widget?.categoryName?.toUpperCase() ?? "Category",
+            widget?.brandName?.toUpperCase() ?? "Branded Products",
             style: TextStyle(
               color: Color(0xff2c393f),
               fontSize: 14,
@@ -187,7 +172,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
                           setState(() {
                             appliedFilters = filters;
                             filteredProductsList = []
-                              ..addAll(filterProds(mainAllProductsList??[]));
+                              ..addAll(filterProds(mainAllProductsList ?? []));
                           });
                       },
                       child: Center(
@@ -284,7 +269,8 @@ class _CategoriesPageState extends State<CategoriesPage> {
           controller: _refreshController,
           onRefresh: () async {
             await getProducts(
-              false,forceRefresh: true
+              false,
+              forceRefresh: true,
             );
             _refreshController.refreshCompleted();
           },
@@ -429,9 +415,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
                               ),
                               itemBuilder: (c, i) {
                                 Map data =
-                                    filteredProductsList.elementAt(i) ?? {};
-                                String shopName =
-                                    (data['user'] ?? {})['shop_name'];
+                                    filteredProductsList?.elementAt(i) ?? {};
                                 double newPrice =
                                     double.parse(data['price']?.toString());
                                 double prevPrice = double.parse(
@@ -478,26 +462,6 @@ class _CategoriesPageState extends State<CategoriesPage> {
                                                 child: CachedNetworkImage(
                                                   imageUrl:
                                                       "${Session.IMAGE_BASE_URL}/assets/images/thumbnails/${data['thumbnail']}",
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          Expanded(
-                                            flex: 0,
-                                            child: Padding(
-                                              padding: const EdgeInsets.only(
-                                                  left: 5.0),
-                                              child: Align(
-                                                alignment: Alignment.centerLeft,
-                                                child: Text(
-                                                  shopName ?? "",
-                                                  maxLines: 2,
-                                                  textAlign: TextAlign.start,
-                                                  style: TextStyle(
-                                                    color: Colors.black54,
-                                                    fontSize: 10,
-                                                    letterSpacing: 0.45,
-                                                  ),
                                                 ),
                                               ),
                                             ),
@@ -652,6 +616,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
                                               ),
                                             ),
                                           ),
+
                                         ],
                                       ),
                                     ),
@@ -702,28 +667,12 @@ class _CategoriesPageState extends State<CategoriesPage> {
   }
 
   List filterProds(List prodsData) {
-    print(prodsData.length);
-    List filteredList = [];
-    Set brands = appliedFilters['brands'] ?? Set(),
-        price = appliedFilters['price'] ?? Set(),
+    List filteredList = []..addAll(prodsData);
+    Set price = appliedFilters['price'] ?? Set(),
         size = appliedFilters['size'] ?? Set(),
         colors = appliedFilters['colors'] ?? Set(),
         star = appliedFilters['stars'] ?? Set(),
         discount = appliedFilters['discount'] ?? Set();
-
-    if (brands.length != 0 &&
-        brands.length != generatedFilters['brands'].length) {
-      print('applying brand filter');
-      brands.forEach((brand) {
-        filteredList.addAll(prodsData
-            .where((prod) => prod['user']['shop_name'].toString() == brand));
-      });
-      print("applied brand filter ${filteredList.length}");
-    } else {
-      print('NO Brand Filter');
-      filteredList.addAll(prodsData);
-      print("Length ${filteredList.length}");
-    }
 
     if (price.length != 0) {
       print("applying price filter");
@@ -771,15 +720,12 @@ class _CategoriesPageState extends State<CategoriesPage> {
   }
 
   Map<String, Set> generateFilters(List prods) {
-    Set brands = Set(), price = Set(), size = Set(), colors = Set();
+    Set price = Set(), size = Set(), colors = Set();
     prods.forEach((element) {
-      if (!brands.contains((element['user']??{})['shop_name'].toString()))
-        brands.add(element['user']['shop_name'].toString());
       double newPrice = double.parse(element['price']?.toString());
       //TODO: ask ravjot to send currency value
       newPrice = newPrice * 68.95;
       if (!price.contains(newPrice)) price.add(newPrice);
-
       if (element['color'] is List) {
         List defColor = element['color'] ?? [];
         defColor.forEach((element) {
@@ -796,7 +742,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
       }
     });
     Map<String, Set> generatedFilters = {}..addAll({
-        "brands": brands,
+        "brands": Set(),
         "price": price,
         "colors": colors,
         "size": size,

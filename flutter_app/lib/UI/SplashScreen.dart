@@ -20,9 +20,9 @@ class _SplashScreenState extends State<SplashScreen>
     super.initState();
     Timer(Duration(seconds: 3), () async {
       SharedPreferences _prefs = await SharedPreferences.getInstance();
-      bool viewIntro = _prefs.getBool("viewIntro")??true;
-      Navigator.of(context)
-          .pushReplacement(MaterialPageRoute(builder: (c) => viewIntro?Intro1():Dashboard()));
+      bool viewIntro = _prefs.getBool("viewIntro") ?? true;
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (c) => viewIntro ? Intro1() : Dashboard()));
     });
     _animCont = AnimationController(
         duration: Duration(
@@ -55,7 +55,7 @@ class _SplashScreenState extends State<SplashScreen>
             padding: const EdgeInsets.all(8.0),
             child: Align(
                 alignment: Alignment.bottomCenter,
-                child: Text("Version 1.0.2")),
+                child: Text("Version 1.0.1")),
           )
         ],
       ),

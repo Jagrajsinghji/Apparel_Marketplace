@@ -22,8 +22,6 @@ class _ForgotPassword3State extends State<ForgotPassword3> {
           ),
         ),
         centerTitle: true,
-        leading: Transform.scale(
-            scale: .4, child: Image.asset("assets/backArrow.png")),
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,

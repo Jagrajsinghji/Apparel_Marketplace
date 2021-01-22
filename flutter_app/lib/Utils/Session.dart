@@ -10,13 +10,12 @@ class Session {
 
   static Session get instance => _constant;
 
-  Map<String, String> _headers = {
-    "Accept":"application/json"
-  };
+  Map<String, String> _headers = {};
   SharedPreferences _pref;
 
   get baseOptions => BaseOptions(
         baseUrl: BASE_URL,
+    contentType: "application/json",
       );
 
   Future<Map<String, String>> getHeaders() async {

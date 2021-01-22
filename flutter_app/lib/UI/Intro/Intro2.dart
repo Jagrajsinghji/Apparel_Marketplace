@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_app/UI/Intro/Intro3.dart';
@@ -73,7 +72,8 @@ class _Intro2State extends State<Intro2> {
               flex: 0,
               child: Padding(
                 padding: const EdgeInsets.only(left: 27),
-                child: Align(alignment: Alignment.centerLeft,
+                child: Align(
+                  alignment: Alignment.centerLeft,
                   child: Text(
                     "Browse and search your new style from all\nthe brands list",
                     style: TextStyle(

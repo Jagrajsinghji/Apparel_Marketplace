@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/Bloc/ScreenBloc.dart';
-import 'package:flutter_app/Bloc/RazorPayBloc.dart';
 import 'package:provider/provider.dart';
-
 
 _bottomNav(BuildContext context, {VoidCallback voidCallback}) {
   ScreenBloc screenBloc = Provider.of<ScreenBloc>(context);
@@ -15,7 +13,7 @@ _bottomNav(BuildContext context, {VoidCallback voidCallback}) {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Padding(
-            padding: const EdgeInsets.only(left:35.0),
+            padding: const EdgeInsets.only(left: 35.0),
             child: InkWell(
               onTap: () {
                 screenBloc.setPage(0);
@@ -92,7 +90,7 @@ _bottomNav(BuildContext context, {VoidCallback voidCallback}) {
           //   ),
           // ),
           Padding(
-            padding: const EdgeInsets.only(right:35.0),
+            padding: const EdgeInsets.only(right: 35.0),
             child: InkWell(
               onTap: () {
                 screenBloc.setPage(4);
@@ -150,11 +148,10 @@ floatingActionButton(BuildContext context, {VoidCallback voidCallback}) {
             padding: const EdgeInsets.all(4.0),
             child: FloatingActionButton(
               heroTag: null,
-              backgroundColor: Color(0xffdc0f21),
+              backgroundColor: Color(0xff005294),
               onPressed: () {
                 screenBloc.setPage(2);
                 voidCallback();
-
               },
               child: Text(
                 "Deals",

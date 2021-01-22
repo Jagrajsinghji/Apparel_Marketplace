@@ -1,14 +1,19 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/UI/Components/AddToCartIcon.dart';
+import 'package:flutter_app/UI/Components/AddToWishListIcon.dart';
+import 'package:flutter_app/UI/Components/ProductRateIcon.dart';
 import 'package:flutter_app/UI/Dashboard/Item/ItemPage.dart';
 import 'package:flutter_app/Utils/Session.dart';
 
+import 'ViewAll.dart';
+
 class Product4GridWIthThumbnail extends StatefulWidget {
   final List productData;
-  final String title;
+  final String title, filter;
 
-  const Product4GridWIthThumbnail({Key key, this.productData, this.title})
+  const Product4GridWIthThumbnail(
+      {Key key, this.productData, this.title, @required this.filter})
       : super(key: key);
 
   @override
@@ -19,6 +24,7 @@ class Product4GridWIthThumbnail extends StatefulWidget {
 class _Product4GridWIthThumbnailState extends State<Product4GridWIthThumbnail> {
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width - 30, height = 460;
     int itemCount = widget.productData?.length ?? 0;
     if (itemCount % 4 != 0) {
       itemCount = itemCount - (itemCount % 4);
@@ -61,7 +67,7 @@ class _Product4GridWIthThumbnailState extends State<Product4GridWIthThumbnail> {
               ),
             ),
             Container(
-              height: 400,
+              height: height,
               child: ListView(
                 physics: BouncingScrollPhysics(),
                 scrollDirection: Axis.horizontal,
@@ -73,134 +79,185 @@ class _Product4GridWIthThumbnailState extends State<Product4GridWIthThumbnail> {
                         .getRange((index * 4), (index * 4) + 4));
                     return Center(
                       child: Container(
-                        width: MediaQuery.of(context).size.width - 30,
-                        child: GridView(shrinkWrap: true,
-                          primary: false,
-                          physics: NeverScrollableScrollPhysics(),
-                          gridDelegate:
-                          SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2, childAspectRatio: .85),
-                          scrollDirection: Axis.vertical,
+                        width: width,
+                        child: Wrap(
                           children: [
                             ...listOf4.map((e) {
                               Map data = e ?? {};
-                              double newPrice = double.parse(data['price']?.toString());
-                              double prevPrice =
-                              double.parse(data['previous_price']?.toString() ?? "0");
+                              double newPrice =
+                                  double.parse(data['price']?.toString());
+                              double prevPrice = double.parse(
+                                  data['previous_price']?.toString() ?? "0");
                               int discount = 0;
                               if (prevPrice > 0)
                                 discount =
-                                    (((prevPrice - newPrice) / prevPrice) * 100).round();
+                                    (((prevPrice - newPrice) / prevPrice) * 100)
+                                        .round();
                               double currency = double.parse(
-                                  (data['curr'] ?? {})['value']?.toString() ?? "68.95");
-                              return Padding(
-                                padding: const EdgeInsets.all(2.0),
-                                child: InkWell(
-                                  onTap: () {
-                                    Navigator.of(context).push(PageRouteBuilder(
-                                        pageBuilder: (c, a, b) => ItemPage(
-                                              itemSlug: data['slug'],
-                                            )));
-                                  },
-                                  key: Key(data['id']?.toString() ?? "$e"),
-                                  borderRadius: BorderRadius.circular(8),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        border: Border.all(
-                                            color: Colors.grey.shade300),
-                                        borderRadius: BorderRadius.circular(8)),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
+                                  (data['curr'] ?? {})['value']?.toString() ??
+                                      "68.95");
+                              return Container(
+                                height: height / 2,
+                                width: width / 2,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(1.0),
+                                  child: InkWell(
+                                    onTap: () {
+                                      Navigator.of(context).push(
+                                          PageRouteBuilder(
+                                              pageBuilder: (c, a, b) =>
+                                                  ItemPage(
+                                                    itemSlug: data['slug'],
+                                                  )));
+                                    },
+                                    key: Key(data['id']?.toString() ?? "$e"),
+                                    borderRadius: BorderRadius.circular(8),
+                                    child: Stack(
                                       children: [
-                                        Expanded(
-                                          flex: 1,
-                                          child: Container(
-                                            color: Colors.white,
-                                            child: CachedNetworkImage(
-                                              imageUrl:
-                                                  "${Session.IMAGE_BASE_URL}/assets/images/thumbnails/${data['thumbnail']}",
-                                            ),
-                                          ),
-                                        ),
-                                        Expanded(
-                                            flex: 0,
-                                            child: Padding(
-                                              padding: const EdgeInsets.only(
-                                                  left: 4,
-                                                  right: 4,
-                                                  top: 4,
-                                                  bottom: 4),
-                                              child: Text(
-                                                "${data['name']}",
-                                                maxLines: 2,
-                                                textAlign: TextAlign.start,
-                                                style: TextStyle(
-                                                  color: Color(0xff727272),
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.bold,
-                                                  letterSpacing: 0.45,
+                                        Container(
+                                          decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              border: Border.all(
+                                                  color: Colors.grey.shade300),
+                                              borderRadius:
+                                                  BorderRadius.circular(8)),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Expanded(
+                                                flex: 1,
+                                                child: Container(
+                                                  color: Colors.white,
+                                                  child: CachedNetworkImage(
+                                                    imageUrl:
+                                                        "${Session.IMAGE_BASE_URL}/assets/images/thumbnails/${data['thumbnail']}",
+                                                  ),
                                                 ),
                                               ),
-                                            )),
-                                        Expanded(
-                                          flex: 0,
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 5, bottom: 5),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                              crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                              children: [
-                                                Expanded(
+                                              Expanded(
                                                   flex: 0,
-                                                  child: Text(
-                                                    "\u20B9 ${((newPrice) * currency).round()}",
-                                                    maxLines: 1,
-                                                    style: TextStyle(
-                                                      fontSize: 14,
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            left: 4,
+                                                            right: 4,
+                                                            top: 4,
+                                                            bottom: 4),
+                                                    child: Text(
+                                                      "${data['name']}",
+                                                      maxLines: 2,
+                                                      textAlign:
+                                                          TextAlign.start,
+                                                      style: TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 12,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        letterSpacing: 0.45,
+                                                      ),
                                                     ),
+                                                  )),
+                                              Expanded(
+                                                flex: 0,
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 5, bottom: 5),
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.start,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Expanded(
+                                                        flex: 0,
+                                                        child: Text(
+                                                          "\u20B9 ${((newPrice) * currency).round()}",
+                                                          maxLines: 1,
+                                                          style: TextStyle(
+                                                            fontSize: 14,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      if (prevPrice != 0 &&
+                                                          prevPrice != newPrice)
+                                                        Expanded(
+                                                          flex: 0,
+                                                          child: Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .only(
+                                                                    left: 5.0),
+                                                            child: Text(
+                                                              "\u20B9 ${(prevPrice * currency).round()}",
+                                                              maxLines: 1,
+                                                              style: TextStyle(
+                                                                  fontSize: 12,
+                                                                  color: Color(
+                                                                      0xffA9A9A9),
+                                                                  decoration:
+                                                                      TextDecoration
+                                                                          .lineThrough),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      if (discount > 0)
+                                                        Expanded(
+                                                          flex: 0,
+                                                          child: Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .only(
+                                                                    left: 5.0),
+                                                            child: Text(
+                                                              "$discount% Off",
+                                                              maxLines: 1,
+                                                              style: TextStyle(
+                                                                  fontSize: 14,
+                                                                  color: Color(
+                                                                      0xffDC0F21)),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                    ],
                                                   ),
                                                 ),
-                                                if (prevPrice != 0)
-                                                  Expanded(
-                                                    flex: 0,
-                                                    child: Padding(
-                                                      padding: const EdgeInsets.only(
-                                                          left: 5.0),
-                                                      child: Text(
-                                                        "\u20B9 ${(prevPrice * currency).round()}",
-                                                        maxLines: 1,
-                                                        style: TextStyle(
-                                                            fontSize: 14,
-                                                            color: Color(0xffA9A9A9),
-                                                            decoration: TextDecoration
-                                                                .lineThrough),
+                                              ),
+                                              Expanded(
+                                                flex: 0,
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 5, bottom: 5),
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceEvenly,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Expanded(flex: 0,child: ProductRateIcon(productData: data,),),
+                                                      Expanded(
+                                                        child:
+                                                            AddToWishListIcon(
+                                                          productsData: data,
+                                                        ),
                                                       ),
-                                                    ),
+                                                      Expanded(
+                                                        child: AddToCartIcon(
+                                                          productData: data,
+                                                        ),
+                                                      )
+                                                    ],
                                                   ),
-                                                if (discount > 0)
-                                                  Expanded(
-                                                    flex: 0,
-                                                    child: Padding(
-                                                      padding: const EdgeInsets.only(
-                                                          left: 5.0),
-                                                      child: Text(
-                                                        "$discount% Off",
-                                                        maxLines: 1,
-                                                        style: TextStyle(
-                                                            fontSize: 14,
-                                                            color: Color(0xffDC0F21)),
-                                                      ),
-                                                    ),
-                                                  ),
-                                              ],
-                                            ),
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ),
                                       ],
@@ -210,18 +267,31 @@ class _Product4GridWIthThumbnailState extends State<Product4GridWIthThumbnail> {
                               );
                             })
                           ],
-
                         ),
                       ),
                     );
                   }),
                   InkWell(
                     onTap: () {
-//TODO: send to new screen
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (c) => ViewAllPage(title: widget.title,
+                                    filters: widget.filter,
+                                  )));
                     },
                     child: Container(
-                      width: 40,
-                      child: Icon(Icons.double_arrow_rounded),
+                      width: 150,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.explore),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text("Explore More"),
+                          )
+                        ],
+                      ),
                     ),
                   )
                 ],

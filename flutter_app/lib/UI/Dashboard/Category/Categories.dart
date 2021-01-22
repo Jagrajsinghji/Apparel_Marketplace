@@ -61,8 +61,7 @@ class _CategoriesState extends State<Categories> {
         child: Container(
           color: Colors.white,
           child: Consumer<CategoryBloc>(builder: (context, snapshot, w) {
-            if (snapshot.categoryData.length == 0)
-              return Center(child: Text("Loading Categories"));
+            if (snapshot.categoryData.length == 0) return Container();
             Map respData = snapshot?.categoryData ?? {};
             List categories = respData['categories'] ?? [];
             return GridView.builder(
@@ -75,7 +74,7 @@ class _CategoriesState extends State<Categories> {
                     mainAxisSpacing: 5,
                     childAspectRatio: .9),
                 itemBuilder: (c, i) {
-                  if (i == categories.length+4) {
+                  if (i == categories.length + 4) {
                     return InkWell(
                       onTap: () {
                         Navigator.of(context).push(PageRouteBuilder(
@@ -87,29 +86,29 @@ class _CategoriesState extends State<Categories> {
                                 )));
                       },
                       child: Padding(
-                        padding: const EdgeInsets.only(bottom: 25.0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Expanded(
-                                flex: 1,
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                      color: Colors.grey.shade300,
-                                      shape: BoxShape.circle),
-                                  child: Center(
-                                      child: Text(
-                                    "+\nExplore\nMore",
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      color: Color(0xff727272),
-                                      fontSize: 16,
-                                      letterSpacing: 0.45,
-                                    ),
-                                  )),
-                                )),
-                          ],
+                        padding: const EdgeInsets.only(bottom: 25.0, top: 10),
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: Colors.grey.shade300,
+                              shape: BoxShape.circle),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 10.0),
+                                child: Icon(Icons.explore),
+                              ),
+                              Text(
+                                "Explore\nMore",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: Color(0xff727272),
+                                  fontSize: 14,
+                                  letterSpacing: 0.45,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     );
@@ -122,8 +121,8 @@ class _CategoriesState extends State<Categories> {
                         Navigator.of(context).push(PageRouteBuilder(
                             pageBuilder: (c, a, b) => CategoriesPage(
                                   categoryName: val.split("/").first,
-                              subCatName: val.split("/")[1],
-                              childCatName: val.split("/").last,
+                                  subCatName: val.split("/")[1],
+                                  childCatName: val.split("/").last,
                                 )));
                       },
                       child: ClipRRect(

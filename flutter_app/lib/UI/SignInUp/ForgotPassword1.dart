@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_app/Bloc/AuthBloc.dart';
+import 'package:provider/provider.dart';
 
 class ForgotPassword1 extends StatefulWidget {
   @override
@@ -29,8 +29,6 @@ class _ForgotPassword1State extends State<ForgotPassword1> {
           ),
         ),
         centerTitle: true,
-        leading: Transform.scale(
-            scale: .4, child: Image.asset("assets/backArrow.png")),
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -181,24 +179,18 @@ class _ForgotPassword1State extends State<ForgotPassword1> {
                             },
                             child: Text(
                               "Got It",
-                              style: TextStyle(
-
-                              ),
+                              style: TextStyle(),
                             ))
                       ],
                       title: Text(
                         "Password Reset Successfully",
                         textAlign: TextAlign.center,
-                        style: TextStyle(
-
-                        ),
+                        style: TextStyle(),
                       ),
                       content: Text(
                         "An email has been sent to your email address with new password.\nPlease login to your account with that password.",
                         textAlign: TextAlign.center,
-                        style: TextStyle(
-
-                        ),
+                        style: TextStyle(),
                       ),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),

@@ -1,27 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/Bloc/CartBloc.dart';
+import 'package:flutter_app/Bloc/ItemBloc.dart';
+import 'package:flutter_app/UI/Dashboard/Cart/WishList.dart';
 import 'package:provider/provider.dart';
 
-class CartIcon extends StatefulWidget {
-  final GlobalKey<ScaffoldState> globalKey;
-
-  const CartIcon({Key key, @required this.globalKey}) : super(key: key);
+class WishListIcon extends StatefulWidget {
+  const WishListIcon({Key key}) : super(key: key);
 
   @override
-  _CartIconState createState() => _CartIconState();
+  _WishListIconState createState() => _WishListIconState();
 }
 
-class _CartIconState extends State<CartIcon> {
+class _WishListIconState extends State<WishListIcon> {
   @override
   Widget build(BuildContext context) {
-    return Consumer<CartBloc>(
+    return Consumer<ItemBloc>(
       builder: (c, s, w) {
-        int totalItems = (s.cartData['products'] ?? {})?.length ?? 0;
+        int totalItems = (s.wishListData['wishlists'] ?? [])?.length ?? 0;
         return Padding(
           padding: const EdgeInsets.only(right: 10.0, top: 8.0, bottom: 8.0),
           child: Container(
             width: 30,
-            child: Hero(tag: "CartIcon",
+            child: Hero(tag: "WishlistIcon",
               child: Material(color: Colors.transparent,
                 child: InkWell(
                   focusColor: Colors.transparent,
@@ -30,7 +29,7 @@ class _CartIconState extends State<CartIcon> {
                     children: [
                       Center(
                         child: Image.asset(
-                          "assets/cart.png",
+                          "assets/favourite.png",
                           width: 20,
                           height: 20,
                         ),
@@ -54,7 +53,25 @@ class _CartIconState extends State<CartIcon> {
                     ],
                   ),
                   onTap: () {
-                    widget.globalKey.currentState.openEndDrawer();
+                    Navigator.push(
+                        context,
+                        PageRouteBuilder(
+                            opaque: false,
+                            barrierColor: Colors.black.withOpacity(.8),
+                            transitionDuration: Duration(
+                              milliseconds: 500,
+                            ),
+                            reverseTransitionDuration: Duration(milliseconds: 500),
+                            transitionsBuilder: (c, a, b, w) {
+                              return SlideTransition(
+                                position:
+                                    Tween(end: Offset.zero, begin: Offset(0, -1))
+                                        .animate(CurvedAnimation(
+                                            parent: a, curve: Curves.decelerate)),
+                                child: w,
+                              );
+                            },
+                            pageBuilder: (c, a, b) => WishList()));
                   },
                 ),
               ),

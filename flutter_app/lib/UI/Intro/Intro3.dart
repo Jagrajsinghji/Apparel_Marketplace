@@ -1,7 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_app/UI/SignInUp/SignIn.dart';
 import 'package:flutter_app/Utils/Session.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -73,10 +71,11 @@ class _Intro3State extends State<Intro3> {
                         child: InkWell(
                           borderRadius: BorderRadius.circular(600),
                           onTap: () async {
-                            SharedPreferences _prefs = await SharedPreferences.getInstance();
-                            _prefs.setBool("viewIntro",false);
-                            Navigator.pushNamedAndRemoveUntil(context,
-                                Session.BASE_URL,(p)=>false);
+                            SharedPreferences _prefs =
+                                await SharedPreferences.getInstance();
+                            _prefs.setBool("viewIntro", false);
+                            Navigator.pushNamedAndRemoveUntil(
+                                context, Session.BASE_URL, (p) => false);
                           },
                           child: Center(
                             child: Text(

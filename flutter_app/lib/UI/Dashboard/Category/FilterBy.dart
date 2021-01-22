@@ -52,11 +52,12 @@ class _FilterByState extends State<FilterBy> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: GestureDetector(  onTap: () {
-        Navigator.pop(context);
-      },
+      child: GestureDetector(
+        onTap: () {
+          Navigator.pop(context);
+        },
         child: Scaffold(
-          backgroundColor: Colors.transparent,
+          backgroundColor: Colors.black26,
           body: BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
             child: Container(
@@ -86,10 +87,10 @@ class _FilterByState extends State<FilterBy> {
                           selectedColors.clear();
                           selectedStars.clear();
                           selectedDiscount.clear();
-                          maxPrice = (widget.allFilters['price'])
-                              .reduce((curr, next) => curr > next ? curr : next);
-                          minPrice = (widget.allFilters['price'])
-                              .reduce((curr, next) => curr < next ? curr : next);
+                          maxPrice = (widget.allFilters['price']).reduce(
+                              (curr, next) => curr > next ? curr : next);
+                          minPrice = (widget.allFilters['price']).reduce(
+                              (curr, next) => curr < next ? curr : next);
                           _priceValues = RangeValues(minPrice, maxPrice);
                           Map<String, Set> appFilters = {}..addAll({
                               "brands": selectedBrands,
@@ -116,7 +117,8 @@ class _FilterByState extends State<FilterBy> {
                       ),
                     ],
                   ),
-                  Padding(
+                  if(widget.allFilters['brands'].length!=0)
+                  ...[Padding(
                     padding: const EdgeInsets.only(left: 10.0, bottom: 10),
                     child: Text(
                       "Brand",
@@ -142,7 +144,8 @@ class _FilterByState extends State<FilterBy> {
                                     ? 6
                                     : widget.allFilters['brands'].length)
                             .map((brand) {
-                          bool selected = selectedBrands.contains(brand) ?? false;
+                          bool selected =
+                              selectedBrands.contains(brand) ?? false;
                           return InkWell(
                             borderRadius: BorderRadius.circular(4),
                             onTap: () {
@@ -200,7 +203,7 @@ class _FilterByState extends State<FilterBy> {
                               ),
                             )),
                       ),
-                    ),
+                    ),],
                   Padding(
                     padding: const EdgeInsets.only(
                       left: 10.0,
@@ -219,7 +222,8 @@ class _FilterByState extends State<FilterBy> {
                     child: Theme(
                       data: ThemeData(
                           sliderTheme: SliderThemeData(
-                              rangeTrackShape: RoundedRectRangeSliderTrackShape(),
+                              rangeTrackShape:
+                                  RoundedRectRangeSliderTrackShape(),
                               rangeValueIndicatorShape:
                                   PaddleRangeSliderValueIndicatorShape(),
                               showValueIndicator: ShowValueIndicator.always)),
@@ -238,7 +242,8 @@ class _FilterByState extends State<FilterBy> {
                         },
                         min: minPrice,
                         max: maxPrice,
-                        labels: RangeLabels(_priceValues.start.round().toString(),
+                        labels: RangeLabels(
+                            _priceValues.start.round().toString(),
                             _priceValues.end.round().toString()),
                       ),
                     ),
@@ -305,8 +310,9 @@ class _FilterByState extends State<FilterBy> {
                                     color: Color(0xff969696),
                                     width: 1,
                                   ),
-                                  color:
-                                      selected ? Color(0xff686868) : Colors.white,
+                                  color: selected
+                                      ? Color(0xff686868)
+                                      : Colors.white,
                                 ),
                                 child: Padding(
                                   padding: const EdgeInsets.all(6.0),
@@ -329,8 +335,8 @@ class _FilterByState extends State<FilterBy> {
                   ],
                   if ((widget.allFilters['colors']).length > 0) ...[
                     Padding(
-                      padding:
-                          const EdgeInsets.only(left: 10.0, top: 10, bottom: 10),
+                      padding: const EdgeInsets.only(
+                          left: 10.0, top: 10, bottom: 10),
                       child: Text(
                         "Colour",
                         style: TextStyle(
@@ -382,8 +388,8 @@ class _FilterByState extends State<FilterBy> {
                                         borderRadius: BorderRadius.circular(4),
                                         color: Colors.black26,
                                       ),
-                                      child:
-                                          Icon(Icons.check, color: Colors.white),
+                                      child: Icon(Icons.check,
+                                          color: Colors.white),
                                     ),
                                 ],
                               ),
@@ -523,8 +529,8 @@ class _FilterByState extends State<FilterBy> {
                   //   ),
                   // ),
                   Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 25, vertical: 20),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 25, vertical: 20),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -583,7 +589,6 @@ class _FilterByState extends State<FilterBy> {
                       ],
                     ),
                   ),
-                  Container(color: Colors.black,height: 1,)
                 ],
               ),
             ),

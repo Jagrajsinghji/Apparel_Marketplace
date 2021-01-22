@@ -4,7 +4,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/Bloc/AuthBloc.dart';
+import 'package:flutter_app/Utils/Extensions.dart';
 import 'package:flutter_app/Utils/Session.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 
 import 'SignIn.dart';
@@ -147,13 +149,11 @@ class _SignUpState extends State<SignUp> {
                   hintStyle: TextStyle(
                     color: Color(0xff9d9d9d),
                     fontSize: 14,
-
                     fontWeight: FontWeight.w400,
                   ),
                 ),
                 style: TextStyle(
                   fontSize: 14,
-
                   fontWeight: FontWeight.w400,
                 ),
               ),
@@ -342,13 +342,11 @@ class _SignUpState extends State<SignUp> {
                     hintStyle: TextStyle(
                       color: Color(0xff9d9d9d),
                       fontSize: 14,
-
                       fontWeight: FontWeight.w400,
                     ),
                   ),
                   style: TextStyle(
                     fontSize: 14,
-
                     fontWeight: FontWeight.w400,
                   ),
                 ),
@@ -382,9 +380,8 @@ class _SignUpState extends State<SignUp> {
                 ),
                 child: Center(
                   child: loading
-                      ? CircularProgressIndicator(
-                          valueColor:
-                              AlwaysStoppedAnimation<Color>(Colors.white),
+                      ? SpinKitFadingCircle(
+                          color: Colors.white,
                         )
                       : Text(
                           "Go Shopping",
@@ -493,27 +490,22 @@ class _SignUpState extends State<SignUp> {
                                 onPressed: () {
                                   Navigator.pop(c);
                                   Navigator.pop(context);
+                                  refreshBlocs(context, loginRefresh: true);
                                 },
                                 child: Text(
                                   "Got It",
-                                  style: TextStyle(
-
-                                  ),
+                                  style: TextStyle(),
                                 ))
                           ],
                           title: Text(
                             "User Registered Successfully",
                             textAlign: TextAlign.center,
-                            style: TextStyle(
-
-                            ),
+                            style: TextStyle(),
                           ),
                           content: Text(
                             "A registration email has been sent to your email address.\nPlease verify your account for all benefits.",
                             textAlign: TextAlign.center,
-                            style: TextStyle(
-
-                            ),
+                            style: TextStyle(),
                           ),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
@@ -549,12 +541,12 @@ class _SignUpState extends State<SignUp> {
     }
   }
 
-void refreshCaptcha() {
-  Provider.of<AuthBloc>(context, listen: false).refreshCode().then((s) {
-    captchaEnabled = s.data['capcha_status'] == 1;
-    _code = s.data['capcha_code'];
-    _time = Random().nextDouble().toString();
-    if (mounted) setState(() {});
-  });
-}
+  void refreshCaptcha() {
+    Provider.of<AuthBloc>(context, listen: false).refreshCode().then((s) {
+      captchaEnabled = s.data['capcha_status'] == 1;
+      _code = s.data['capcha_code'];
+      _time = Random().nextDouble().toString();
+      if (mounted) setState(() {});
+    });
+  }
 }

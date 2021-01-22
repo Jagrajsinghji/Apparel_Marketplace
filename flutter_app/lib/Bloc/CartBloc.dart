@@ -34,8 +34,17 @@ class CartBloc with ChangeNotifier {
     dio.interceptors.add(_dioInterceptor);
     Response response = await dio.get("/api/addcart/$itemID");
     await Session.instance.updateCookie(response);
-
     await getCartItems();
+    // print(itemID);
+    print(response.data);
+    // print(response.request.uri);
+    if (response.data is! Map) {
+      if (((response.data['data'] ?? {})['item'] ?? {})['id'] == itemID.toString()) {
+        Fluttertoast.showToast(msg: "Item Added To Cart");
+      }
+    } else {
+      Fluttertoast.showToast(msg: "An Error occurred!");
+    }
     return response;
   }
 
@@ -55,11 +64,11 @@ class CartBloc with ChangeNotifier {
         "${Session.BASE_URL}/api/numcart/add?id=$itemId&qty=$qty&size=$size&color=$color&size_qty=$sizeQty&size_price=$sizePrice&size_key=$sizeKey&keys=$keys&values=$values&prices=$prices");
     await Session.instance.updateCookie(response);
     await getCartItems();
-    if (response.data != null && response.data['data'] is String) {
-      Fluttertoast.showToast(msg: "An Error occurred!");
-    }
+    print(response.data);
     if (((response.data['data'] ?? {})['item'] ?? {})['id'] == itemId) {
       Fluttertoast.showToast(msg: "Item Added To Cart");
+    } else {
+      Fluttertoast.showToast(msg: "An Error Occurred");
     }
     notifyListeners();
     return response;
@@ -73,7 +82,7 @@ class CartBloc with ChangeNotifier {
     Response response =
         await dio.get("${Session.BASE_URL}/api/removecart/$key");
     await Session.instance.updateCookie(response);
-
+    print(response.data);
     await getCartItems();
     return response;
   }
@@ -86,19 +95,24 @@ class CartBloc with ChangeNotifier {
         "${Session.BASE_URL}/api/add/byone?id=$id&itemid=$itemId&size_qty=$sizeQty&size_price=$sizePrice");
 
     await Session.instance.updateCookie(response);
-
+    print(response.data);
     if (getCartItem) {
       await getCartItems();
     } else
       getCartItems();
 
     if (response.data['data'] is String) {
-      if (response.data['data'].toString().contains("Out of stock"))
+      if (response.data['data']
+          .toString()
+          .contains("is greater than size qty")) {
         Fluttertoast.showToast(msg: "Item out of stock.");
+        return null;
+      }
     } else if (response.data['data'] is Map) {
       Fluttertoast.showToast(msg: "Item added successfully.");
+    } else {
+      Fluttertoast.showToast(msg: "An Error Occurred");
     }
-
     notifyListeners();
 
     return response;
@@ -115,12 +129,12 @@ class CartBloc with ChangeNotifier {
     Response response = await dio.get(
         "${Session.BASE_URL}/api/reduce/byone?id=$id&itemid=$itemId&size_qty=$sizeQty&size_price=$sizePrice");
     await Session.instance.updateCookie(response);
+    print(response.data);
     await getCartItems();
-    if (response.data['data'] is String) {
-      if (response.data['data'].toString().contains("greater than size qty"))
-        Fluttertoast.showToast(msg: "Can not remove item.");
-    } else if (response.data['data'] is Map) {
+    if (response.data['data'] is Map) {
       Fluttertoast.showToast(msg: "Item removed successfully.");
+    } else {
+      Fluttertoast.showToast(msg: "An Error occurred!");
     }
     notifyListeners();
     return response;
@@ -231,7 +245,10 @@ class CartBloc with ChangeNotifier {
   }
 
   Future<Response> razorPayCallack(
-      {String orderId, String signature, String paymentId,String wowfasID}) async {
+      {String orderId,
+      String signature,
+      String paymentId,
+      String wowfasID}) async {
     Dio dio = Dio(Session.instance.baseOptions);
     dio.interceptors.add(_dioInterceptor);
     String token = await Session.instance.getToken();

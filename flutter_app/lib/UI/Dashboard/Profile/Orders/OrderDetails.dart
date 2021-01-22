@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/Bloc/OrdersBloc.dart';
 import 'package:flutter_app/UI/Dashboard/Item/ItemPage.dart';
 import 'package:flutter_app/Utils/Session.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 
 class OrderDetails extends StatefulWidget {
@@ -29,19 +30,20 @@ class _OrderDetailsState extends State<OrderDetails> {
           },
         ),
         title: Text(
-          "My Orders",style: TextStyle(color: Colors.black),
+          "My Orders",
+          style: TextStyle(color: Colors.black),
         ),
         backgroundColor: Colors.white,
         iconTheme: IconThemeData(color: Colors.black),
       ),
-      backgroundColor: Color(0xffE5E5E5),
+      backgroundColor: Colors.white,
       body: FutureBuilder<Response>(
         future: _orderBloc.getOrderDetails(widget.orderId),
         builder: (c, snap) {
           if (snap?.data?.data == null)
             return Center(
-                child: CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation(Color(0xffdc0f21)),
+                child: SpinKitFadingCircle(
+              color: Color(0xffDC0F21),
             ));
           else {
             Map orderData = snap?.data?.data ?? {};
@@ -306,7 +308,7 @@ class _OrderDetailsState extends State<OrderDetails> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(top:10.0,bottom: 5),
+                  padding: const EdgeInsets.only(top: 10.0, bottom: 5),
                   child: Text(
                     'Items Purchased',
                     style: TextStyle(
@@ -345,7 +347,6 @@ class _OrderDetailsState extends State<OrderDetails> {
                     context,
                     MaterialPageRoute(
                         builder: (c) => ItemPage(
-
                               itemSlug: details['item']['slug'],
                             )));
               },

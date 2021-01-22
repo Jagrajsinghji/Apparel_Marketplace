@@ -8,8 +8,8 @@ import 'package:flutter_app/Bloc/CartBloc.dart';
 import 'package:flutter_app/UI/Dashboard/Item/ItemPage.dart';
 import 'package:flutter_app/UI/Dashboard/Profile/AddAddress.dart';
 import 'package:flutter_app/UI/SignInUp/SignIn.dart';
-import 'package:flutter_app/Utils/Extensions.dart';
 import 'package:flutter_app/Utils/Session.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -54,7 +54,7 @@ class _CheckOutState extends State<CheckOut> {
         backgroundColor: Colors.white,
         iconTheme: IconThemeData(color: Colors.black),
       ),
-      backgroundColor: Color(0xffE5E5E5),
+      backgroundColor: Colors.white,
       body: Stack(
         children: [
           FutureBuilder<Response>(
@@ -62,9 +62,8 @@ class _CheckOutState extends State<CheckOut> {
               builder: (context, snapshot) {
                 if (snapshot?.data == null)
                   return Center(
-                      child: CircularProgressIndicator(
-                    valueColor:
-                        AlwaysStoppedAnimation<Color>(Color(0xffDC0F21)),
+                      child: SpinKitFadingCircle(
+                    color: Color(0xffDC0F21),
                   ));
                 else {
                   Map data = snapshot?.data?.data ?? {};
@@ -112,7 +111,6 @@ class _CheckOutState extends State<CheckOut> {
                         child: SmartRefresher(
                           controller: _refreshController,
                           onRefresh: () async {
-                            refreshBlocs(context);
                             await Future.delayed(Duration(milliseconds: 1000));
                             _refreshController.refreshCompleted();
                           },
@@ -221,8 +219,7 @@ class _CheckOutState extends State<CheckOut> {
                                     accentColor: Color(0xffFF1D1D),
                                   ),
                                   child: Padding(
-                                    padding:
-                                        EdgeInsets.only(bottom: 2, top: 2),
+                                    padding: EdgeInsets.only(bottom: 2, top: 2),
                                     child: Container(
                                       color: Colors.white,
                                       child: ExpansionTile(
@@ -292,8 +289,7 @@ class _CheckOutState extends State<CheckOut> {
                                   data:
                                       ThemeData(accentColor: Color(0xffFF1D1D)),
                                   child: Padding(
-                                    padding:
-                                        EdgeInsets.only(bottom: 2, top: 2),
+                                    padding: EdgeInsets.only(bottom: 2, top: 2),
                                     child: Container(
                                       color: Colors.white,
                                       child: ExpansionTile(
@@ -589,8 +585,8 @@ class _CheckOutState extends State<CheckOut> {
               child: Container(
                 color: Colors.black54,
                 child: Center(
-                    child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(Color(0xffDC0F21)),
+                    child: SpinKitFadingCircle(
+                  color: Color(0xffDC0F21),
                 )),
               ),
             )
@@ -680,12 +676,19 @@ class _CheckOutState extends State<CheckOut> {
 
     //TODO: ask ravjot to send currency value
     double currency = 68.95;
-    double sizePrice = itemPrice + double.parse(details['size_price']?.toString()??"0");
+    double sizePrice =
+        itemPrice + double.parse(details['size_price']?.toString() ?? "0");
     return Padding(
-      padding: const EdgeInsets.only(bottom: 10),
+      padding: const EdgeInsets.only(bottom: 5),
       child: Container(
         height: 130,
-        color: Colors.white,
+        decoration: BoxDecoration(boxShadow: [
+          BoxShadow(
+              color: Colors.black12,
+              blurRadius: 1,
+              spreadRadius: 1,
+              offset: Offset(0, 1))
+        ], color: Colors.white),
         child: Row(
           children: [
             InkWell(
@@ -694,14 +697,14 @@ class _CheckOutState extends State<CheckOut> {
                     context,
                     MaterialPageRoute(
                         builder: (c) => ItemPage(
-                          itemSlug: details['item']['slug'],
-                        )));
+                              itemSlug: details['item']['slug'],
+                            )));
               },
               child: Container(
                 height: double.maxFinite,
                 child: CachedNetworkImage(
                   imageUrl:
-                  "${Session.IMAGE_BASE_URL}/assets/images/products/${details['item']['photo']}",
+                      "${Session.IMAGE_BASE_URL}/assets/images/products/${details['item']['photo']}",
                   fit: BoxFit.fitHeight,
                 ),
                 width: MediaQuery.of(context).size.width / 2.4,
@@ -883,7 +886,7 @@ class _CheckOutState extends State<CheckOut> {
                                     borderRadius: BorderRadius.circular(8)),
                                 child: Row(
                                   mainAxisAlignment:
-                                  MainAxisAlignment.spaceEvenly,
+                                      MainAxisAlignment.spaceEvenly,
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     Padding(
@@ -949,7 +952,8 @@ class _CheckOutState extends State<CheckOut> {
                                               });
                                             await snapshot.addByOne(
                                                 details['item']['id'], itemID,
-                                                sizePrice: sizePrice,getCartItem: false,
+                                                sizePrice: sizePrice,
+                                                getCartItem: false,
                                                 sizeQty: details['size_qty']);
                                             if (mounted)
                                               setState(() {

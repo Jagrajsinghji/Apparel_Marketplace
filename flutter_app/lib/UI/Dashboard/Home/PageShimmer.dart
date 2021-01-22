@@ -7,12 +7,12 @@ class PageShimmer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Shimmer(
       gradient: LinearGradient(
-          begin: Alignment.topLeft,
+          begin: Alignment.centerLeft,
           end: Alignment.centerRight,
           colors: <Color>[
             Colors.grey.shade400,
             Colors.white60,
-            Colors.redAccent,
+            Colors.redAccent.withOpacity(.5),
             Colors.grey.shade200,
             Colors.grey.shade400
           ],
@@ -32,20 +32,17 @@ class PageShimmer extends StatelessWidget {
             color: Colors.white,
           ),
           Padding(
-            padding:
-            const EdgeInsets.only(top: 10.0, right: 10, left: 10),
+            padding: const EdgeInsets.only(top: 10.0, right: 10, left: 10),
             child: Container(
               decoration: BoxDecoration(
                   color: Colors.white,
-                  border:
-                  Border.all(color: Colors.grey.shade300),
+                  border: Border.all(color: Colors.grey.shade300),
                   borderRadius: BorderRadius.circular(8)),
               height: 40,
             ),
           ),
           Padding(
-            padding:
-            const EdgeInsets.only(bottom: 5.0, right: 10, left: 10),
+            padding: const EdgeInsets.only(bottom: 5.0, right: 10, left: 10),
             child: Container(
               height: 400,
               child: ListView(
@@ -62,8 +59,8 @@ class PageShimmer extends StatelessWidget {
                           primary: false,
                           physics: NeverScrollableScrollPhysics(),
                           gridDelegate:
-                          SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2, childAspectRatio: .85),
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 2, childAspectRatio: .85),
                           scrollDirection: Axis.vertical,
                           children: List.generate(4, (index) {
                             return Padding(
@@ -71,8 +68,8 @@ class PageShimmer extends StatelessWidget {
                               child: Container(
                                 decoration: BoxDecoration(
                                     color: Colors.white,
-                                    border: Border.all(
-                                        color: Colors.grey.shade300),
+                                    border:
+                                        Border.all(color: Colors.grey.shade300),
                                     borderRadius: BorderRadius.circular(8)),
                               ),
                             );
@@ -91,18 +88,17 @@ class PageShimmer extends StatelessWidget {
           ),
           Padding(
             padding:
-            const EdgeInsets.only(top: 5,bottom: 5.0, right: 10, left: 10),
+                const EdgeInsets.only(top: 5, bottom: 5.0, right: 10, left: 10),
             child: Container(
               decoration: BoxDecoration(
                   color: Colors.white,
-                  border:
-                  Border.all(color: Colors.grey.shade300),
+                  border: Border.all(color: Colors.grey.shade300),
                   borderRadius: BorderRadius.circular(8)),
               height: 40,
             ),
           ),
-          Padding(padding:
-          const EdgeInsets.only( left: 10),
+          Padding(
+            padding: const EdgeInsets.only(left: 10),
             child: Container(
               height: 240,
               child: ListView.builder(
@@ -113,7 +109,7 @@ class PageShimmer extends StatelessWidget {
                   itemBuilder: (c, i) {
                     return Padding(
                       padding:
-                      const EdgeInsets.only(bottom: 10, right: 2, left: 2),
+                          const EdgeInsets.only(bottom: 10, right: 2, left: 2),
                       child: Material(
                         color: Colors.transparent,
                         child: Container(
@@ -130,19 +126,17 @@ class PageShimmer extends StatelessWidget {
           ),
           Padding(
             padding:
-            const EdgeInsets.only(top: 5,bottom: 5.0, right: 10, left: 10),
+                const EdgeInsets.only(top: 5, bottom: 5.0, right: 10, left: 10),
             child: Container(
               decoration: BoxDecoration(
                   color: Colors.white,
-                  border:
-                  Border.all(color: Colors.grey.shade300),
+                  border: Border.all(color: Colors.grey.shade300),
                   borderRadius: BorderRadius.circular(8)),
               height: 40,
             ),
           ),
           Padding(
-            padding:
-            const EdgeInsets.only(bottom: 10.0, right: 10, left: 10),
+            padding: const EdgeInsets.only(bottom: 10.0, right: 10, left: 10),
             child: GridView.builder(
                 itemCount: 4,
                 shrinkWrap: true,
@@ -157,14 +151,12 @@ class PageShimmer extends StatelessWidget {
                     child: Container(
                       decoration: BoxDecoration(
                           color: Colors.white,
-                          border:
-                          Border.all(color: Colors.grey.shade300),
+                          border: Border.all(color: Colors.grey.shade300),
                           borderRadius: BorderRadius.circular(8)),
                     ),
                   );
                 }),
           ),
-
         ],
       ),
     );

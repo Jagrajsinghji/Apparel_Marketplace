@@ -1,4 +1,8 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_app/UI/Components/CartIcon.dart';
+import 'package:flutter_app/UI/Dashboard/Cart/ShoppingBag.dart';
 
 class Notifications extends StatefulWidget {
   @override
@@ -6,41 +10,52 @@ class Notifications extends StatefulWidget {
 }
 
 class _NotificationsState extends State<Notifications> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        leading: FlatButton(
-          child: Image.asset("assets/backArrow.png"),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-        backgroundColor: Colors.white,
-        iconTheme: IconThemeData(color: Colors.black),
-      ),
-      backgroundColor: Colors.white,
-      body: ListView(shrinkWrap: true,
-        children: [
-          Container(
-            child: Image.asset("assets/cross.png"),
-            height: 40,
-            width: 40,
-          ),
-          SizedBox(
-            height: 20,
-          ),
-          Center(
-            child: Text(
-              "No New Notification",
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: () => Navigator.pop(context),
+        child: Scaffold(
+          key: _scaffoldKey,
+          appBar: AppBar(
+            elevation: 0,
+            title: Text(
+              "Notification",
               style: TextStyle(
-                color: Color(0xff5b5b5b),
-                fontSize: 20,
+                color: Color(0xff2c393f),
+                fontSize: 18,
+              ),
+            ),
+            backgroundColor: Colors.white,
+            iconTheme: IconThemeData(color: Colors.black),
+            actions: [
+              CartIcon(
+                globalKey: _scaffoldKey,
+              )
+            ],
+          ),
+          endDrawer: ShoppingBag(),
+          backgroundColor: Colors.transparent,
+          body: InkWell(
+            onTap: () {},
+            child: Container(
+              height: MediaQuery.of(context).size.height / 2,
+              decoration: BoxDecoration(color: Colors.white),
+              child: Center(
+                child: Text(
+                  "No New Notification",
+                  style: TextStyle(
+                    color: Color(0xff5b5b5b),
+                    fontSize: 20,
+                  ),
+                ),
               ),
             ),
           ),
-        ],
+        ),
       ),
     );
   }

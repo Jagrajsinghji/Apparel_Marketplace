@@ -3,8 +3,9 @@ import 'package:flutter_app/Utils/Session.dart';
 
 class OrderPlaced extends StatefulWidget {
   final Map data;
+  final String paymentStatus;
 
-  const OrderPlaced({Key key, this.data}) : super(key: key);
+  const OrderPlaced({Key key, this.data,@required this.paymentStatus}) : super(key: key);
 
   @override
   _OrderPlacedState createState() => _OrderPlacedState();
@@ -14,9 +15,9 @@ class _OrderPlacedState extends State<OrderPlaced> {
   Map data;
   @override
   Widget build(BuildContext context) {
-    data=widget.data;
+    data = widget.data;
     return Scaffold(
-      backgroundColor: Color(0xffE5E5E5),
+      backgroundColor: Colors.white,
       appBar: AppBar(
         elevation: 0,
         leading: FlatButton(
@@ -35,22 +36,31 @@ class _OrderPlacedState extends State<OrderPlaced> {
         ),
         iconTheme: IconThemeData(color: Colors.black),
       ),
-      body: Column(mainAxisAlignment: MainAxisAlignment.center,
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Padding(
-            padding: const EdgeInsets.only(top:20.0,bottom: 10),
-            child: Center(child: Text("Order Placed Successfully",style: TextStyle(fontSize: 24),)),
+            padding: const EdgeInsets.only(top: 20.0, bottom: 10),
+            child: Center(
+                child: Text(
+              "Order Placed Successfully",
+              style: TextStyle(fontSize: 24),
+            )),
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text("Order Number: ${data['order_number']}"),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text("Payment Status: ${widget.paymentStatus}"),
           ),
           Center(
             child: InkWell(
               borderRadius: BorderRadius.circular(600),
               onTap: () {
                 Navigator.pushNamedAndRemoveUntil(
-                    context, Session.BASE_URL, (route) => false);
+                    context, "Orders", (route) => route.isFirst);
               },
               child: Container(
                 width: 186,
@@ -65,7 +75,7 @@ class _OrderPlacedState extends State<OrderPlaced> {
                 ),
                 child: Center(
                   child: Text(
-                    "Shop More",
+                    "Go To My Orders",
                     style: TextStyle(
                       color: Color(0xffdc0f21),
                       fontSize: 14,

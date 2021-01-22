@@ -12,30 +12,28 @@ import 'package:flutter_app/UI/Components/SearchIcon.dart';
 import 'package:flutter_app/UI/Components/WishListIcon.dart';
 import 'package:flutter_app/UI/Dashboard/Cart/ShoppingBag.dart';
 import 'package:flutter_app/UI/Dashboard/Category/FilterBy.dart';
+import 'package:flutter_app/UI/Dashboard/Category/SortBy.dart';
 import 'package:flutter_app/UI/Dashboard/Item/ItemPage.dart';
-import 'package:flutter_app/UI/Dashboard/Search/SearchProds.dart';
 import 'package:flutter_app/Utils/Session.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shimmer/shimmer.dart';
 
-import 'SortBy.dart';
+class ViewAllPage extends StatefulWidget {
+  final String filters, title;
 
-class CategoriesPage extends StatefulWidget {
-  final String categoryName;
-  final String subCatName;
-  final String childCatName;
-
-  const CategoriesPage(
-      {Key key, this.categoryName, this.subCatName, this.childCatName})
-      : super(key: key);
+  const ViewAllPage({
+    Key key,
+    this.filters,
+    @required this.title,
+  }) : super(key: key);
 
   @override
-  _CategoriesPageState createState() => _CategoriesPageState();
+  _ViewAllPageState createState() => _ViewAllPageState();
 }
 
-class _CategoriesPageState extends State<CategoriesPage> {
+class _ViewAllPageState extends State<ViewAllPage> {
   Sort sort = Sort.NONE;
 
   Map<String, Set> generatedFilters = {};
@@ -50,6 +48,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
   ///final show list which user will be.
   List filteredProductsList;
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
   @override
   void initState() {
     super.initState();
@@ -57,23 +56,12 @@ class _CategoriesPageState extends State<CategoriesPage> {
   }
 
   Future<bool> getProducts(bool fetchMore,
-      {int currentPage = 1, int lastPage,bool forceRefresh=false}) async {
+      {int currentPage = 1, int lastPage, bool forceRefresh = false}) async {
     if (lastPage != null && currentPage > lastPage) return false;
     if (fetchMore) currentPage++;
     ProductsBloc _pBloc = Provider.of<ProductsBloc>(context, listen: false);
-    Future _future = _pBloc.getProductsByCategoryName(widget.categoryName,
-        page: currentPage,forceRefresh: forceRefresh);
-    if (widget.categoryName != null && widget.subCatName != null) {
-      _future = _pBloc.getProductsBySubCategoryName(
-          widget.categoryName, widget.subCatName,
-          page: currentPage,forceRefresh: forceRefresh);
-    } else if (widget.categoryName != null &&
-        widget.subCatName != null &&
-        widget.childCatName != null) {
-      _future = _pBloc.getProductsByChildCategoryName(
-          widget.categoryName, widget.subCatName, widget.childCatName,
-          page: currentPage,forceRefresh: forceRefresh);
-    }
+    Future _future = _pBloc.getViewMoreProducts(widget.filters,
+        page: currentPage, forceRefresh: forceRefresh);
     Response response = await _future;
     apiProductsResponseData = {}..addAll((response?.data ?? {}));
     if (fetchMore) {
@@ -82,14 +70,14 @@ class _CategoriesPageState extends State<CategoriesPage> {
 
       ///generating new filters with new prods fetched
       Map<String, Set> _filters =
-          generateFilters(apiProductsResponseData['products']??[]);
+          generateFilters(apiProductsResponseData['products'] ?? []);
       _filters.forEach((key, value) {
         generatedFilters[key].addAll(value);
       });
 
       ///adding flitered prods in show list
       filteredProductsList
-          .addAll(filterProds(apiProductsResponseData['products']??[]));
+          .addAll(filterProds(apiProductsResponseData['products'] ?? []));
       sort = Sort.NONE;
     } else {
       /// getting all prods
@@ -97,22 +85,16 @@ class _CategoriesPageState extends State<CategoriesPage> {
         ..addAll(apiProductsResponseData['products'] ?? []);
 
       ///generating filters
-      generatedFilters = generateFilters(mainAllProductsList??[]);
+      generatedFilters = generateFilters(mainAllProductsList ?? []);
 
       /// sort prods if refresh
       filteredProductsList = []..addAll(sortProds(mainAllProductsList));
 
       /// filter prods if refresh
-      filteredProductsList = []..addAll(filterProds(mainAllProductsList??[]));
+      filteredProductsList = []..addAll(filterProds(mainAllProductsList ?? []));
     }
     if (mounted) setState(() {});
     return true;
-  }
-
-  @override
-  void dispose() {
-    _refreshController?.dispose();
-    super.dispose();
   }
 
   @override
@@ -129,7 +111,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
           ),
           backgroundColor: Colors.white,
           title: Text(
-            widget?.categoryName?.toUpperCase() ?? "Category",
+            widget.title?.toUpperCase(),
             style: TextStyle(
               color: Color(0xff2c393f),
               fontSize: 14,
@@ -148,129 +130,116 @@ class _CategoriesPageState extends State<CategoriesPage> {
               height: 50,
               color: Color(0xffDC0F21),
               child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Expanded(
-                    flex: 1,
-                    child: InkWell(
-                      onTap: () async {
-                        if (generatedFilters?.length == 0) {
-                          Fluttertoast.showToast(msg: "No Filters Available.");
-                          return;
-                        }
-                        var filters =
-                            await Navigator.of(context).push(PageRouteBuilder(
-                          opaque: false,
-                          barrierColor: Colors.black12,
-                          transitionDuration: Duration(
-                            milliseconds: 500,
-                          ),
-                          reverseTransitionDuration:
-                              Duration(milliseconds: 500),
-                          transitionsBuilder: (c, a, b, w) {
-                            return SlideTransition(
-                              position:
-                                  Tween(end: Offset.zero, begin: Offset(0, -1))
-                                      .animate(CurvedAnimation(
-                                          parent: a, curve: Curves.decelerate)),
-                              child: w,
-                            );
-                          },
-                          pageBuilder: (c, a, b) => FilterBy(
-                            appliedFilters: appliedFilters,
-                            allFilters: generatedFilters,
-                          ),
-                        ));
-
-                        if (filters != null)
-                          setState(() {
-                            appliedFilters = filters;
-                            filteredProductsList = []
-                              ..addAll(filterProds(mainAllProductsList??[]));
-                          });
-                      },
-                      child: Center(
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Image.asset(
-                              "assets/fliter.png",
-                              height: 25,
-                              width: 25,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                "Filter",
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14,
-                                ),
-                              ),
-                            ),
-                          ],
+                  InkWell(
+                    onTap: () async {
+                      if (generatedFilters?.length == 0) {
+                        Fluttertoast.showToast(msg: "No Filters Available.");
+                        return;
+                      }
+                      var filters =
+                          await Navigator.of(context).push(PageRouteBuilder(
+                        opaque: false,
+                        barrierColor: Colors.black12,
+                        transitionDuration: Duration(
+                          milliseconds: 500,
                         ),
-                      ),
+                        reverseTransitionDuration: Duration(milliseconds: 500),
+                        transitionsBuilder: (c, a, b, w) {
+                          return SlideTransition(
+                            position:
+                                Tween(end: Offset.zero, begin: Offset(0, -1))
+                                    .animate(CurvedAnimation(
+                                        parent: a, curve: Curves.decelerate)),
+                            child: w,
+                          );
+                        },
+                        pageBuilder: (c, a, b) => FilterBy(
+                          appliedFilters: appliedFilters,
+                          allFilters: generatedFilters,
+                        ),
+                      ));
+
+                      if (filters != null)
+                        setState(() {
+                          appliedFilters = filters;
+                          filteredProductsList = []
+                            ..addAll(filterProds(mainAllProductsList ?? []));
+                        });
+                    },
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Image.asset(
+                          "assets/fliter.png",
+                          height: 25,
+                          width: 25,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            "Filter",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  Expanded(
-                    flex: 1,
-                    child: InkWell(
-                      onTap: () async {
-                        var sortCat =
-                            await Navigator.of(context).push(PageRouteBuilder(
-                          opaque: false,
-                          barrierColor: Colors.black12,
-                          transitionDuration: Duration(
-                            milliseconds: 500,
-                          ),
-                          reverseTransitionDuration:
-                              Duration(milliseconds: 500),
-                          transitionsBuilder: (c, a, b, w) {
-                            return SlideTransition(
-                              position:
-                                  Tween(end: Offset.zero, begin: Offset(0, -1))
-                                      .animate(CurvedAnimation(
-                                          parent: a, curve: Curves.decelerate)),
-                              child: w,
-                            );
-                          },
-                          pageBuilder: (c, a, b) => SortBy(
-                            sort: sort,
-                          ),
-                        ));
-                        if (sortCat != null)
-                          setState(() {
-                            sort = sortCat;
-                            List st = sortProds(filteredProductsList);
-                            filteredProductsList = []..addAll(st);
-                          });
-                      },
-                      child: Center(
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Image.asset(
-                              "assets/sortBy.png",
-                              height: 25,
-                              width: 25,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                "Sort By",
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14,
-                                ),
-                              ),
-                            ),
-                          ],
+                  InkWell(
+                    onTap: () async {
+                      var sortCat =
+                          await Navigator.of(context).push(PageRouteBuilder(
+                        opaque: false,
+                        barrierColor: Colors.black12,
+                        transitionDuration: Duration(
+                          milliseconds: 500,
                         ),
-                      ),
+                        reverseTransitionDuration: Duration(milliseconds: 500),
+                        transitionsBuilder: (c, a, b, w) {
+                          return SlideTransition(
+                            position:
+                                Tween(end: Offset.zero, begin: Offset(0, -1))
+                                    .animate(CurvedAnimation(
+                                        parent: a, curve: Curves.decelerate)),
+                            child: w,
+                          );
+                        },
+                        pageBuilder: (c, a, b) => SortBy(
+                          sort: sort,
+                        ),
+                      ));
+                      if (sortCat != null)
+                        setState(() {
+                          sort = sortCat;
+                          List st = sortProds(filteredProductsList);
+                          filteredProductsList = []..addAll(st);
+                        });
+                    },
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Image.asset(
+                          "assets/sortBy.png",
+                          height: 25,
+                          width: 25,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            "Sort By",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],
@@ -283,9 +252,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
         body: SmartRefresher(
           controller: _refreshController,
           onRefresh: () async {
-            await getProducts(
-              false,forceRefresh: true
-            );
+            await getProducts(false, forceRefresh: true);
             _refreshController.refreshCompleted();
           },
           onLoading: () async {
@@ -625,8 +592,8 @@ class _CategoriesPageState extends State<CategoriesPage> {
                                                 ],
                                               ),
                                             ),
-                                          ),
-                                          Expanded(
+                                          )
+                                          ,Expanded(
                                             flex: 0,
                                             child: Padding(
                                               padding: const EdgeInsets.only(
@@ -670,6 +637,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
   }
 
   List sortProds(List prodsData) {
+    if (prodsData == null) return [];
     prodsData.sort((a, b) {
       switch (sort) {
         case Sort.WhatsNew:
@@ -729,6 +697,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
       print("applying price filter");
       print("filters list length till now ${filteredList.length}");
       List priceFilList = [];
+
       priceFilList.addAll(filteredList.where((element) =>
           (double.parse(element['price'].toString()) * 68.95) <= price.last &&
           (double.parse(element['price'].toString()) * 68.95) >= price.first));
@@ -773,7 +742,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
   Map<String, Set> generateFilters(List prods) {
     Set brands = Set(), price = Set(), size = Set(), colors = Set();
     prods.forEach((element) {
-      if (!brands.contains((element['user']??{})['shop_name'].toString()))
+      if (!brands.contains(element['user']['shop_name'].toString()))
         brands.add(element['user']['shop_name'].toString());
       double newPrice = double.parse(element['price']?.toString());
       //TODO: ask ravjot to send currency value

@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/Bloc/AuthBloc.dart';
+import 'package:flutter_app/UI/Dashboard/Drawer/ShopByCat.dart';
 import 'package:flutter_app/UI/SignInUp/SignIn.dart';
-import 'package:flutter_app/Utils/Extensions.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-import 'Category/CategoriesPage.dart';
 
 class DashDrawer extends StatefulWidget {
   @override
@@ -45,7 +43,6 @@ class _DashDrawerState extends State<DashDrawer> {
                                         context,
                                         MaterialPageRoute(
                                             builder: (c) => SignIn()));
-                                    refreshBlocs(context);
                                     if (mounted) setState(() {});
                                   }
                                 : null,
@@ -100,94 +97,7 @@ class _DashDrawerState extends State<DashDrawer> {
                         color: Colors.black45, fontWeight: FontWeight.w800),
                   ),
                 ),
-                ListTile(
-                  title: Text(
-                    "Men",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  onTap: () {
-                    Navigator.pop(context);
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (c) => CategoriesPage(
-                              categoryName: "Men",
-                            )));
-                  },
-                  trailing: Icon(
-                    Icons.arrow_forward_ios_rounded,
-                    size: 15,
-                    color: Colors.black,
-                  ),
-                ),
-                ListTile(
-                  title: Text(
-                    "Women",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  onTap: () {
-                    Navigator.pop(context);
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (c) => CategoriesPage(
-                              categoryName: "Women",
-                            )));
-                  },
-                  trailing: Icon(
-                    Icons.arrow_forward_ios_rounded,
-                    size: 15,
-                    color: Colors.black,
-                  ),
-                ),
-                ListTile(
-                  title: Text(
-                    "Kids",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  onTap: () {
-                    Navigator.pop(context);
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (c) => CategoriesPage(
-                              categoryName: "kids",
-                            )));
-                  },
-                  trailing: Icon(
-                    Icons.arrow_forward_ios_rounded,
-                    size: 15,
-                    color: Colors.black,
-                  ),
-                ),
-                ListTile(
-                  title: Text(
-                    "Home & Living",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  onTap: () {
-                    Navigator.pop(context);
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (c) => CategoriesPage(
-                              categoryName: "home-living",
-                            )));
-                  },
-                  trailing: Icon(
-                    Icons.arrow_forward_ios_rounded,
-                    size: 15,
-                    color: Colors.black,
-                  ),
-                ),
+                ShopByCategory(),
                 Container(
                   width: 260,
                   height: 1,

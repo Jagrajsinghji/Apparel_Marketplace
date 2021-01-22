@@ -3,15 +3,15 @@ import 'package:flutter/services.dart';
 import 'package:flutter_app/Bloc/ScreenBloc.dart';
 import 'package:flutter_app/UI/Components/CartIcon.dart';
 import 'package:flutter_app/UI/Components/GlobalWidget.dart';
-import 'package:flutter_app/UI/Dashboard/DashDrawer.dart';
-import 'package:flutter_app/UI/Dashboard/Explore/Explore.dart';
-import 'package:flutter_app/UI/Dashboard/Fashion/Fashion.dart';
+import 'package:flutter_app/UI/Components/SearchIcon.dart';
+import 'package:flutter_app/UI/Components/WishListIcon.dart';
 import 'package:flutter_app/UI/Dashboard/Home/Notifications.dart';
 import 'package:flutter_app/UI/Dashboard/Profile/Profile.dart';
-import 'package:flutter_app/UI/Dashboard/Search/SearchProds.dart';
 import 'package:provider/provider.dart';
 
-import 'Cart/WishList.dart';
+import 'file:///D:/WeExpan/WOW-APP/flutter_app/lib/UI/Dashboard/Drawer/DashDrawer.dart';
+
+import 'Cart/ShoppingBag.dart';
 import 'Deals/DealsPage.dart';
 import 'Home/Home.dart';
 
@@ -27,8 +27,9 @@ class _DashboardState extends State<Dashboard> {
   void initState() {
     super.initState();
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: Color(0xffdc0f21),
+      statusBarColor: Color(0xff005294),
     ));
+    alertForLogin();
   }
 
   @override
@@ -36,7 +37,7 @@ class _DashboardState extends State<Dashboard> {
     ScreenBloc screenBloc = Provider.of<ScreenBloc>(context);
     int page = screenBloc.page;
     return Scaffold(
-        backgroundColor: Color(0xffE5E5E5),
+        backgroundColor: Colors.white,
         key: _scaffoldKey,
         appBar: page == 4
             ? null
@@ -69,27 +70,7 @@ class _DashboardState extends State<Dashboard> {
                         ),
                       ),
                 actions: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: InkWell(
-                      focusColor: Colors.transparent,
-                      splashColor: Colors.transparent,
-                      child: Image.asset(
-                        "assets/search.png",
-                        width: 20,
-                        height: 20,
-                      ),
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            PageRouteBuilder(
-                                transitionDuration: Duration(seconds: 1),
-                                reverseTransitionDuration:
-                                    Duration(milliseconds: 800),
-                                pageBuilder: (c, a, b) => SearchProds()));
-                      },
-                    ),
-                  ),
+                  SearchIcon(),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: InkWell(
@@ -104,51 +85,59 @@ class _DashboardState extends State<Dashboard> {
                         Navigator.push(
                             context,
                             PageRouteBuilder(
-                                transitionDuration: Duration(seconds: 1),
+                                opaque: false,
+                                barrierColor: Colors.black.withOpacity(.8),
+                                transitionDuration: Duration(
+                                  milliseconds: 500,
+                                ),
                                 reverseTransitionDuration:
-                                    Duration(milliseconds: 800),
+                                    Duration(milliseconds: 500),
+                                transitionsBuilder: (c, a, b, w) {
+                                  return SlideTransition(
+                                    position: Tween(
+                                            end: Offset.zero,
+                                            begin: Offset(0, -1))
+                                        .animate(CurvedAnimation(
+                                            parent: a,
+                                            curve: Curves.decelerate)),
+                                    child: w,
+                                  );
+                                },
                                 pageBuilder: (c, a, b) => Notifications()));
                       },
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: InkWell(
-                      focusColor: Colors.transparent,
-                      splashColor: Colors.transparent,
-                      child: Image.asset(
-                        "assets/favourite.png",
-                        width: 20,
-                        height: 20,
-                      ),
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            PageRouteBuilder(
-                                transitionDuration: Duration(seconds: 1),
-                                reverseTransitionDuration:
-                                    Duration(milliseconds: 800),
-                                pageBuilder: (c, a, b) => WishList()));
-                      },
-                    ),
-                  ),
-                  CartIcon()
+                  WishListIcon(),
+                  CartIcon(
+                    globalKey: _scaffoldKey,
+                  )
                 ],
                 iconTheme: IconThemeData(color: Colors.black),
               ),
         drawer: page != 4 ? DashDrawer() : null,
+        endDrawer: ShoppingBag(),
         body: page == 0
             ? Home()
             // : page == 1
             //     ? Fashion()
-                : page == 2
-                    ? DealsPage()
-                    // : page == 3
-                    //     ? Explore()
-                        : Profile(),
+            : page == 2
+                ? DealsPage()
+                // : page == 3
+                //     ? Explore()
+                : Profile(),
         bottomNavigationBar: bottomNavigation(context, voidCallback: () {}),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         floatingActionButton:
             floatingActionButton(context, voidCallback: () {}));
+  }
+
+  void alertForLogin() {
+    // AuthBloc authBloc = Provider.of<AuthBloc>(context,listen: false);
+    // if (authBloc.userData.length == 0)
+    //   Timer(Duration(seconds: 5), () {
+    //     if (mounted) {
+    //       Navigator.push(context, MaterialPageRoute(builder: (c) => SignIn()));
+    //     }
+    //   });
   }
 }

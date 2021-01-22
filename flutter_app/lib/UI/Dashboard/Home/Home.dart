@@ -1,6 +1,8 @@
+import 'dart:ui';
+
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_app/Bloc/CategoryBloc.dart';
 import 'package:flutter_app/Bloc/ProductsBloc.dart';
 import 'package:flutter_app/Bloc/ScreenBloc.dart';
@@ -24,29 +26,19 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  @override
-  void initState() {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: Color(0xffdc0f21),
-    ));
-    super.initState();
-  }
-
   RefreshController _refreshController =
       RefreshController(initialRefresh: false);
-
-  ScrollController _scrollController = ScrollController();
 
   @override
   Widget build(BuildContext context) {
     Widget categoryShimmer() => Shimmer(
           gradient: LinearGradient(
-              begin: Alignment.topLeft,
+              begin: Alignment.centerLeft,
               end: Alignment.centerRight,
               colors: <Color>[
                 Colors.grey.shade400,
                 Colors.white60,
-                Colors.redAccent,
+                Colors.redAccent.withOpacity(.5),
                 Colors.grey.shade200,
                 Colors.grey.shade400
               ],
@@ -97,14 +89,15 @@ class _HomeState extends State<Home> {
               }),
         );
 
-
     return Scaffold(
-        backgroundColor: Color(0xffE5E5E5),
+        backgroundColor: Colors.white,
         body: SmartRefresher(
           controller: _refreshController,
+          onOffsetChange: (t, sd) {
+            print(sd);
+          },
           onRefresh: () async {
-            refreshBlocs(context);
-            await Future.delayed(Duration(milliseconds: 1000));
+            await refreshBlocs(context);
             _refreshController.refreshCompleted();
           },
           physics: BouncingScrollPhysics(),
@@ -115,7 +108,6 @@ class _HomeState extends State<Home> {
             backgroundColor: Color(0xffDC0F21),
           ),
           child: CustomScrollView(
-            controller: _scrollController,
             physics: BouncingScrollPhysics(),
             shrinkWrap: true,
             slivers: [
@@ -280,7 +272,7 @@ class _HomeState extends State<Home> {
                     Map resp1Data = s?.homePageData ?? {};
                     Map resp2Data = s?.homePageExtras ?? {};
                     if (resp1Data.length == 0 && resp2Data.length == 0)
-                      return  PageShimmer();
+                      return PageShimmer();
                     else {
                       bool slider =
                           (resp1Data['slider'] as int).toBool() ?? false;
@@ -328,7 +320,7 @@ class _HomeState extends State<Home> {
                       String bigSaveBanner1 = (resp1Data['pagesettings'] ??
                               {})['big_save_banner1'] ??
                           "";
-
+                      List topSlidingBanners = resp1Data['sliders'];
                       return CustomScrollView(
                         shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),
@@ -338,7 +330,7 @@ class _HomeState extends State<Home> {
                               height: 200,
                               numb: 0,
                               duration: Duration(seconds: 3),
-                              slidersData: resp1Data['sliders'],
+                              slidersData: topSlidingBanners,
                               picsPath: "sliders",
                             ),
 
@@ -359,6 +351,7 @@ class _HomeState extends State<Home> {
                           Product4GridWIthThumbnail(
                             productData: resp2Data['trending_products'],
                             title: "Trending Products",
+                            filter: "trending",
                           ),
 
                           /// Best Products
@@ -366,6 +359,7 @@ class _HomeState extends State<Home> {
                             ProductListWithThumbnail(
                               productData: resp2Data['best_products'],
                               title: "Best Buy",
+                              filter: "best",
                             ),
 
                           /// Larger Banner if present
@@ -419,7 +413,8 @@ class _HomeState extends State<Home> {
 
                           /// Top Rated
                           if (topRated)
-                            ProductGridWIthThumbnail(
+                            Product4GridWIthThumbnail(
+                              filter: "top",
                               title: "Top Rated",
                               productData: resp2Data['top_products'],
                             ),
@@ -429,6 +424,7 @@ class _HomeState extends State<Home> {
                           /// Big Products
                           if (big)
                             ProductListWithThumbnail(
+                              filter: "big",
                               productData: resp2Data['big_products'],
                               title: "Big Products",
                             ),
@@ -463,6 +459,7 @@ class _HomeState extends State<Home> {
                           ProductGridWIthThumbnail(
                             title: "Latest Products",
                             productData: resp2Data['latest_products'],
+                            filter: "latest",
                           ),
 
                           if (bigSaveBanner1 != null)
@@ -488,15 +485,18 @@ class _HomeState extends State<Home> {
                               ),
                             ])),
 
-                          ///Hot Products
-                          ProductListWithThumbnail(
-                            title: "Hot Products",
-                            productData: resp2Data['hot_products'],
-                          ),
+                          /// Hot Sale Products
+                          if (hotSale)
+                            ProductListWithThumbnail(
+                              filter: "sale",
+                              title: "Hot Sale",
+                              productData: resp2Data['sale_products'],
+                            ),
 
                           /// Featured Products from Response 1
                           if (featured)
                             ProductGridWIthThumbnail(
+                              filter: "featured",
                               productData: resp1Data['feature_products'],
                               title: "Featured Products",
                             ),
@@ -510,15 +510,16 @@ class _HomeState extends State<Home> {
                               picsPath: "banners",
                             ),
 
-                          /// Hot Sale Products
-                          if (hotSale)
-                            ProductListWithThumbnail(
-                              title: "Hot Sale",
-                              productData: resp2Data['sale_products'],
-                            ),
+                          ///Hot Products
+                          ProductListWithThumbnail(
+                            filter: "hot",
+                            title: "Hot Products",
+                            productData: resp2Data['hot_products'],
+                          ),
 
                           /// Discount Products
                           ProductGridWIthThumbnail(
+                            filter: "is_discount",
                             title: "Discount Products",
                             productData: resp2Data['discount_products'],
                           ),

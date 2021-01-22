@@ -12,23 +12,24 @@ class OrdersBloc with ChangeNotifier {
   }
 
   Future<Response> getMyOrders() async {
-    try{
-    Dio dio = Dio(Session.instance.baseOptions);
-    dio.interceptors.add(_dioInterceptor);
-    String token = await Session.instance.getToken();
-    Response response = await dio.get("/api/user/orders",
-        options: Options(headers: {"Authorization": "Bearer $token"}));
-    await Session.instance.updateCookie(response);
+    try {
+      Dio dio = Dio(Session.instance.baseOptions);
+      dio.interceptors.add(_dioInterceptor);
+      String token = await Session.instance.getToken();
+      Response response = await dio.get("/api/user/orders",
+          options: Options(headers: {"Authorization": "Bearer $token"}));
+      await Session.instance.updateCookie(response);
 
-
-    if (response?.data is List)
-      myOrders = response?.data ?? [];
-    else
-      myOrders = [];
-    notifyListeners();
-    return response;}
-    catch (err){
+      if (response?.data is List)
+        myOrders = response?.data ?? [];
+      else
+        myOrders = [];
+      notifyListeners();
+      return response;
+    } catch (err) {
       print(err);
+      myOrders = [];
+      notifyListeners();
       return null;
     }
   }

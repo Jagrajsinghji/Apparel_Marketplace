@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -26,7 +25,8 @@ class _Intro1State extends State<Intro1> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
-        body: Column(crossAxisAlignment: CrossAxisAlignment.start,
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -127,9 +127,11 @@ class _Intro1State extends State<Intro1> {
               flex: 0,
               child: Padding(
                 padding: const EdgeInsets.only(left: 27.0),
-                child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Expanded(flex: 0,
+                    Expanded(
+                      flex: 0,
                       child: Row(
                         children: [
                           Stack(
@@ -182,22 +184,31 @@ class _Intro1State extends State<Intro1> {
                         ],
                       ),
                     ),
-                    Expanded(flex: 0,
-                    child:InkWell(onTap: (){
-                      Navigator.push(
-                          context,
-                          PageRouteBuilder(
-                              pageBuilder: (c, a, b) => Intro3(),
-                              transitionsBuilder: (c, a, b, w) {
-                                return SlideTransition(
-                                  position: Tween(
-                                      begin: Offset(2.0, 0),
-                                      end: Offset.zero)
-                                      .animate(a),
-                                  child: w,
-                                );
-                              }));
-                    }, child: Container(height: 20,child: Center(child: Text("Skip")),width: 80,),),)
+                    Expanded(
+                      flex: 0,
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              PageRouteBuilder(
+                                  pageBuilder: (c, a, b) => Intro3(),
+                                  transitionsBuilder: (c, a, b, w) {
+                                    return SlideTransition(
+                                      position: Tween(
+                                              begin: Offset(2.0, 0),
+                                              end: Offset.zero)
+                                          .animate(a),
+                                      child: w,
+                                    );
+                                  }));
+                        },
+                        child: Container(
+                          height: 20,
+                          child: Center(child: Text("Skip")),
+                          width: 80,
+                        ),
+                      ),
+                    )
                   ],
                 ),
               ),

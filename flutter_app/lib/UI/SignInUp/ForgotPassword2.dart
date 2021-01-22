@@ -23,8 +23,6 @@ class _ForgotPassword2State extends State<ForgotPassword2> {
           ),
         ),
         centerTitle: true,
-        leading: Transform.scale(
-            scale: .4, child: Image.asset("assets/backArrow.png")),
       ),
       body: ListView(
         children: [

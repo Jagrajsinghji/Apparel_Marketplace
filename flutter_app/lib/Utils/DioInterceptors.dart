@@ -2,11 +2,10 @@ import 'package:dio/dio.dart';
 import 'package:flutter_app/Utils/Session.dart';
 
 class DioInterceptor extends Interceptor {
-  static DioInterceptor _instance = DioInterceptor._private();
 
   DioInterceptor._private();
 
-  factory DioInterceptor.getInstance() => _instance;
+  factory DioInterceptor.getInstance() => DioInterceptor._private();
 
   @override
   Future onRequest(RequestOptions options) async {

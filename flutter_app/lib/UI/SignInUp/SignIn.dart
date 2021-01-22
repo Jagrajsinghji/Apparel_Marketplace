@@ -2,7 +2,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/Bloc/AuthBloc.dart';
 import 'package:flutter_app/UI/SignInUp/SignUp.dart';
-import 'package:flutter_app/Utils/Session.dart';
+import 'package:flutter_app/Utils/Extensions.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 
 import 'ForgotPassword1.dart';
@@ -226,9 +227,8 @@ class _SignInState extends State<SignIn> {
                 ),
                 child: Center(
                   child: loading
-                      ? CircularProgressIndicator(
-                          valueColor:
-                              AlwaysStoppedAnimation<Color>(Colors.white),
+                      ? SpinKitFadingCircle(
+                          color: Colors.white,
                         )
                       : Text(
                           "Go Shopping",
@@ -400,12 +400,13 @@ class _SignInState extends State<SignIn> {
       // });
 
       try {
-        Response resp = await Provider.of<AuthBloc>(context, listen: false).login(email, pass);
+        Response resp = await Provider.of<AuthBloc>(context, listen: false)
+            .login(email, pass);
 
-        if(resp.data is Map &&resp.data.length>0){
+        if (resp.data is Map && resp.data.length > 0) {
+          refreshBlocs(context, loginRefresh: true);
           Navigator.pop(context);
-        }
-         else
+        } else
           throw DioError(
               type: DioErrorType.RESPONSE,
               response: Response(data: {"error": "", "code": 102}));

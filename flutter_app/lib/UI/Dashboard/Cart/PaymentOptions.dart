@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/Bloc/CartBloc.dart';
 import 'package:flutter_app/Bloc/OrdersBloc.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
@@ -24,7 +25,7 @@ class _PaymentOptionsState extends State<PaymentOptions> {
   double currency = 68.95;
   Razorpay _razorPay;
 
-  Map orderData={};
+  Map orderData = {};
 
   @override
   void initState() {
@@ -41,7 +42,7 @@ class _PaymentOptionsState extends State<PaymentOptions> {
         data['couponDiscount'];
 
     return Scaffold(
-      backgroundColor: Color(0xffE5E5E5),
+      backgroundColor: Colors.white,
       appBar: AppBar(
         elevation: 0,
         leading: FlatButton(
@@ -62,8 +63,8 @@ class _PaymentOptionsState extends State<PaymentOptions> {
       ),
       body: loading
           ? Center(
-              child: CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation(Color(0xffdc0f21)),
+              child: SpinKitFadingCircle(
+              color: Color(0xffDC0F21),
             ))
           : Stack(
               children: [
@@ -473,6 +474,7 @@ class _PaymentOptionsState extends State<PaymentOptions> {
           context,
           PageRouteBuilder(
               pageBuilder: (c, a, b) => OrderPlaced(
+                    paymentStatus: "Pending",
                     data: data,
                   )),
           (route) => route.isFirst);
@@ -513,7 +515,7 @@ class _PaymentOptionsState extends State<PaymentOptions> {
     if (resp.data is Map && resp.data.containsKey('order')) {
       OrdersBloc _oBloc = Provider.of<OrdersBloc>(context, listen: false);
       _oBloc.getMyOrders();
-      orderData= resp.data['order'] ?? {};
+      orderData = resp.data['order'] ?? {};
       Map<String, dynamic> razorPayData = resp.data['razorpay_data'] ?? {};
       razorpayPayment(razorPayData);
     } else {
@@ -554,9 +556,10 @@ class _PaymentOptionsState extends State<PaymentOptions> {
         context,
         PageRouteBuilder(
             pageBuilder: (c, a, b) => OrderPlaced(
-              data: orderData,
-            )),
-            (route) => route.isFirst);
+                  paymentStatus: "Pending",
+                  data: orderData,
+                )),
+        (route) => route.isFirst);
     Fluttertoast.showToast(
       msg: response.message,
     );
@@ -567,9 +570,10 @@ class _PaymentOptionsState extends State<PaymentOptions> {
         context,
         PageRouteBuilder(
             pageBuilder: (c, a, b) => OrderPlaced(
-              data: orderData,
-            )),
-            (route) => route.isFirst);
+                  data: orderData,
+                  paymentStatus: "Pending",
+                )),
+        (route) => route.isFirst);
     Fluttertoast.showToast(
       msg: response.walletName,
     );
@@ -577,17 +581,22 @@ class _PaymentOptionsState extends State<PaymentOptions> {
 
   void _handlePaymentSuccess(PaymentSuccessResponse paymentRes) async {
     CartBloc _cBloc = Provider.of<CartBloc>(context, listen: false);
-    Response response = await _cBloc.razorPayCallack(orderId: paymentRes.orderId,
-    paymentId: paymentRes.paymentId,signature: paymentRes.signature,wowfasID: orderData['order_number']);
+    Response response = await _cBloc.razorPayCallack(
+        orderId: paymentRes.orderId,
+        paymentId: paymentRes.paymentId,
+        signature: paymentRes.signature,
+        wowfasID: orderData['order_number']);
     OrdersBloc _oBloc = Provider.of<OrdersBloc>(context, listen: false);
     _oBloc.getMyOrders();
-    Map odata= response.data['order']??{};
+    Map odata = response.data['order'] ?? {};
     Navigator.pushAndRemoveUntil(
         context,
         PageRouteBuilder(
             pageBuilder: (c, a, b) => OrderPlaced(
-              data: odata,
-            )), (route) => route.isFirst);
+                  paymentStatus: "Successful",
+                  data: odata,
+                )),
+        (route) => route.isFirst);
     Fluttertoast.showToast(
       msg: "SUCCESS",
     );

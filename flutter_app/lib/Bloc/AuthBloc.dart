@@ -56,6 +56,8 @@ class AuthBloc with ChangeNotifier {
       return response;
     } catch (err) {
       print(err);
+      userData = {};
+      notifyListeners();
       return null;
     }
   }
@@ -97,7 +99,6 @@ class AuthBloc with ChangeNotifier {
     Response response = await dio.get("${Session.BASE_URL}/api/user/logout",
         options: Options(headers: {"Authorization": "Bearer $token"}));
     await Session.instance.updateCookie(response);
-
     Session.instance.setToken(null);
     await getUserProfile();
     return response;
