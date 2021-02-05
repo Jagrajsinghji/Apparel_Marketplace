@@ -1,7 +1,13 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/Bloc/AuthBloc.dart';
 import 'package:flutter_app/UI/Dashboard/Drawer/ShopByCat.dart';
+import 'package:flutter_app/UI/Dashboard/Profile/EditProfile/EditProfile.dart';
+import 'package:flutter_app/UI/SignInUp/MobileLogin.dart';
 import 'package:flutter_app/UI/SignInUp/SignIn.dart';
+import 'package:flutter_app/Utils/Extensions.dart';
+import 'package:flutter_app/Utils/PageRouteBuilders.dart';
+import 'package:flutter_app/Utils/Session.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -30,6 +36,8 @@ class _DashDrawerState extends State<DashDrawer> {
               children: [
                 Consumer<AuthBloc>(builder: (context, snapshot, w) {
                   bool loggedIn = snapshot.userData.length > 0;
+                  String photoLink;
+                  if (loggedIn) photoLink = snapshot.userData['photo'];
                   return Container(
                       width: double.infinity,
                       height: 120,
@@ -39,13 +47,19 @@ class _DashDrawerState extends State<DashDrawer> {
                           InkWell(
                             onTap: !loggedIn
                                 ? () async {
-                                    await Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (c) => SignIn()));
+                              await Navigator.push(context,
+                                  PageRouteBuilder(opaque: false,barrierColor: Colors.black54,transitionDuration: Duration(milliseconds: 500),transitionsBuilder: (c,a,b,w){
+                                    return SlideTransition(position: Tween(begin: Offset(0,1),end: Offset.zero).animate(CurvedAnimation(curve: Curves.fastLinearToSlowEaseIn,parent: a)),child: w,);
+                                  },pageBuilder:  (c,a,b) => MobileLogin()));
                                     if (mounted) setState(() {});
                                   }
-                                : null,
+                                : () => Navigator.of(context).push(
+                                    SlideLeftPageRouteBuilder(
+                                        transitionDuration:
+                                            Duration(milliseconds: 300),
+                                        pageBuilder: (c, a, b) => EditProfile(
+                                              profileData: snapshot.userData,
+                                            ))),
                             child: Container(
                               color: Colors.black38,
                               child: Center(
@@ -62,14 +76,26 @@ class _DashDrawerState extends State<DashDrawer> {
                                               color: Colors.white,
                                               borderRadius:
                                                   BorderRadius.circular(15)),
-                                          child: Transform.scale(
-                                            scale: .5,
-                                            child: Image.asset(
-                                              "assets/user.png",
-                                              height: 30,
-                                              width: 30,
-                                            ),
-                                          )),
+                                          child: photoLink != null
+                                              ? ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(15),
+                                                  child: CachedNetworkImage(
+                                                    imageUrl:
+                                                        "${Session.BASE_URL}/assets/images/users/$photoLink",
+                                                    fit: BoxFit.cover,
+                                                    width: 200,
+                                                    height: 200,
+                                                  ),
+                                                )
+                                              : Transform.scale(
+                                                  scale: .5,
+                                                  child: Image.asset(
+                                                    "assets/user.png",
+                                                    height: 30,
+                                                    width: 30,
+                                                  ),
+                                                )),
                                     ),
                                     Text(
                                       loggedIn
@@ -188,7 +214,7 @@ class _DashDrawerState extends State<DashDrawer> {
           Expanded(
             flex: 0,
             child: Text(
-              "Version 0.0.1",
+              "Version $versionName",
               style: TextStyle(
                 color: Color(0xff9d9d9d),
                 fontSize: 14,

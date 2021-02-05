@@ -44,4 +44,15 @@ class OrdersBloc with ChangeNotifier {
 
     return response;
   }
+
+  Future<Response> cancelOrder(String id) async {
+    Dio dio = Dio(Session.instance.baseOptions);
+    dio.interceptors.add(_dioInterceptor);
+    String token = await Session.instance.getToken();
+    Response response = await dio.get("/api/user/cancel-this-order/$id/1",
+        options: Options(headers: {"Authorization": "Bearer $token"}));
+    await Session.instance.updateCookie(response);
+    notifyListeners();
+    return response;
+  }
 }

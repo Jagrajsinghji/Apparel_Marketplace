@@ -70,7 +70,7 @@ class _WishListState extends State<WishList> {
                         SizedBox(height: 20),
                         Center(
                           child: Text(
-                            "Save items that you like in your wihlist.\nReview them anytime and easily move\nthem to bag",
+                            "Save items that you like in your wishlist.\nReview them anytime and easily move\nthem to bag",
                             style: TextStyle(
                               color: Color(0xff5b5b5b),
                               fontSize: 14,
@@ -200,9 +200,12 @@ class _WishListState extends State<WishList> {
                         ),
                         Expanded(
                           flex: 0,
-                          child: AddToWishListIcon(
-                            productsData: details,
-                            inWishlist: true,
+                          child: Container(
+                            width: 40,
+                            child: AddToWishListIcon(
+                              productsData: details,
+                              inWishlist: true,
+                            ),
                           ),
                         ),
                       ],
@@ -261,11 +264,13 @@ class _WishListState extends State<WishList> {
                     ),
                     Expanded(
                       flex: 0,
-                      child: Padding(
-                        padding: const EdgeInsets.only(bottom: 5),
-                        child: AddToCartIcon(
-                          inWishlist: true,
-                          productData: details,
+                      child: Container(height: 40,
+                        child: Padding(
+                          padding: const EdgeInsets.only(bottom: 5),
+                          child: AddToCartIcon(
+                            inWishlist: true,
+                            productData: details,
+                          ),
                         ),
                       ),
                     ),

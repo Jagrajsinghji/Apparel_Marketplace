@@ -5,10 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/Bloc/AuthBloc.dart';
 import 'package:flutter_app/Bloc/CartBloc.dart';
 import 'package:flutter_app/UI/Dashboard/Item/ItemPage.dart';
-import 'package:flutter_app/UI/SignInUp/SignIn.dart';
+import 'package:flutter_app/UI/SignInUp/MobileLogin.dart';
+import 'package:flutter_app/Utils/PageRouteBuilders.dart';
 import 'package:flutter_app/Utils/Session.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
@@ -113,7 +113,6 @@ class _ShoppingBagState extends State<ShoppingBag> {
                             child: InkWell(
                               borderRadius: BorderRadius.circular(600),
                               onTap: () async {
-                                // Fluttertoast.showToast(msg: "Still in Development");
                                 if (mounted)
                                   setState(() {
                                     isLoading = true;
@@ -124,7 +123,7 @@ class _ShoppingBagState extends State<ShoppingBag> {
                                 if (_authBloc.userData.length > 0) {
                                   Navigator.push(
                                       context,
-                                      PageRouteBuilder(
+                                      SlideLeftPageRouteBuilder(
                                           reverseTransitionDuration:
                                               Duration(milliseconds: 800),
                                           transitionDuration:
@@ -132,26 +131,45 @@ class _ShoppingBagState extends State<ShoppingBag> {
                                           pageBuilder: (c, a, b) =>
                                               CheckOut()));
                                 } else {
+                                  Function func = () {
+                                    AuthBloc _authBloc1 = Provider.of<AuthBloc>(
+                                        context,
+                                        listen: false);
+                                    if (_authBloc1.userData.length > 0) {
+                                      Navigator.push(
+                                          context,
+                                          SlideLeftPageRouteBuilder(
+                                              reverseTransitionDuration:
+                                                  Duration(milliseconds: 800),
+                                              transitionDuration:
+                                                  Duration(milliseconds: 800),
+                                              pageBuilder: (c, a, b) =>
+                                                  CheckOut()));
+                                    }
+                                  };
+
                                   await Navigator.push(
                                       context,
-                                      MaterialPageRoute(
-                                          builder: (c) => SignIn()));
-                                  AuthBloc _authBloc1 = Provider.of<AuthBloc>(
-                                      context,
-                                      listen: false);
-                                  if (_authBloc1.userData.length > 0) {
-                                    Navigator.push(
-                                        context,
-                                        PageRouteBuilder(
-                                            reverseTransitionDuration:
-                                                Duration(milliseconds: 800),
-                                            transitionDuration:
-                                                Duration(milliseconds: 800),
-                                            pageBuilder: (c, a, b) =>
-                                                CheckOut()));
-                                  } else
-                                    Fluttertoast.showToast(
-                                        msg: "Please Login To Proceed");
+                                      PageRouteBuilder(
+                                          opaque: false,
+                                          barrierColor: Colors.black54,
+                                          transitionDuration:
+                                              Duration(milliseconds: 500),
+                                          transitionsBuilder: (c, a, b, w) {
+                                            return SlideTransition(
+                                              position: Tween(
+                                                      begin: Offset(0, 1),
+                                                      end: Offset.zero)
+                                                  .animate(CurvedAnimation(
+                                                      curve: Curves
+                                                          .fastLinearToSlowEaseIn,
+                                                      parent: a)),
+                                              child: w,
+                                            );
+                                          },
+                                          pageBuilder: (c, a, b) => MobileLogin(
+                                              )));
+                                  func();
                                 }
                                 if (mounted)
                                   setState(() {
@@ -231,7 +249,7 @@ class _ShoppingBagState extends State<ShoppingBag> {
           height: 20,
         ),
         Text(
-          "Save items that you like in your wihlist.\nReview them anytime and easily move\nthem to bag",
+          "Save items that you like in your wishlist.\nReview them anytime and easily move\nthem to bag",
           style: TextStyle(
             color: Color(0xff5b5b5b),
             fontSize: 14,
@@ -281,12 +299,12 @@ class _ShoppingBagState extends State<ShoppingBag> {
 
     //TODO: ask ravjot to send currency value
     double currency = 68.95;
-    double sizePrice = 0;
+    double sizePrice = itemPrice;
     try {
       sizePrice =
           itemPrice + double.parse(details['size_price']?.toString() ?? "0");
     } catch (err) {
-      print(err.toString()+"In Shopping Bag");
+      print(err.toString() + "Error In Shopping Bag");
     }
     return Padding(
       padding: const EdgeInsets.only(bottom: 5.0),
@@ -540,7 +558,7 @@ class _ShoppingBagState extends State<ShoppingBag> {
                                                 });
                                               await snapshot.reduceByOne(
                                                   details['item']['id'], itemID,
-                                                  sizePrice: sizePrice,
+                                                  sizePrice: sizePrice ?? "",
                                                   sizeQty: details['size_qty']);
                                               if (mounted)
                                                 setState(() {
@@ -562,7 +580,7 @@ class _ShoppingBagState extends State<ShoppingBag> {
                                               });
                                             await snapshot.addByOne(
                                                 details['item']['id'], itemID,
-                                                sizePrice: sizePrice,
+                                                sizePrice: sizePrice ?? "",
                                                 sizeQty: details['size_qty']);
                                             if (mounted)
                                               setState(() {

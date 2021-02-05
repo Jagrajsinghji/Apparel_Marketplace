@@ -4,6 +4,7 @@ import 'package:flutter_app/UI/Components/AddToCartIcon.dart';
 import 'package:flutter_app/UI/Components/AddToWishListIcon.dart';
 import 'package:flutter_app/UI/Components/ProductRateIcon.dart';
 import 'package:flutter_app/UI/Dashboard/Item/ItemPage.dart';
+import 'package:flutter_app/Utils/PageRouteBuilders.dart';
 import 'package:flutter_app/Utils/Session.dart';
 
 import 'ViewAll.dart';
@@ -104,7 +105,7 @@ class _Product4GridWIthThumbnailState extends State<Product4GridWIthThumbnail> {
                                   child: InkWell(
                                     onTap: () {
                                       Navigator.of(context).push(
-                                          PageRouteBuilder(
+                                          SlideLeftPageRouteBuilder(
                                               pageBuilder: (c, a, b) =>
                                                   ItemPage(
                                                     itemSlug: data['slug'],
@@ -112,155 +113,151 @@ class _Product4GridWIthThumbnailState extends State<Product4GridWIthThumbnail> {
                                     },
                                     key: Key(data['id']?.toString() ?? "$e"),
                                     borderRadius: BorderRadius.circular(8),
-                                    child: Stack(
-                                      children: [
-                                        Container(
-                                          decoration: BoxDecoration(
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          border: Border.all(
+                                              color: Colors.grey.shade300),
+                                          borderRadius:
+                                              BorderRadius.circular(8)),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Expanded(
+                                            flex: 1,
+                                            child: Container(
                                               color: Colors.white,
-                                              border: Border.all(
-                                                  color: Colors.grey.shade300),
-                                              borderRadius:
-                                                  BorderRadius.circular(8)),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Expanded(
-                                                flex: 1,
-                                                child: Container(
-                                                  color: Colors.white,
-                                                  child: CachedNetworkImage(
-                                                    imageUrl:
-                                                        "${Session.IMAGE_BASE_URL}/assets/images/thumbnails/${data['thumbnail']}",
+                                              child: CachedNetworkImage(
+                                                imageUrl:
+                                                    "${Session.IMAGE_BASE_URL}/assets/images/thumbnails/${data['thumbnail']}",
+                                              ),
+                                            ),
+                                          ),
+                                          Expanded(
+                                              flex: 0,
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.only(
+                                                        left: 4,
+                                                        right: 4,
+                                                        top: 4,
+                                                        bottom: 4),
+                                                child: Text(
+                                                  "${data['name']}",
+                                                  maxLines: 2,
+                                                  textAlign:
+                                                      TextAlign.start,
+                                                  style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 12,
+                                                    fontWeight:
+                                                        FontWeight.bold,
+                                                    letterSpacing: 0.45,
                                                   ),
                                                 ),
-                                              ),
-                                              Expanded(
-                                                  flex: 0,
-                                                  child: Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            left: 4,
-                                                            right: 4,
-                                                            top: 4,
-                                                            bottom: 4),
+                                              )),
+                                          Expanded(
+                                            flex: 0,
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.only(
+                                                      left: 5, bottom: 5),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment
+                                                        .center,
+                                                children: [
+                                                  Expanded(
+                                                    flex: 0,
                                                     child: Text(
-                                                      "${data['name']}",
-                                                      maxLines: 2,
-                                                      textAlign:
-                                                          TextAlign.start,
+                                                      "\u20B9 ${((newPrice) * currency).round()}",
+                                                      maxLines: 1,
                                                       style: TextStyle(
-                                                        color: Colors.black,
-                                                        fontSize: 12,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        letterSpacing: 0.45,
+                                                        fontSize: 14,
                                                       ),
                                                     ),
-                                                  )),
-                                              Expanded(
-                                                flex: 0,
-                                                child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          left: 5, bottom: 5),
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.start,
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      Expanded(
-                                                        flex: 0,
+                                                  ),
+                                                  if (prevPrice != 0 &&
+                                                      prevPrice != newPrice)
+                                                    Expanded(
+                                                      flex: 0,
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .only(
+                                                                left: 5.0),
                                                         child: Text(
-                                                          "\u20B9 ${((newPrice) * currency).round()}",
+                                                          "\u20B9 ${(prevPrice * currency).round()}",
                                                           maxLines: 1,
                                                           style: TextStyle(
-                                                            fontSize: 14,
-                                                          ),
+                                                              fontSize: 12,
+                                                              color: Color(
+                                                                  0xffA9A9A9),
+                                                              decoration:
+                                                                  TextDecoration
+                                                                      .lineThrough),
                                                         ),
                                                       ),
-                                                      if (prevPrice != 0 &&
-                                                          prevPrice != newPrice)
-                                                        Expanded(
-                                                          flex: 0,
-                                                          child: Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                        .only(
-                                                                    left: 5.0),
-                                                            child: Text(
-                                                              "\u20B9 ${(prevPrice * currency).round()}",
-                                                              maxLines: 1,
-                                                              style: TextStyle(
-                                                                  fontSize: 12,
-                                                                  color: Color(
-                                                                      0xffA9A9A9),
-                                                                  decoration:
-                                                                      TextDecoration
-                                                                          .lineThrough),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      if (discount > 0)
-                                                        Expanded(
-                                                          flex: 0,
-                                                          child: Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                        .only(
-                                                                    left: 5.0),
-                                                            child: Text(
-                                                              "$discount% Off",
-                                                              maxLines: 1,
-                                                              style: TextStyle(
-                                                                  fontSize: 14,
-                                                                  color: Color(
-                                                                      0xffDC0F21)),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                              Expanded(
-                                                flex: 0,
-                                                child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          left: 5, bottom: 5),
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceEvenly,
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      Expanded(flex: 0,child: ProductRateIcon(productData: data,),),
-                                                      Expanded(
-                                                        child:
-                                                            AddToWishListIcon(
-                                                          productsData: data,
+                                                    ),
+                                                  if (discount > 0)
+                                                    Expanded(
+                                                      flex: 0,
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .only(
+                                                                left: 5.0),
+                                                        child: Text(
+                                                          "$discount% Off",
+                                                          maxLines: 1,
+                                                          style: TextStyle(
+                                                              fontSize: 14,
+                                                              color: Color(
+                                                                  0xffDC0F21)),
                                                         ),
                                                       ),
-                                                      Expanded(
-                                                        child: AddToCartIcon(
-                                                          productData: data,
-                                                        ),
-                                                      )
-                                                    ],
-                                                  ),
-                                                ),
+                                                    ),
+                                                ],
                                               ),
-                                            ],
+                                            ),
                                           ),
-                                        ),
-                                      ],
+                                          Expanded(
+                                            flex: 0,
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.only(
+                                                      left: 5, bottom: 5),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceEvenly,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment
+                                                        .center,
+                                                children: [
+                                                  Expanded(flex: 0,child: ProductRateIcon(productData: data,),),
+                                                  Expanded(
+                                                    child:
+                                                        AddToWishListIcon(
+                                                      productsData: data,
+                                                    ),
+                                                  ),
+                                                  Expanded(
+                                                    child: AddToCartIcon(
+                                                      productData: data,
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),

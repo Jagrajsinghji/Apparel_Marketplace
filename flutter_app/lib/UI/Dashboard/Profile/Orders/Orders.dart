@@ -1,9 +1,11 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/Bloc/OrdersBloc.dart';
+import 'package:flutter_app/UI/Dashboard/Profile/Orders/OrderDetails.dart';
+import 'package:flutter_app/Utils/PageRouteBuilders.dart';
 import 'package:flutter_app/Utils/Session.dart';
 import 'package:provider/provider.dart';
-
-import 'OrderDetails.dart';
 
 class Orders extends StatefulWidget {
   @override
@@ -102,32 +104,117 @@ class _OrdersState extends State<Orders> {
               itemCount: _orderBloc.myOrders.length,
               itemBuilder: (c, i) {
                 Map order = _orderBloc.myOrders.elementAt(i);
+                Map products = order['products'] ?? {};
                 return Padding(
                   padding: const EdgeInsets.all(2.0),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 5),
-                    child: Container(
-                      decoration: BoxDecoration(
-                          color: Colors.white38,
-                          border: Border.all(color: Colors.grey),
-                          borderRadius: BorderRadius.circular(20)),
-                      child: ListTile(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (c) => OrderDetails(
-                                        orderId: order['order_id'],
-                                      )));
-                        },
-                        title: Text("Order Number: ${order['order_number']}"),
-                        isThreeLine: true,
-                        subtitle: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.of(context).push(SlideLeftPageRouteBuilder(
+                            pageBuilder: (c, a, b) => OrderDetails(
+                                  orderId: order['order_id'],
+                                )));
+                      },
+                      child: Container(
+                        height: 140,
+                        decoration: BoxDecoration(
+                            color: Colors.white38,
+                            border: Border.all(color: Colors.grey),
+                            borderRadius: BorderRadius.circular(10)),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            Text("Date: ${order['order_date']}\n"
-                                "Status: ${order['order_status']}"),
-                            Text(" Total Price: ${order['order_total']}")
+                            Expanded(
+                              flex: 0,
+                              child: Container(
+                                width: MediaQuery.of(context).size.width / 3,
+                                child: Stack(
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(10),
+                                          bottomLeft: Radius.circular(10)),
+                                      child: CachedNetworkImage(
+                                        imageUrl:
+                                            "${Session.IMAGE_BASE_URL}/assets/images/products/${products.entries.first.value['item']['photo']}",
+                                        fit: BoxFit.fill,
+                                        height: 140,
+                                        width:
+                                            MediaQuery.of(context).size.width /
+                                                3,
+                                      ),
+                                    ),
+                                    if (products.length > 1)
+                                      Align(
+                                        alignment: Alignment.bottomRight,
+                                        child: Padding(
+                                          padding:
+                                              const EdgeInsets.only(right: 8.0),
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                shape: BoxShape.circle),
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(5),
+                                              child: Text(
+                                                "+${products.length}",
+                                                style: TextStyle(
+                                                  color: Color(0xffDC0F21),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                  ],
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                                flex: 1,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 10.0, top: 5, bottom: 5),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "${products.entries.first.value['item']['name']}",
+                                        maxLines: 1,
+                                        style: TextStyle(fontSize: 16),
+                                      ),
+                                      Text(
+                                        "Order Number : ${order['order_number']}",
+                                        style: TextStyle(fontSize: 12),
+                                      ),
+                                      Text(
+                                        "Order Status : ${order['order_status']}",
+                                        style: TextStyle(fontSize: 12),
+                                      ),
+                                      Text(
+                                        "Order Date : ${order['order_date']}",
+                                        style: TextStyle(fontSize: 12),
+                                      ),
+                                      Text(
+                                        "Order Total : ${order['order_total']}",
+                                        style: TextStyle(fontSize: 12),
+                                      ),
+                                    ],
+                                  ),
+                                )),
+                            Expanded(
+                              flex: 0,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Align(
+                                    alignment: Alignment.centerRight,
+                                    child:
+                                        Icon(Icons.arrow_forward_ios_rounded)),
+                              ),
+                            )
                           ],
                         ),
                       ),

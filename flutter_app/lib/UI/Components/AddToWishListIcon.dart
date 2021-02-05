@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/Bloc/AuthBloc.dart';
 import 'package:flutter_app/Bloc/ItemBloc.dart';
+import 'package:flutter_app/UI/SignInUp/MobileLogin.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
@@ -36,40 +37,68 @@ class _AddToWishListIconState extends State<AddToWishListIcon> {
         : InkWell(
             onTap: () async {
               Map data = authBloc.userData;
-              if (data.length == 0) {
-                //TODO: login pop up
-                Fluttertoast.showToast(msg: "Please Login To Proceed");
-                return;
-              }
+              Function function = () async
+              {
+                AuthBloc _authBloc1 = Provider.of<AuthBloc>(
+                    context,
+                    listen: false);
+                if(_authBloc1.userData.length==0)
+                  return;
+                int id = widget.productsData['id'];
+                if (id == null) return;
 
-              int id = widget.productsData['id'];
-              if (id == null) return;
+                if (mounted)
+                  setState(() {
+                    isLoading = true;
+                  });
 
-              if (mounted)
-                setState(() {
-                  isLoading = true;
-                });
-
-              if (!isPresentInWishlist) {
-                await Provider.of<ItemBloc>(context, listen: false)
-                    .addItemToWishlist(id);
-              } else {
-                var list = wishListProds.where((element) =>
-                    element['slug'] == widget.productsData['slug']);
-                if (list.length != 0)
+                if (!isPresentInWishlist) {
                   await Provider.of<ItemBloc>(context, listen: false)
-                      .removeItemFromWishlist(list.first['wishlist_id']);
-              }
-              if (mounted)
-                setState(() {
-                  isLoading = false;
-                });
+                      .addItemToWishlist(id);
+                } else {
+                  var list = wishListProds.where((element) =>
+                      element['slug'] == widget.productsData['slug']);
+                  if (list.length != 0)
+                    await Provider.of<ItemBloc>(context, listen: false)
+                        .removeItemFromWishlist(list.first['wishlist_id']);
+                }
+                if (mounted)
+                  setState(() {
+                    isLoading = false;
+                  });
+              };
+
+              if (data.length == 0) {
+                await Navigator.push(
+                    context,
+                    PageRouteBuilder(
+                        opaque: false,
+                        barrierColor: Colors.black54,
+                        transitionDuration: Duration(milliseconds: 500),
+                        transitionsBuilder: (c, a, b, w) {
+                          return SlideTransition(
+                            position:
+                                Tween(begin: Offset(0, 1), end: Offset.zero)
+                                    .animate(CurvedAnimation(
+                                        curve: Curves.fastLinearToSlowEaseIn,
+                                        parent: a)),
+                            child: w,
+                          );
+                        },
+                        pageBuilder: (c, a, b) => MobileLogin()));
+                function();
+              } else
+                function();
             },
             child: widget.inWishlist
                 ? Padding(
-                  padding: const EdgeInsets.only(right:5.0),
-                  child: Image.asset("assets/cross.png",height: 15,width: 15,),
-                )
+                    padding: const EdgeInsets.only(right: 5.0),
+                    child: Image.asset(
+                      "assets/cross.png",
+                      height: 15,
+                      width: 15,
+                    ),
+                  )
                 : Tooltip(
                     message: isPresentInWishlist
                         ? "Added To Wishlist"

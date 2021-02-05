@@ -5,12 +5,17 @@ class DioInterceptor extends Interceptor {
 
   DioInterceptor._private();
 
-  factory DioInterceptor.getInstance() => DioInterceptor._private();
+  static DioInterceptor _instance;
+
+  factory DioInterceptor.getInstance() {
+    _instance ??= DioInterceptor._private();
+    return _instance;
+  }
 
   @override
   Future onRequest(RequestOptions options) async {
-    options.headers.addAll((await Session.instance.getHeaders()));
-    // print(options.headers);
+    var cookies = (await Session.instance.getHeaders());
+    options.headers.addAll(cookies);
     print(options.uri);
     // print(options.headers);
     return options;

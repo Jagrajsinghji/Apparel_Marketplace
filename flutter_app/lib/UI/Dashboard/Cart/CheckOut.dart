@@ -5,14 +5,17 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/Bloc/AuthBloc.dart';
 import 'package:flutter_app/Bloc/CartBloc.dart';
+import 'package:flutter_app/Bloc/CountryStateBloc.dart';
 import 'package:flutter_app/UI/Dashboard/Item/ItemPage.dart';
-import 'package:flutter_app/UI/Dashboard/Profile/AddAddress.dart';
+import 'package:flutter_app/UI/SignInUp/MobileLogin.dart';
 import 'package:flutter_app/UI/SignInUp/SignIn.dart';
 import 'package:flutter_app/Utils/Session.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+
+import 'ChooseAddress.dart';
 
 class CheckOut extends StatefulWidget {
   @override
@@ -676,8 +679,14 @@ class _CheckOutState extends State<CheckOut> {
 
     //TODO: ask ravjot to send currency value
     double currency = 68.95;
-    double sizePrice =
-        itemPrice + double.parse(details['size_price']?.toString() ?? "0");
+    double sizePrice = itemPrice;
+    try {
+      sizePrice =
+          itemPrice + double.parse(details['size_price']?.toString()??"0");
+    } catch (err) {
+      print(err.toString()+"Error In Shopping Bag");
+      print(details);
+    }
     return Padding(
       padding: const EdgeInsets.only(bottom: 5),
       child: Container(
@@ -1003,26 +1012,33 @@ class _CheckOutState extends State<CheckOut> {
         isLoading = true;
       });
     AuthBloc _authBloc = Provider.of<AuthBloc>(context, listen: false);
+    CountryStateBloc _countrySBloc = Provider.of<CountryStateBloc>(context, listen: false);
+
     if (_authBloc.userData.length > 0) {
       Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (c) => AddAddress(
-                    checkOutData: checkOutData,
+              builder: (c) => ChooseAddress(profileData: _authBloc.userData,
+                    checkOutData: checkOutData,countryStates: {'countries': _countrySBloc.countries,"states": _countrySBloc.states},
                   )));
     } else {
-      await Navigator.push(
-          context, MaterialPageRoute(builder: (c) => SignIn()));
-      AuthBloc _authBloc1 = Provider.of<AuthBloc>(context, listen: false);
-      if (_authBloc1.userData.length > 0) {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (c) => AddAddress(
-                      checkOutData: checkOutData,
-                    )));
-      } else
-        Fluttertoast.showToast(msg: "Please Login To Proceed");
+      Function func = (){
+        AuthBloc _authBloc1 = Provider.of<AuthBloc>(context, listen: false);
+        if (_authBloc1.userData.length > 0) {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (c) => ChooseAddress(profileData: _authBloc.userData,
+                    checkOutData: checkOutData,countryStates: {'countries': _countrySBloc.countries,"states": _countrySBloc.states},
+                  )));
+        }
+      };
+      await   Navigator.push(context,
+          PageRouteBuilder(opaque: false,barrierColor: Colors.black54,transitionDuration: Duration(milliseconds: 500),transitionsBuilder: (c,a,b,w){
+            return SlideTransition(position: Tween(begin: Offset(0,1),end: Offset.zero).animate(CurvedAnimation(curve: Curves.fastLinearToSlowEaseIn,parent: a)),child: w,);
+          },pageBuilder:  (c,a,b) => MobileLogin()));
+      func();
+
     }
     if (mounted)
       setState(() {

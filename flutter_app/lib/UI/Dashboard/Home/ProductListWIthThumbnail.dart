@@ -4,6 +4,7 @@ import 'package:flutter_app/UI/Components/AddToCartIcon.dart';
 import 'package:flutter_app/UI/Components/AddToWishListIcon.dart';
 import 'package:flutter_app/UI/Components/ProductRateIcon.dart';
 import 'package:flutter_app/UI/Dashboard/Item/ItemPage.dart';
+import 'package:flutter_app/Utils/PageRouteBuilders.dart';
 import 'package:flutter_app/Utils/Session.dart';
 
 import 'ViewAll.dart';
@@ -108,7 +109,7 @@ class _ProductListWithThumbnailState extends State<ProductListWithThumbnail> {
                           const EdgeInsets.only(bottom: 10, right: 2, left: 2),
                       child: InkWell(
                         onTap: () {
-                          Navigator.of(context).push(PageRouteBuilder(
+                          Navigator.of(context).push(SlideLeftPageRouteBuilder(
                               pageBuilder: (c, a, b) => ItemPage(
                                     itemSlug: data['slug'],
                                   )));

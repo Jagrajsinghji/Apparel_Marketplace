@@ -6,6 +6,7 @@ import 'package:flutter_app/Bloc/AuthBloc.dart';
 import 'package:flutter_app/Bloc/CartBloc.dart';
 import 'package:flutter_app/Bloc/CategoryBloc.dart';
 import 'package:flutter_app/Bloc/ItemBloc.dart';
+import 'package:flutter_app/Bloc/RecentProdsBloc.dart';
 import 'package:flutter_app/UI/Components/AddToCartIcon.dart';
 import 'package:flutter_app/UI/Components/AddToWishListIcon.dart';
 import 'package:flutter_app/UI/Components/CartIcon.dart';
@@ -15,9 +16,11 @@ import 'package:flutter_app/UI/Dashboard/Cart/ShoppingBag.dart';
 import 'package:flutter_app/UI/Dashboard/Cart/WishList.dart';
 import 'package:flutter_app/UI/Dashboard/Category/CategoriesPage.dart';
 import 'package:flutter_app/UI/Dashboard/Item/ViewItemImages.dart';
+import 'package:flutter_app/UI/Dashboard/RecentProds/RecentProdsList.dart';
+import 'package:flutter_app/UI/SignInUp/MobileLogin.dart';
+import 'package:flutter_app/Utils/PageRouteBuilders.dart';
 import 'package:flutter_app/Utils/Session.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shimmer/shimmer.dart';
@@ -67,6 +70,7 @@ class _ItemPageState extends State<ItemPage> {
       if (mounted)
         setState(() {
           itemData = value.data;
+          Provider.of<RecentProdsBloc>(context,listen: false).setProduct(itemData,widget.itemSlug);
         });
       if (callback != null) callback();
     });
@@ -76,6 +80,7 @@ class _ItemPageState extends State<ItemPage> {
 
   @override
   Widget build(BuildContext context) {
+
     CartBloc _cartBloc = Provider.of<CartBloc>(context);
     ItemBloc _itemBloc = Provider.of<ItemBloc>(context);
     List wishListProds = _itemBloc.wishListData['wishlists'] ?? [];
@@ -339,7 +344,7 @@ class _ItemPageState extends State<ItemPage> {
 
     Map cartProds = (_cartBloc.cartData ?? {})['products'] ?? {};
     alreadyAdded = cartProds.containsKey(itemId);
-    var vendorName = (itemData ?? {})['shop_name'] ?? "";
+    var shopName = (itemData ?? {})['shop_name'] ?? "";
     double newPrice = double.parse(productData['price']?.toString() ?? "0");
     double prevPrice =
         double.parse(productData['previous_price']?.toString() ?? "0");
@@ -517,18 +522,18 @@ class _ItemPageState extends State<ItemPage> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 20.0, top: 5, bottom: 5),
-                              child: Text(
-                                "$vendorName",
-                                style: TextStyle(
-                                  color: Color(0xff515151),
-                                  fontSize: 15,
-                                  letterSpacing: 0.45,
-                                ),
-                              ),
-                            ),
+                            // Padding(
+                            //   padding: const EdgeInsets.only(
+                            //       left: 20.0, top: 5, bottom: 5),
+                            //   child: Text(
+                            //     "$shopName",
+                            //     style: TextStyle(
+                            //       color: Color(0xff515151),
+                            //       fontSize: 15,
+                            //       letterSpacing: 0.45,
+                            //     ),
+                            //   ),
+                            // ),
                             Padding(
                               padding:
                                   const EdgeInsets.only(left: 20.0, bottom: 5),
@@ -690,13 +695,13 @@ class _ItemPageState extends State<ItemPage> {
                                                                   0xffDC0F21)
                                                               : Colors.white,
                                                     ),
-                                                    width: s.key.length > 6
+                                                    width: s.key.length > 3
                                                         ? 120
                                                         : 45,
                                                     height: 45,
                                                     child: Center(
                                                       child: Text(
-                                                        "${s.key}",
+                                                        "${s.key.toUpperCase()}",
                                                         maxLines: 1,
                                                         style: TextStyle(
                                                           color: selected
@@ -1017,31 +1022,70 @@ class _ItemPageState extends State<ItemPage> {
                                                                   WishList()));
                                                   return;
                                                 }
+                                                Function function = () async
+                                                {
+                                                  AuthBloc _authBloc1 = Provider.of<AuthBloc>(
+                                                      context,
+                                                      listen: false);
+                                                  if(_authBloc1.userData.length==0)
+                                                    return;
+                                                  int id = productData['id'];
+                                                  if (id == null) return;
+                                                  if (mounted)
+                                                    setState(() {
+                                                      isLoading = true;
+                                                    });
+                                                  await Provider.of<ItemBloc>(
+                                                      context,
+                                                      listen: false)
+                                                      .addItemToWishlist(id);
+                                                  if (mounted)
+                                                    setState(() {
+                                                      isLoading = false;
+                                                    });
+                                                };
+
                                                 Map data =
                                                     Provider.of<AuthBloc>(
                                                             context,
                                                             listen: false)
                                                         .userData;
                                                 if (data.length == 0) {
-                                                  Fluttertoast.showToast(
-                                                      msg:
-                                                          "Please Login To Proceed");
-                                                  return;
-                                                }
-                                                int id = productData['id'];
-                                                if (id == null) return;
-                                                if (mounted)
-                                                  setState(() {
-                                                    isLoading = true;
-                                                  });
-                                                await Provider.of<ItemBloc>(
-                                                        context,
-                                                        listen: false)
-                                                    .addItemToWishlist(id);
-                                                if (mounted)
-                                                  setState(() {
-                                                    isLoading = false;
-                                                  });
+                                                  await Navigator.push(
+                                                      context,
+                                                      PageRouteBuilder(
+                                                          opaque: false,
+                                                          barrierColor:
+                                                              Colors.black54,
+                                                          transitionDuration:
+                                                              Duration(
+                                                                  milliseconds:
+                                                                      500),
+                                                          transitionsBuilder:
+                                                              (c, a, b, w) {
+                                                            return SlideTransition(
+                                                              position: Tween(
+                                                                      begin:
+                                                                          Offset(
+                                                                              0,
+                                                                              1),
+                                                                      end: Offset
+                                                                          .zero)
+                                                                  .animate(CurvedAnimation(
+                                                                      curve: Curves
+                                                                          .fastLinearToSlowEaseIn,
+                                                                      parent:
+                                                                          a)),
+                                                              child: w,
+                                                            );
+                                                          },
+                                                          pageBuilder: (c, a,
+                                                                  b) =>
+                                                              MobileLogin()));
+                                                  function();
+                                                } else
+                                                  function();
+
                                               },
                                               color: Color(0xffDC0F21),
                                               height: 50,
@@ -1173,7 +1217,9 @@ class _ItemPageState extends State<ItemPage> {
                           "Similar@Products"),
 
                       ...products(itemData['similar_brands'] ?? [],
-                          "More@products by $vendorName"),
+                          "More@products by Same Brand"),
+
+                      RecentProdsList(),
 
                       Padding(
                         padding: const EdgeInsets.only(top: 2.0),
@@ -1350,7 +1396,7 @@ class _ItemPageState extends State<ItemPage> {
                       if (catList.length > 0) catSlug = catList.first['slug'];
                       if (subCatList.length > 0)
                         subCatSlug = subCatList.first['slug'];
-                      Navigator.of(context).push(PageRouteBuilder(
+                      Navigator.of(context).push(SlideLeftPageRouteBuilder(
                           transitionDuration: Duration(seconds: 1),
                           reverseTransitionDuration:
                               Duration(milliseconds: 800),

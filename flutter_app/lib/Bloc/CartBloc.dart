@@ -32,14 +32,12 @@ class CartBloc with ChangeNotifier {
   ) async {
     Dio dio = Dio(Session.instance.baseOptions);
     dio.interceptors.add(_dioInterceptor);
-    Response response = await dio.get("/api/addcart/$itemID");
+    Response response = await dio.get("/api/addcart/$itemID",);
     await Session.instance.updateCookie(response);
     await getCartItems();
-    // print(itemID);
-    print(response.data);
-    // print(response.request.uri);
-    if (response.data is! Map) {
-      if (((response.data['data'] ?? {})['item'] ?? {})['id'] == itemID.toString()) {
+    // print(response.request.uri);r
+    if (response.data is Map) {
+      if (((response.data['data'] ?? {})['item'] ?? {})['id'] == itemID) {
         Fluttertoast.showToast(msg: "Item Added To Cart");
       }
     } else {
@@ -82,7 +80,7 @@ class CartBloc with ChangeNotifier {
     Response response =
         await dio.get("${Session.BASE_URL}/api/removecart/$key");
     await Session.instance.updateCookie(response);
-    print(response.data);
+    // print(response.data);
     await getCartItems();
     return response;
   }
@@ -95,7 +93,7 @@ class CartBloc with ChangeNotifier {
         "${Session.BASE_URL}/api/add/byone?id=$id&itemid=$itemId&size_qty=$sizeQty&size_price=$sizePrice");
 
     await Session.instance.updateCookie(response);
-    print(response.data);
+    // print(response.data);
     if (getCartItem) {
       await getCartItems();
     } else

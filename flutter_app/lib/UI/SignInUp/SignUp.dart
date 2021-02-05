@@ -9,8 +9,6 @@ import 'package:flutter_app/Utils/Session.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 
-import 'SignIn.dart';
-
 class SignUp extends StatefulWidget {
   @override
   _SignUpState createState() => _SignUpState();
@@ -42,6 +40,7 @@ class _SignUpState extends State<SignUp> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: ListView(
+        shrinkWrap: true,
         children: [
           Image.asset(
             "assets/logo.png",
@@ -49,9 +48,9 @@ class _SignUpState extends State<SignUp> {
             width: 225,
           ),
           Padding(
-            padding: const EdgeInsets.only(left: 36.0, top: 17),
+            padding: const EdgeInsets.only(left: 36.0, top: 20),
             child: Text(
-              "Sign Up",
+              "Register",
               style: TextStyle(
                 color: Color(0xff2c393f),
                 fontSize: 40,
@@ -60,11 +59,59 @@ class _SignUpState extends State<SignUp> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(left: 36.0, top: 17),
-            child: Text(
-              "Create a new account to access thousands\nof products",
+            padding: const EdgeInsets.only(
+              left: 36.0,
+            ),
+            child: Align(
+              alignment: Alignment.bottomLeft,
+              child: Container(
+                decoration: BoxDecoration(
+                    color: Colors.grey.shade400,
+                    borderRadius: BorderRadius.circular(20)),
+                height: 4,
+                width: 140,
+              ),
+            ),
+          ),
+          SizedBox(height: 18.11),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 27),
+            child: TextFormField(
+              key: _nameKey,
+              validator: (c) {
+                if (c.trim().length < 3)
+                  return "Name must be greater than 3 letters.";
+                return null;
+              },
+              onChanged: (c) => name = c.trim(),
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: Colors.white,
+                isDense: true,
+                contentPadding: EdgeInsets.all(16),
+                enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(100),
+                    borderSide: BorderSide(color: Colors.black)),
+                focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(100),
+                    borderSide: BorderSide(color: Colors.black)),
+                errorBorder: OutlineInputBorder(
+                  borderSide:
+                      BorderSide(color: Color(0xffDC0F21).withOpacity(.5)),
+                  borderRadius: BorderRadius.circular(100),
+                ),
+                focusedErrorBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Color(0xffDC0F21)),
+                  borderRadius: BorderRadius.circular(100),
+                ),
+                hintText: "Name",
+                hintStyle: TextStyle(
+                  color: Color(0xff9d9d9d),
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
               style: TextStyle(
-                color: Color(0xff2c393f),
                 fontSize: 14,
                 fontWeight: FontWeight.w400,
               ),
@@ -73,20 +120,113 @@ class _SignUpState extends State<SignUp> {
           SizedBox(height: 18.11),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 27),
-            child: Container(
-              decoration: BoxDecoration(
-                color: Color(0xfff6f6f6),
-                borderRadius: BorderRadius.circular(100),
+            child: TextFormField(
+              key: _mobileKey,
+              validator: (c) {
+                if (c.trim().length < 10) return "Invalid Mobile Number";
+                return null;
+              },
+              onChanged: (c) => number = c.trim(),
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: Colors.white,
+                isDense: true,
+                contentPadding: EdgeInsets.all(16),
+                enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(100),
+                    borderSide: BorderSide(color: Colors.black)),
+                focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(100),
+                    borderSide: BorderSide(color: Colors.black)),
+                errorBorder: OutlineInputBorder(
+                  borderSide:
+                      BorderSide(color: Color(0xffDC0F21).withOpacity(.5)),
+                  borderRadius: BorderRadius.circular(100),
+                ),
+                focusedErrorBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Color(0xffDC0F21)),
+                  borderRadius: BorderRadius.circular(100),
+                ),
+                hintText: "Mobile Number",
+                hintStyle: TextStyle(
+                  color: Color(0xff9d9d9d),
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
+                ),
               ),
-              child: TextFormField(
-                key: _nameKey,
-                validator: (c) {
-                  if (c.trim().length < 3)
-                    return "Name must be greater than 3 letters.";
-                  return null;
-                },
-                onChanged: (c) => name = c.trim(),
-                decoration: InputDecoration(
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+          ),
+          SizedBox(height: 18.11),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 27),
+            child: TextFormField(
+              key: _emailKey,
+              validator: (val) {
+                Pattern pattern =
+                    r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+                RegExp regex = new RegExp(pattern);
+                if (val.isEmpty ||
+                    val == " " ||
+                    val.length < 5 ||
+                    !regex.hasMatch(val)) {
+                  return "Enter Valid Email Address";
+                }
+                return null;
+              },
+              onChanged: (c) => email = c.trim(),
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: Colors.white,
+                isDense: true,
+                contentPadding: EdgeInsets.all(16),
+                enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(100),
+                    borderSide: BorderSide(color: Colors.black)),
+                focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(100),
+                    borderSide: BorderSide(color: Colors.black)),
+                errorBorder: OutlineInputBorder(
+                  borderSide:
+                      BorderSide(color: Color(0xffDC0F21).withOpacity(.5)),
+                  borderRadius: BorderRadius.circular(100),
+                ),
+                focusedErrorBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Color(0xffDC0F21)),
+                  borderRadius: BorderRadius.circular(100),
+                ),
+                hintText: "Email",
+                hintStyle: TextStyle(
+                  color: Color(0xff9d9d9d),
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+          ),
+          SizedBox(height: 18.11),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 27),
+            child: TextFormField(
+              key: _passKey,
+              validator: (c) {
+                if (c.length < 6)
+                  return "Password must be greater than 6 letters";
+                return null;
+              },
+              onChanged: (c) => pass = c.trim(),
+              decoration: InputDecoration(
+                  filled: true,
+                  fillColor: Colors.white,
+                  isDense: true,
+                  contentPadding: EdgeInsets.all(16),
                   enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(100),
                       borderSide: BorderSide(color: Colors.black)),
@@ -94,186 +234,45 @@ class _SignUpState extends State<SignUp> {
                       borderRadius: BorderRadius.circular(100),
                       borderSide: BorderSide(color: Colors.black)),
                   errorBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Color(0xffDC0F21)),
+                    borderSide:
+                        BorderSide(color: Color(0xffDC0F21).withOpacity(.5)),
                     borderRadius: BorderRadius.circular(100),
                   ),
                   focusedErrorBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Color(0xffDC0F21)),
                     borderRadius: BorderRadius.circular(100),
                   ),
-                  hintText: "Name",
+                  hintText: "Password",
                   hintStyle: TextStyle(
                     color: Color(0xff9d9d9d),
                     fontSize: 14,
                     fontWeight: FontWeight.w400,
                   ),
-                ),
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
-            ),
-          ),
-          SizedBox(height: 18.11),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 27),
-            child: Container(
-              decoration: BoxDecoration(
-                color: Color(0xfff6f6f6),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: TextFormField(
-                key: _mobileKey,
-                validator: (c) {
-                  if (c.trim().length < 10) return "Invalid Mobile Number";
-                  return null;
-                },
-                onChanged: (c) => number = c.trim(),
-                decoration: InputDecoration(
-                  enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(100),
-                      borderSide: BorderSide(color: Colors.black)),
-                  focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(100),
-                      borderSide: BorderSide(color: Colors.black)),
-                  errorBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Color(0xffDC0F21)),
-                    borderRadius: BorderRadius.circular(100),
-                  ),
-                  focusedErrorBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Color(0xffDC0F21)),
-                    borderRadius: BorderRadius.circular(100),
-                  ),
-                  hintText: "Mobile Number",
-                  hintStyle: TextStyle(
-                    color: Color(0xff9d9d9d),
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
-            ),
-          ),
-          SizedBox(height: 18.11),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 27),
-            child: Container(
-              decoration: BoxDecoration(
-                color: Color(0xfff6f6f6),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: TextFormField(
-                key: _emailKey,
-                validator: (val) {
-                  Pattern pattern =
-                      r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-                  RegExp regex = new RegExp(pattern);
-                  if (val.isEmpty ||
-                      val == " " ||
-                      val.length < 5 ||
-                      !regex.hasMatch(val)) {
-                    return "Enter Valid Email Address";
-                  }
-                  return null;
-                },
-                onChanged: (c) => email = c.trim(),
-                decoration: InputDecoration(
-                  enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(100),
-                      borderSide: BorderSide(color: Colors.black)),
-                  focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(100),
-                      borderSide: BorderSide(color: Colors.black)),
-                  errorBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Color(0xffDC0F21)),
-                    borderRadius: BorderRadius.circular(100),
-                  ),
-                  focusedErrorBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Color(0xffDC0F21)),
-                    borderRadius: BorderRadius.circular(100),
-                  ),
-                  hintText: "Email",
-                  hintStyle: TextStyle(
-                    color: Color(0xff9d9d9d),
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
-            ),
-          ),
-          SizedBox(height: 18.11),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 27),
-            child: Container(
-              decoration: BoxDecoration(
-                color: Color(0xfff6f6f6),
-                borderRadius: BorderRadius.circular(100),
-              ),
-              child: TextFormField(
-                key: _passKey,
-                validator: (c) {
-                  if (c.length < 6)
-                    return "Password must be greater than 6 letters";
-                  return null;
-                },
-                onChanged: (c) => pass = c.trim(),
-                decoration: InputDecoration(
-                    enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(100),
-                        borderSide: BorderSide(color: Colors.black)),
-                    focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(100),
-                        borderSide: BorderSide(color: Colors.black)),
-                    errorBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Color(0xffDC0F21)),
-                      borderRadius: BorderRadius.circular(100),
+                  suffixIcon: Container(
+                    height: 50,
+                    child: FlatButton(
+                      splashColor: Colors.transparent,
+                      focusColor: Colors.transparent,
+                      onPressed: () {
+                        setState(() {
+                          showPassword = !showPassword;
+                        });
+                      },
+                      child: showPassword
+                          ? Transform.translate(
+                              offset: Offset(18, 0),
+                              child: Transform.scale(
+                                  scale: .3,
+                                  child: Image.asset("assets/hidePass.png")))
+                          : Transform.scale(
+                              scale: .5,
+                              child: Image.asset("assets/seePass1.png")),
                     ),
-                    focusedErrorBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Color(0xffDC0F21)),
-                      borderRadius: BorderRadius.circular(100),
-                    ),
-                    hintText: "Password",
-                    hintStyle: TextStyle(
-                      color: Color(0xff9d9d9d),
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400,
-                    ),
-                    suffixIcon: Container(
-                      height: 50,
-                      child: FlatButton(
-                        splashColor: Colors.transparent,
-                        focusColor: Colors.transparent,
-                        onPressed: () {
-                          setState(() {
-                            showPassword = !showPassword;
-                          });
-                        },
-                        child: showPassword
-                            ? Transform.translate(
-                                offset: Offset(18, 0),
-                                child: Transform.scale(
-                                    scale: .3,
-                                    child: Image.asset("assets/hidePass.png")))
-                            : Transform.scale(
-                                scale: .5,
-                                child: Image.asset("assets/seePass1.png")),
-                      ),
-                    )),
-                obscureText: showPassword,
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w400,
-                ),
+                  )),
+              obscureText: showPassword,
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
               ),
             ),
           ),
@@ -310,45 +309,44 @@ class _SignUpState extends State<SignUp> {
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 27),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Color(0xfff6f6f6),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: TextFormField(
-                  key: _captchaKey,
-                  validator: (c) {
-                    if (c.trim() != _code.toString().trim())
-                      return "Please Enter valid captcha";
-                    return null;
-                  },
-                  onChanged: (c) => captcha = c.trim(),
-                  decoration: InputDecoration(
-                    enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(100),
-                        borderSide: BorderSide(color: Colors.black)),
-                    focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(100),
-                        borderSide: BorderSide(color: Colors.black)),
-                    errorBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Color(0xffDC0F21)),
+              child: TextFormField(
+                key: _captchaKey,
+                validator: (c) {
+                  if (c.trim() != _code.toString().trim())
+                    return "Please Enter valid captcha";
+                  return null;
+                },
+                onChanged: (c) => captcha = c.trim(),
+                decoration: InputDecoration(
+                  filled: true,
+                  fillColor: Colors.white,
+                  isDense: true,
+                  contentPadding: EdgeInsets.all(16),
+                  enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(100),
-                    ),
-                    focusedErrorBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Color(0xffDC0F21)),
+                      borderSide: BorderSide(color: Colors.black)),
+                  focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(100),
-                    ),
-                    hintText: "Captcha Code",
-                    hintStyle: TextStyle(
-                      color: Color(0xff9d9d9d),
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400,
-                    ),
+                      borderSide: BorderSide(color: Colors.black)),
+                  errorBorder: OutlineInputBorder(
+                    borderSide:
+                        BorderSide(color: Color(0xffDC0F21).withOpacity(.5)),
+                    borderRadius: BorderRadius.circular(100),
                   ),
-                  style: TextStyle(
+                  focusedErrorBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xffDC0F21)),
+                    borderRadius: BorderRadius.circular(100),
+                  ),
+                  hintText: "Captcha Code",
+                  hintStyle: TextStyle(
+                    color: Color(0xff9d9d9d),
                     fontSize: 14,
                     fontWeight: FontWeight.w400,
                   ),
+                ),
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
                 ),
               ),
             ),
@@ -373,7 +371,7 @@ class _SignUpState extends State<SignUp> {
               onTap: signUp,
               borderRadius: BorderRadius.circular(100),
               child: Container(
-                height: 58,
+                height: 50,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(100),
                   color: Color(0xffdc0f21),
@@ -396,32 +394,32 @@ class _SignUpState extends State<SignUp> {
             ),
           ),
           SizedBox(height: 18.11),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                "Already have an account? ",
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
-              InkWell(
-                onTap: () {
-                  Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (c) => SignIn()));
-                },
-                child: Text(
-                  "Sign In",
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Color(0xff1382B6),
-                    fontWeight: FontWeight.w400,
+          InkWell(
+            onTap: () => Navigator.of(context).pop(),
+            child: Container(
+              height: 40,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "Already have an account? ",
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                    ),
                   ),
-                ),
+                  Text(
+                    "Sign In",
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Color(0xffDC0f21),
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
         ],
       ),
@@ -489,8 +487,8 @@ class _SignUpState extends State<SignUp> {
                             FlatButton(
                                 onPressed: () {
                                   Navigator.pop(c);
-                                  Navigator.pop(context);
-                                  refreshBlocs(context, loginRefresh: true);
+                                  Navigator.pop(context, "LoggedIn");
+                                  refreshBlocs(context, logInOutRefresh: true);
                                 },
                                 child: Text(
                                   "Got It",

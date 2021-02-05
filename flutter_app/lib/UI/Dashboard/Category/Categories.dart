@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/Bloc/CategoryBloc.dart';
 import 'package:flutter_app/UI/Dashboard/Category/CategoriesPage.dart';
+import 'package:flutter_app/Utils/PageRouteBuilders.dart';
 import 'package:flutter_app/Utils/Session.dart';
 import 'package:provider/provider.dart';
 
@@ -77,11 +78,8 @@ class _CategoriesState extends State<Categories> {
                   if (i == categories.length + 4) {
                     return InkWell(
                       onTap: () {
-                        Navigator.of(context).push(PageRouteBuilder(
-                            transitionDuration: Duration(seconds: 1),
-                            reverseTransitionDuration:
-                                Duration(milliseconds: 800),
-                            pageBuilder: (c, a, b) => CategoriesPage(
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (c) => CategoriesPage(
                                   categoryName: null,
                                 )));
                       },
@@ -118,8 +116,8 @@ class _CategoriesState extends State<Categories> {
                     String val = moreCats.entries.elementAt(i).value;
                     return InkWell(
                       onTap: () {
-                        Navigator.of(context).push(PageRouteBuilder(
-                            pageBuilder: (c, a, b) => CategoriesPage(
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (c) => CategoriesPage(
                                   categoryName: val.split("/").first,
                                   subCatName: val.split("/")[1],
                                   childCatName: val.split("/").last,
@@ -148,7 +146,7 @@ class _CategoriesState extends State<Categories> {
                   Map data = categories.elementAt(i);
                   return InkWell(
                     onTap: () {
-                      Navigator.of(context).push(PageRouteBuilder(
+                      Navigator.of(context).push(SlideLeftPageRouteBuilder(
                           pageBuilder: (c, a, b) => CategoriesPage(
                                 categoryName: data['slug'],
                               )));

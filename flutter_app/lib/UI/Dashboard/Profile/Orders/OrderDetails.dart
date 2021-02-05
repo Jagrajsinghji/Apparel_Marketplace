@@ -17,34 +17,26 @@ class OrderDetails extends StatefulWidget {
 }
 
 class _OrderDetailsState extends State<OrderDetails> {
+  bool isLoading = false;
   @override
   Widget build(BuildContext context) {
     OrdersBloc _orderBloc = Provider.of<OrdersBloc>(context);
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        leading: FlatButton(
-          child: Image.asset("assets/backArrow.png"),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-        title: Text(
-          "My Orders",
-          style: TextStyle(color: Colors.black),
-        ),
-        backgroundColor: Colors.white,
-        iconTheme: IconThemeData(color: Colors.black),
-      ),
-      backgroundColor: Colors.white,
-      body: FutureBuilder<Response>(
+    return isLoading? Material(color: Colors.white,
+      child: Center(
+          child: SpinKitFadingCircle(
+            color: Color(0xffDC0F21),
+          )),
+    ):  FutureBuilder<Response>(
         future: _orderBloc.getOrderDetails(widget.orderId),
         builder: (c, snap) {
           if (snap?.data?.data == null)
-            return Center(
-                child: SpinKitFadingCircle(
-              color: Color(0xffDC0F21),
-            ));
+            return Material(
+              color: Colors.white,
+              child: Center(
+                  child: SpinKitFadingCircle(
+                color: Color(0xffDC0F21),
+              )),
+            );
           else {
             Map orderData = snap?.data?.data ?? {};
             Map billingAddress = orderData['billing_address'] ?? {};
@@ -54,279 +46,455 @@ class _OrderDetailsState extends State<OrderDetails> {
                 orderData['payment_method'] != "cashondelivery";
             Map cartItems = orderData['cart'] ?? {};
             int itemLength = cartItems?.length ?? 0;
-            return ListView(
-              physics: BouncingScrollPhysics(),
-              shrinkWrap: true,
-              children: [
-                Center(
-                    child: Text(
-                  "Order Number : ${orderDetails['order_number']}",
-                  style: TextStyle(fontSize: 20),
-                  textAlign: TextAlign.center,
-                )),
-                Center(child: Text("Status: ${orderDetails['order_status']}")),
-                Center(child: Text("Order on : ${orderDetails['order_date']}")),
-                Padding(
-                  padding: EdgeInsets.only(bottom: 10, top: 10),
-                  child: Container(
-                    color: Colors.white,
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Shipping Address',
-                            style: TextStyle(
-                              color: Color(0xff515151),
-                              fontSize: 15,
-                              letterSpacing: 0.45,
-                            ),
-                          ),
-                          Text(
-                            "Name : ${shippingAddress['shipping_name']}",
-                            style: TextStyle(
-                              color: Color(0xff7f7f7f),
-                              fontSize: 14,
-                              letterSpacing: 0.42,
-                            ),
-                          ),
-                          Text(
-                            "Email Id : ${shippingAddress['shipping_email']}",
-                            style: TextStyle(
-                              color: Color(0xff7f7f7f),
-                              fontSize: 14,
-                              letterSpacing: 0.42,
-                            ),
-                          ),
-                          Text(
-                            "Phone Number : ${shippingAddress['shipping_phone']}",
-                            style: TextStyle(
-                              color: Color(0xff7f7f7f),
-                              fontSize: 14,
-                              letterSpacing: 0.42,
-                            ),
-                          ),
-                          Text(
-                            "Shipping Address : ${shippingAddress['shipping_address']}",
-                            style: TextStyle(
-                              color: Color(0xff7f7f7f),
-                              fontSize: 14,
-                              letterSpacing: 0.42,
-                            ),
-                          ),
-                          Text(
-                            "Shipping City : ${shippingAddress['shipping_city']}",
-                            style: TextStyle(
-                              color: Color(0xff7f7f7f),
-                              fontSize: 14,
-                              letterSpacing: 0.42,
-                            ),
-                          ),
-                          Text(
-                            "Pin Code : ${shippingAddress['pin_code']}",
-                            style: TextStyle(
-                              color: Color(0xff7f7f7f),
-                              fontSize: 14,
-                              letterSpacing: 0.42,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+            bool eligibleForCancel =
+                orderDetails['eligible_for_cancel'] ?? false;
+
+            return Scaffold(
+                appBar: AppBar(
+                  elevation: 0,
+                  leading: FlatButton(
+                    child: Image.asset("assets/backArrow.png"),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
                   ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(bottom: 10, top: 10),
-                  child: Container(
-                    color: Colors.white,
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Billing Address',
-                            style: TextStyle(
-                              color: Color(0xff515151),
-                              fontSize: 15,
-                              letterSpacing: 0.45,
-                            ),
-                          ),
-                          Text(
-                            "Name: ${billingAddress['customer_name']}",
-                            style: TextStyle(
-                              color: Color(0xff7f7f7f),
-                              fontSize: 14,
-                              letterSpacing: 0.42,
-                            ),
-                          ),
-                          Text(
-                            "Email Id: ${billingAddress['customer_email']}",
-                            style: TextStyle(
-                              color: Color(0xff7f7f7f),
-                              fontSize: 14,
-                              letterSpacing: 0.42,
-                            ),
-                          ),
-                          Text(
-                            "Phone Number: ${billingAddress['customer_phone']}",
-                            style: TextStyle(
-                              color: Color(0xff7f7f7f),
-                              fontSize: 14,
-                              letterSpacing: 0.42,
-                            ),
-                          ),
-                          Text(
-                            "Shipping Address: ${billingAddress['customer_address']}",
-                            style: TextStyle(
-                              color: Color(0xff7f7f7f),
-                              fontSize: 14,
-                              letterSpacing: 0.42,
-                            ),
-                          ),
-                          Text(
-                            "Shipping City: ${billingAddress['customer_city']}",
-                            style: TextStyle(
-                              color: Color(0xff7f7f7f),
-                              fontSize: 14,
-                              letterSpacing: 0.42,
-                            ),
-                          ),
-                          Text(
-                            "Pin Code: ${billingAddress['customer_pincode']}",
-                            style: TextStyle(
-                              color: Color(0xff7f7f7f),
-                              fontSize: 14,
-                              letterSpacing: 0.42,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                  titleSpacing: -10,
+                  title: Text(
+                    "${orderDetails['order_number']}",
+                    style: TextStyle(color: Colors.black),
                   ),
+                  backgroundColor: Colors.white,
+                  iconTheme: IconThemeData(color: Colors.black),
                 ),
-                Padding(
-                  padding: EdgeInsets.only(bottom: 10, top: 10),
-                  child: Container(
-                    color: Colors.white,
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Price Details ($itemLength${itemLength > 1 ? " Items)" : " Item)"} ",
-                            style: TextStyle(
-                              color: Color(0xff515151),
-                              fontSize: 15,
-                              letterSpacing: 0.45,
+                backgroundColor: Colors.white,
+                body: ListView(
+                  physics: BouncingScrollPhysics(),
+                  shrinkWrap: true,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Expanded(
+                          flex: 1,
+                          child: Padding(
+                            padding: const EdgeInsets.all(5.0),
+                            child: RichText(
+                              text: TextSpan(
+                                  text: "Oder Status",
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                    letterSpacing: 0.45,
+                                  ),
+                                  children: [
+                                    TextSpan(
+                                      text: "\n${orderDetails['order_status']}",
+                                      style: TextStyle(
+                                        color: Color(0xffdc0f21),
+                                        fontWeight: FontWeight.normal,
+                                        letterSpacing: 0.45,
+                                      ),
+                                    ),
+                                  ]),
+                              textAlign: TextAlign.center,
                             ),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 10),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Text(
-                                  "Shipping Fee",
+                        ),
+                        Expanded(flex: 1,
+                          child: Padding(
+                            padding: const EdgeInsets.all(5.0),
+                            child: RichText(
+                              text: TextSpan(
+                                  text: "Payment Status",
                                   style: TextStyle(
-                                    color: Color(0xff7f7f7f),
-                                    fontSize: 14,
-                                    letterSpacing: 0.42,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                    letterSpacing: 0.45,
                                   ),
-                                ),
-                                Text(
-                                  "${(orderDetails['shipping_cost'])}",
-                                  style: TextStyle(
-                                    color: Color(0xff7f7f7f),
-                                    fontSize: 14,
-                                    letterSpacing: 0.42,
-                                  ),
-                                ),
-                              ],
+                                  children: [
+                                    TextSpan(
+                                      text: "\n${orderDetails['payment_status']}",
+                                      style: TextStyle(
+                                        color: Color(0xffdc0f21),
+                                        fontWeight: FontWeight.normal,
+                                        letterSpacing: 0.45,
+                                      ),
+                                    ),
+                                  ]),
+                              textAlign: TextAlign.center,
                             ),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 10),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.center,
+                        ),
+                      ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: RichText(
+                          text: TextSpan(
+                              text: "Items",
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 0.45,
+                              ),
                               children: [
-                                Text(
-                                  "Packaging Fee",
+                                TextSpan(
+                                  text: " Purchased",
                                   style: TextStyle(
-                                    color: Color(0xff7f7f7f),
-                                    fontSize: 14,
-                                    letterSpacing: 0.42,
-                                  ),
-                                ),
-                                Text(
-                                  "${(orderDetails['packaging_cost'])}",
-                                  style: TextStyle(
-                                    color: Color(0xff7f7f7f),
-                                    fontSize: 14,
-                                    letterSpacing: 0.42,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Divider(
-                            color: Color(0xffDCDCDC),
-                            height: 2,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 10),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Text(
-                                  "Total Amount",
-                                  style: TextStyle(
-                                    color: Color(0xff515151),
+                                    color: Color(0xffdc0f21),
+                                    fontWeight: FontWeight.normal,
                                     fontSize: 15,
                                     letterSpacing: 0.45,
                                   ),
                                 ),
-                                Text(
-                                  "${(orderDetails['total'])}",
-                                  style: TextStyle(
-                                    color: Color(0xff515151),
-                                    fontSize: 14,
-                                    letterSpacing: 0.42,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
+                              ]),
+                          textAlign: TextAlign.center,
+                        ),
                       ),
                     ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 10.0, bottom: 5),
-                  child: Text(
-                    'Items Purchased',
-                    style: TextStyle(
-                      color: Color(0xff515151),
-                      fontSize: 15,
-                      letterSpacing: 0.45,
+                    ...cartItems.entries
+                        .map((e) => productTile(e.key, e.value))
+                        .toList(),
+                    if (eligibleForCancel)
+                      Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: InkWell(
+                          borderRadius: BorderRadius.circular(600),
+                          onTap: () async{
+                            setState(() {
+                              isLoading = true;
+                            });
+                            await _orderBloc.cancelOrder(
+                                orderDetails['order_id'].toString());
+                            setState(() {
+                              isLoading =false;
+                            });
+                          },
+                          child: Container(
+                            height: 50,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(600),
+                              color: Color(0xffdc0f21),
+                            ),
+                            child: Center(
+                              child: Text(
+                                "Cancel Order",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    Padding(
+                      padding: EdgeInsets.only(bottom: 10, top: 10),
+                      child: Container(
+                        color: Colors.white,
+                        child: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: RichText(
+                                  text: TextSpan(
+                                      text: "Shipping",
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.bold,
+                                        letterSpacing: 0.45,
+                                      ),
+                                      children: [
+                                        TextSpan(
+                                          text: " Address",
+                                          style: TextStyle(
+                                            color: Color(0xffdc0f21),
+                                            fontWeight: FontWeight.normal,
+                                            fontSize: 15,
+                                            letterSpacing: 0.45,
+                                          ),
+                                        ),
+                                      ]),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                              Text(
+                                "Name : ${shippingAddress['shipping_name']}",
+                                style: TextStyle(
+                                  color: Color(0xff7f7f7f),
+                                  fontSize: 14,
+                                  letterSpacing: 0.42,
+                                ),
+                              ),
+                              Text(
+                                "Email Id : ${shippingAddress['shipping_email']}",
+                                style: TextStyle(
+                                  color: Color(0xff7f7f7f),
+                                  fontSize: 14,
+                                  letterSpacing: 0.42,
+                                ),
+                              ),
+                              Text(
+                                "Phone Number : ${shippingAddress['shipping_phone']}",
+                                style: TextStyle(
+                                  color: Color(0xff7f7f7f),
+                                  fontSize: 14,
+                                  letterSpacing: 0.42,
+                                ),
+                              ),
+                              Text(
+                                "Shipping Address : ${shippingAddress['shipping_address']}",
+                                style: TextStyle(
+                                  color: Color(0xff7f7f7f),
+                                  fontSize: 14,
+                                  letterSpacing: 0.42,
+                                ),
+                              ),
+                              Text(
+                                "Shipping City : ${shippingAddress['shipping_city']}",
+                                style: TextStyle(
+                                  color: Color(0xff7f7f7f),
+                                  fontSize: 14,
+                                  letterSpacing: 0.42,
+                                ),
+                              ),
+                              Text(
+                                "Pin Code : ${shippingAddress['pin_code']}",
+                                style: TextStyle(
+                                  color: Color(0xff7f7f7f),
+                                  fontSize: 14,
+                                  letterSpacing: 0.42,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-                ...cartItems.entries
-                    .map((e) => productTile(e.key, e.value))
-                    .toList()
-              ],
-            );
+                    Padding(
+                      padding: EdgeInsets.only(bottom: 10, top: 10),
+                      child: Container(
+                        color: Colors.white,
+                        child: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: RichText(
+                                  text: TextSpan(
+                                      text: "Billing",
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.bold,
+                                        letterSpacing: 0.45,
+                                      ),
+                                      children: [
+                                        TextSpan(
+                                          text: " Address",
+                                          style: TextStyle(
+                                            color: Color(0xffdc0f21),
+                                            fontWeight: FontWeight.normal,
+                                            fontSize: 15,
+                                            letterSpacing: 0.45,
+                                          ),
+                                        ),
+                                      ]),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                              Text(
+                                "Name: ${billingAddress['customer_name']}",
+                                style: TextStyle(
+                                  color: Color(0xff7f7f7f),
+                                  fontSize: 14,
+                                  letterSpacing: 0.42,
+                                ),
+                              ),
+                              Text(
+                                "Email Id: ${billingAddress['customer_email']}",
+                                style: TextStyle(
+                                  color: Color(0xff7f7f7f),
+                                  fontSize: 14,
+                                  letterSpacing: 0.42,
+                                ),
+                              ),
+                              Text(
+                                "Phone Number: ${billingAddress['customer_phone']}",
+                                style: TextStyle(
+                                  color: Color(0xff7f7f7f),
+                                  fontSize: 14,
+                                  letterSpacing: 0.42,
+                                ),
+                              ),
+                              Text(
+                                "Shipping Address: ${billingAddress['customer_address']}",
+                                style: TextStyle(
+                                  color: Color(0xff7f7f7f),
+                                  fontSize: 14,
+                                  letterSpacing: 0.42,
+                                ),
+                              ),
+                              Text(
+                                "Shipping City: ${billingAddress['customer_city']}",
+                                style: TextStyle(
+                                  color: Color(0xff7f7f7f),
+                                  fontSize: 14,
+                                  letterSpacing: 0.42,
+                                ),
+                              ),
+                              Text(
+                                "Pin Code: ${billingAddress['customer_pincode']}",
+                                style: TextStyle(
+                                  color: Color(0xff7f7f7f),
+                                  fontSize: 14,
+                                  letterSpacing: 0.42,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(bottom: 10, top: 10),
+                      child: Container(
+                        color: Colors.white,
+                        child: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: RichText(
+                                  text: TextSpan(
+                                      text: "Price Details",
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.bold,
+                                        letterSpacing: 0.45,
+                                      ),
+                                      children: [
+                                        TextSpan(
+                                          text:
+                                              " ($itemLength${itemLength > 1 ? " Items)" : " Item)"} ",
+                                          style: TextStyle(
+                                            color: Color(0xffdc0f21),
+                                            fontWeight: FontWeight.normal,
+                                            fontSize: 15,
+                                            letterSpacing: 0.45,
+                                          ),
+                                        ),
+                                      ]),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 10),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "Shipping Fee",
+                                      style: TextStyle(
+                                        color: Color(0xff7f7f7f),
+                                        fontSize: 14,
+                                        letterSpacing: 0.42,
+                                      ),
+                                    ),
+                                    Text(
+                                      "${(orderDetails['shipping_cost'])}",
+                                      style: TextStyle(
+                                        color: Color(0xff7f7f7f),
+                                        fontSize: 14,
+                                        letterSpacing: 0.42,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 10),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "Packaging Fee",
+                                      style: TextStyle(
+                                        color: Color(0xff7f7f7f),
+                                        fontSize: 14,
+                                        letterSpacing: 0.42,
+                                      ),
+                                    ),
+                                    Text(
+                                      "${(orderDetails['packaging_cost'])}",
+                                      style: TextStyle(
+                                        color: Color(0xff7f7f7f),
+                                        fontSize: 14,
+                                        letterSpacing: 0.42,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Divider(
+                                color: Color(0xffDCDCDC),
+                                height: 2,
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 10),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "Total Amount",
+                                      style: TextStyle(
+                                        color: Color(0xff515151),
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.bold,
+                                        letterSpacing: 0.45,
+                                      ),
+                                    ),
+                                    Text(
+                                      "${(orderDetails['total'])}",
+                                      style: TextStyle(
+                                        color: Color(0xffDC0f21),
+                                        fontSize: 14,
+                                        letterSpacing: 0.42,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ));
           }
-        },
-      ),
-    );
+        });
   }
 
   Widget productTile(String key, Map details) {
@@ -335,10 +503,16 @@ class _OrderDetailsState extends State<OrderDetails> {
     double currency = 68.95;
 
     return Padding(
-      padding: const EdgeInsets.only(bottom: 10),
+      padding: const EdgeInsets.only(bottom: 5.0),
       child: Container(
-        height: 150,
-        color: Colors.white,
+        height: 130,
+        decoration: BoxDecoration(boxShadow: [
+          BoxShadow(
+              color: Colors.black12,
+              blurRadius: 1,
+              spreadRadius: 1,
+              offset: Offset(0, 1))
+        ], color: Colors.white),
         child: Row(
           children: [
             InkWell(
@@ -375,54 +549,57 @@ class _OrderDetailsState extends State<OrderDetails> {
                         maxLines: 2,
                         style: TextStyle(
                           color: Color(0xff515151),
-                          fontSize: 15,
+                          fontSize: 14,
                           letterSpacing: 0.45,
                         ),
                       ),
                     ),
-                    if (details['size'].toString().length > 0)
-                      Expanded(
-                        flex: 0,
-                        child: Text(
-                          "Size : ${details['size']}",
-                          style: TextStyle(
-                            color: Color(0xff515151),
-                            fontSize: 12,
-                            fontWeight: FontWeight.w300,
-                            letterSpacing: 0.30,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        if (details['size'].toString().length > 0)
+                          Expanded(
+                            flex: 0,
+                            child: Text(
+                              "Size : ${details['size']}",
+                              style: TextStyle(
+                                color: Color(0xff515151),
+                                fontSize: 12,
+                                fontWeight: FontWeight.w300,
+                                letterSpacing: 0.30,
+                              ),
+                            ),
+                          ),
+                        Expanded(
+                          flex: 0,
+                          child: Padding(
+                            padding: EdgeInsets.only(
+                                left: (details['size'].toString().length > 0)
+                                    ? 20.0
+                                    : 0),
+                            child: Text(
+                              "Qty : ${details['qty']}",
+                              style: TextStyle(
+                                color: Color(0xff515151),
+                                fontSize: 12,
+                                fontWeight: FontWeight.w300,
+                                letterSpacing: 0.30,
+                              ),
+                            ),
                           ),
                         ),
-                      ),
-                    Expanded(
-                      flex: 0,
-                      child: Text(
-                        "Qty : ${details['qty']}",
-                        style: TextStyle(
-                          color: Color(0xff515151),
-                          fontSize: 12,
-                          fontWeight: FontWeight.w300,
-                          letterSpacing: 0.30,
-                        ),
-                      ),
+                      ],
                     ),
                     Expanded(
                       flex: 0,
-                      child: Text(
-                        "\u20B9 ${(newPrice * currency).round()}",
-                        maxLines: 1,
-                        style: TextStyle(
-                          fontSize: 15,
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      flex: 0,
-                      child: Text(
-                        "30 days easy return",
-                        style: TextStyle(
-                          color: Color(0xff999999),
-                          fontSize: 10,
-                          letterSpacing: 0.30,
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 5.0),
+                        child: Text(
+                          "\u20B9 ${(newPrice * currency).round()}",
+                          maxLines: 1,
+                          style: TextStyle(
+                            fontSize: 14,
+                          ),
                         ),
                       ),
                     ),

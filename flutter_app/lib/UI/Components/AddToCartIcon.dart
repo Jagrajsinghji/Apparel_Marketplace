@@ -23,7 +23,7 @@ class _AddToCartIconState extends State<AddToCartIcon> {
     Map cartProds = (_cartBloc.cartData ?? {})['products'] ?? {};
     bool alreadyAdded =
         cartProds.keys.any((element) => element.toString().contains(itemId));
-    return alreadyAdded? Container(height: 0,width: 0,): isLoading
+    return (alreadyAdded&&widget.inWishlist)? Container(height: 0,width: 0,): isLoading
         ? SpinKitSquareCircle(
             color: Color(0xffDC0F21),
             size: 20,
@@ -68,7 +68,7 @@ class _AddToCartIconState extends State<AddToCartIcon> {
                   child: Center(child: Text("Add to Cart",style: TextStyle(color: Colors.black),))),
                 )
                 : Tooltip(
-              message: "Add To Cart",
+              message: alreadyAdded?"Remove From Cart":"Add To Cart",
               child: Image.asset(
                 "assets/cart.png",
                 width: 20,

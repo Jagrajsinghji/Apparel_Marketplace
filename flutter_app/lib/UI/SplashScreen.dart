@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/UI/Dashboard/Dashboard.dart';
 import 'package:flutter_app/UI/Intro/Intro1.dart';
+import 'package:flutter_app/Utils/Extensions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -55,7 +56,7 @@ class _SplashScreenState extends State<SplashScreen>
             padding: const EdgeInsets.all(8.0),
             child: Align(
                 alignment: Alignment.bottomCenter,
-                child: Text("Version 1.0.1")),
+                child: Text("Version $versionName")),
           )
         ],
       ),

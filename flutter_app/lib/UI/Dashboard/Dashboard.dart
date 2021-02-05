@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_app/Bloc/AuthBloc.dart';
 import 'package:flutter_app/Bloc/ScreenBloc.dart';
 import 'package:flutter_app/UI/Components/CartIcon.dart';
 import 'package:flutter_app/UI/Components/GlobalWidget.dart';
@@ -7,12 +10,13 @@ import 'package:flutter_app/UI/Components/SearchIcon.dart';
 import 'package:flutter_app/UI/Components/WishListIcon.dart';
 import 'package:flutter_app/UI/Dashboard/Home/Notifications.dart';
 import 'package:flutter_app/UI/Dashboard/Profile/Profile.dart';
+import 'package:flutter_app/UI/SignInUp/MobileLogin.dart';
+import 'package:flutter_app/Utils/Extensions.dart';
 import 'package:provider/provider.dart';
-
-import 'file:///D:/WeExpan/WOW-APP/flutter_app/lib/UI/Dashboard/Drawer/DashDrawer.dart';
 
 import 'Cart/ShoppingBag.dart';
 import 'Deals/DealsPage.dart';
+import 'Drawer/DashDrawer.dart';
 import 'Home/Home.dart';
 
 class Dashboard extends StatefulWidget {
@@ -118,26 +122,39 @@ class _DashboardState extends State<Dashboard> {
         endDrawer: ShoppingBag(),
         body: page == 0
             ? Home()
-            // : page == 1
-            //     ? Fashion()
             : page == 2
                 ? DealsPage()
-                // : page == 3
-                //     ? Explore()
                 : Profile(),
         bottomNavigationBar: bottomNavigation(context, voidCallback: () {}),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        floatingActionButtonLocation:
+            FloatingActionButtonLocation.centerDocked,
         floatingActionButton:
             floatingActionButton(context, voidCallback: () {}));
   }
 
   void alertForLogin() {
-    // AuthBloc authBloc = Provider.of<AuthBloc>(context,listen: false);
-    // if (authBloc.userData.length == 0)
-    //   Timer(Duration(seconds: 5), () {
-    //     if (mounted) {
-    //       Navigator.push(context, MaterialPageRoute(builder: (c) => SignIn()));
-    //     }
-    //   });
+    if (askedForLogin) return;
+    AuthBloc authBloc = Provider.of<AuthBloc>(context, listen: false);
+    if (authBloc.userData.length == 0)
+      Timer(Duration(seconds: 5), () {
+        if (mounted) {
+          Navigator.push(
+              context,
+              PageRouteBuilder(
+                  opaque: false,
+                  barrierColor: Colors.black54,
+                  transitionDuration: Duration(milliseconds: 500),
+                  transitionsBuilder: (c, a, b, w) {
+                    return SlideTransition(
+                      position: Tween(begin: Offset(0, 1), end: Offset.zero)
+                          .animate(CurvedAnimation(
+                              curve: Curves.fastLinearToSlowEaseIn, parent: a)),
+                      child: w,
+                    );
+                  },
+                  pageBuilder: (c, a, b) => MobileLogin()));
+          askedForLogin = true;
+        }
+      });
   }
 }

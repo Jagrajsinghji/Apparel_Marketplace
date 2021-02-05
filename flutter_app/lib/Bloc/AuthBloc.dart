@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/Utils/DioInterceptors.dart';
 import 'package:flutter_app/Utils/Session.dart';
+import 'package:http_parser/http_parser.dart';
 
 class AuthBloc with ChangeNotifier {
   Map userData = {};
@@ -62,6 +65,56 @@ class AuthBloc with ChangeNotifier {
     }
   }
 
+  Future<Response> editProfile(
+      {String name,
+      String email,
+      String mobileNumber,
+      String city,
+      String state,
+      String country,
+      String zip,
+      String address,
+      File photo}) async {
+    try {
+      Dio dio = Dio(Session.instance.baseOptions);
+      dio.interceptors.add(_dioInterceptor);
+      String token = await Session.instance.getToken();
+
+
+      Map<String, dynamic> data = {
+        "name": name,
+        "email": email,
+        "mobile_number": mobileNumber,
+        "city": city,
+        "address": address,
+        "zip": zip,
+        "country":country,
+        "state": state
+      };
+      if (photo != null) {
+        String fileName = photo?.path?.split('/')?.last;
+        MultipartFile mFile = await MultipartFile.fromFile(
+          photo?.path,
+          filename: fileName,
+          contentType: MediaType("image", fileName.split(".").last),
+        );
+      data.addAll({"photo": mFile});
+    }
+    FormData fData = FormData.fromMap(data);
+      Response response = await dio.post("${Session.BASE_URL}/api/user/profile",
+          data: fData,
+          options: Options(headers: {"Authorization": "Bearer $token"}));
+      await Session.instance.updateCookie(response);
+      await getUserProfile();
+      print(response.data);
+      return response;
+    } catch (err) {
+      print(err);
+      notifyListeners();
+      return null;
+    }
+  }
+
   Future<Response> refreshCode() async {
     Dio dio = Dio(Session.instance.baseOptions);
     dio.interceptors.add(_dioInterceptor);
@@ -100,7 +153,7 @@ class AuthBloc with ChangeNotifier {
         options: Options(headers: {"Authorization": "Bearer $token"}));
     await Session.instance.updateCookie(response);
     Session.instance.setToken(null);
-    await getUserProfile();
+    userData = {};
     return response;
   }
 
@@ -129,6 +182,32 @@ class AuthBloc with ChangeNotifier {
         await dio.post("${Session.BASE_URL}/api/user/forgot?email=$email");
     await Session.instance.updateCookie(response);
 
+    return response;
+  }
+
+  Future<Response> loginWithNumber(String number, String otp) async {
+    Dio dio = Dio(Session.instance.baseOptions);
+    dio.options.headers.addAll({"Accept": "application/json"});
+    dio.interceptors.add(_dioInterceptor);
+    Response response = await dio.post(
+        "${Session.BASE_URL}/api/user/login-register-otp",
+        data: {"mobile_number": number, "otp": otp});
+    await Session.instance.updateCookie(response);
+    if (response.data is Map && response.data.length > 0) {
+      String apiToken = response.data['success']['token'];
+      if (apiToken != null) Session.instance.setToken(apiToken);
+    }
+    await getUserProfile();
+    return response;
+  }
+
+  Future<Response> sendOTP(String number, String signature) async {
+    Dio dio = Dio(Session.instance.baseOptions);
+    dio.options.headers.addAll({"Accept": "application/json"});
+    dio.interceptors.add(_dioInterceptor);
+    Response response = await dio.post("${Session.BASE_URL}/api/user/send-otp",
+        data: {"mobile_number": number, "signature": signature});
+    await Session.instance.updateCookie(response);
     return response;
   }
 }

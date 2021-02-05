@@ -113,22 +113,23 @@ class _SortByState extends State<SortBy> {
                       //     ),
                       //   ),
                       // ),
-                      // ListTile(
-                      //   onTap: () {
-                      //     Navigator.pop(context, Sort.Discount);
-                      //   },
-                      //   selectedTileColor: Color(0xffDC0F21),
-                      //   selected: widget.sort == Sort.Discount,
-                      //   title: Text(
-                      //     "Discount",
-                      //     style: TextStyle(
-                      //       color: widget.sort == Sort.Discount
-                      //           ? Colors.white
-                      //           : Colors.black,
-                      //       fontSize: 14,
-                      //     ),
-                      //   ),
-                      // ),
+                      ListTile(
+                        onTap: () {
+                          Navigator.pop(context, Sort.Discount);
+                        },
+                        selectedTileColor: Color(0xffDC0F21),
+                        selected: widget.sort == Sort.Discount,
+                        title: Text(
+                          "Discount",
+                          style: TextStyle(
+                            color: widget.sort == Sort.Discount
+                                ? Colors.white
+                                : Colors.black,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 20,)
                       // ListTile(
                       //   onTap: () {
                       //     Navigator.pop(context, Sort.CustomerRating);

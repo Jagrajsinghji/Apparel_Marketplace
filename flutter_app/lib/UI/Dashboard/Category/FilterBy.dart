@@ -457,77 +457,79 @@ class _FilterByState extends State<FilterBy> {
                   //     ],
                   //   ),
                   // ),
-                  // Padding(
-                  //   padding:
-                  //       const EdgeInsets.only(left: 10.0, top: 10, bottom: 10),
-                  //   child: Text(
-                  //     "Discount",
-                  //     style: TextStyle(
-                  //         color: Colors.black,
-                  //         fontSize: 14,
-                  //         fontWeight: FontWeight.bold),
-                  //   ),
-                  // ),
-                  // Padding(
-                  //   padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  //   child: Wrap(
-                  //     alignment: WrapAlignment.start,
-                  //     crossAxisAlignment: WrapCrossAlignment.start,
-                  //     runSpacing: 8,
-                  //     spacing: 8,
-                  //     children: [
-                  //       ...List.generate(4, (index) {
-                  //         bool selected =
-                  //             selectedDiscount.contains(index) ?? false;
-                  //         String text = "10% Or Above";
-                  //         switch (index) {
-                  //           case 1:
-                  //             text = "30% Or Above";
-                  //             break;
-                  //           case 2:
-                  //             text = "50% Or Above";
-                  //             break;
-                  //           case 3:
-                  //             text = "70% Or Above";
-                  //             break;
-                  //         }
-                  //         return InkWell(
-                  //           borderRadius: BorderRadius.circular(4),
-                  //           onTap: () {
-                  //             if (selected)
-                  //               selectedDiscount.clear();
-                  //             else
-                  //               selectedDiscount = [index].toSet();
-                  //             if (mounted) setState(() {});
-                  //           },
-                  //           child: Container(
-                  //             decoration: BoxDecoration(
-                  //               borderRadius: BorderRadius.circular(4),
-                  //               border: Border.all(
-                  //                 color: Color(0xff969696),
-                  //                 width: 1,
-                  //               ),
-                  //               color:
-                  //                   selected ? Color(0xff686868) : Colors.white,
-                  //             ),
-                  //             child: Padding(
-                  //               padding: const EdgeInsets.all(10.0),
-                  //               child: Text(
-                  //                 "$text",
-                  //                 style: TextStyle(
-                  //                   color: selected
-                  //                       ? Colors.white
-                  //                       : Color(0xff969696),
-                  //                   fontSize: 14,
-                  //                 ),
-                  //               ),
-                  //             ),
-                  //           ),
-                  //         );
-                  //       })
-                  //     ],
-                  //   ),
-                  // ),
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(left: 10.0, top: 10, bottom: 10),
+                    child: Text(
+                      "Discount",
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Wrap(
+                      alignment: WrapAlignment.start,
+                      crossAxisAlignment: WrapCrossAlignment.start,
+                      runSpacing: 8,
+                      spacing: 8,
+                      children: [
+                        ...List.generate(5, (index) {
+                          bool selected =
+                              selectedDiscount.contains(index) ?? false;
+                          String text = "10% Or Above";
+                          switch (index) {
+                            case 1: text = "20% Or Above";
+                            break;
+                            case 2:
+                              text = "30% Or Above";
+                              break;
+                            case 3:
+                              text = "50% Or Above";
+                              break;
+                            case 4:
+                              text = "70% Or Above";
+                              break;
+                          }
+                          return InkWell(
+                            borderRadius: BorderRadius.circular(4),
+                            onTap: () {
+                              if (selected)
+                                selectedDiscount.clear();
+                              else
+                                selectedDiscount = [index].toSet();
+                              if (mounted) setState(() {});
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(4),
+                                border: Border.all(
+                                  color: Color(0xff969696),
+                                  width: 1,
+                                ),
+                                color:
+                                    selected ? Color(0xff686868) : Colors.white,
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: Text(
+                                  "$text",
+                                  style: TextStyle(
+                                    color: selected
+                                        ? Colors.white
+                                        : Color(0xff969696),
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        })
+                      ],
+                    ),
+                  ),
                   Padding(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 25, vertical: 20),

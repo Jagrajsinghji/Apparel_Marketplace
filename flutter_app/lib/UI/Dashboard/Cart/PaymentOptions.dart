@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/Bloc/CartBloc.dart';
 import 'package:flutter_app/Bloc/OrdersBloc.dart';
+import 'package:flutter_app/Utils/PageRouteBuilders.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
@@ -395,7 +396,7 @@ class _PaymentOptionsState extends State<PaymentOptions> {
                       borderRadius: BorderRadius.circular(600),
                       onTap: paymentOption != null ? _confirmOrder : null,
                       child: Container(
-                        height: 60,
+                        height: 50,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(600),
                           color: paymentOption == null
@@ -440,10 +441,10 @@ class _PaymentOptionsState extends State<PaymentOptions> {
       couponCode: data['couponCode'].toString(),
       couponDiscount: data['couponDiscount'].toString(),
       couponId: data['couponId'].toString(),
-      customerCountry: "India",
+      customerCountry: data['country'],
       vendorPackingId: data['vendorPackingId'].toString(),
       dp: "0",
-      email: data['personalEmail'],
+      email: data['email'],
       method: "cashondelivery",
       name: data['name'],
       packingCost: data['packingCost'].toString(),
@@ -472,7 +473,7 @@ class _PaymentOptionsState extends State<PaymentOptions> {
       Map data = resp.data['order'] ?? {};
       Navigator.pushAndRemoveUntil(
           context,
-          PageRouteBuilder(
+          SlideLeftPageRouteBuilder(
               pageBuilder: (c, a, b) => OrderPlaced(
                     paymentStatus: "Pending",
                     data: data,
@@ -492,10 +493,10 @@ class _PaymentOptionsState extends State<PaymentOptions> {
       couponCode: data['couponCode'].toString(),
       couponDiscount: data['couponDiscount'].toString(),
       couponId: data['couponId'].toString(),
-      customerCountry: "India",
+      customerCountry: data['country'],
       vendorPackingId: data['vendorPackingId'].toString(),
       dp: "0",
-      email: data['personalEmail'],
+      email: data['email'],
       name: data['name'],
       packingCost: data['packingCost'].toString(),
       personalConfirm: null,
@@ -554,7 +555,7 @@ class _PaymentOptionsState extends State<PaymentOptions> {
   void _handlePaymentError(PaymentFailureResponse response) {
     Navigator.pushAndRemoveUntil(
         context,
-        PageRouteBuilder(
+        SlideLeftPageRouteBuilder(
             pageBuilder: (c, a, b) => OrderPlaced(
                   paymentStatus: "Pending",
                   data: orderData,
@@ -568,7 +569,7 @@ class _PaymentOptionsState extends State<PaymentOptions> {
   void _handleExternalWallet(ExternalWalletResponse response) {
     Navigator.pushAndRemoveUntil(
         context,
-        PageRouteBuilder(
+        SlideLeftPageRouteBuilder(
             pageBuilder: (c, a, b) => OrderPlaced(
                   data: orderData,
                   paymentStatus: "Pending",
@@ -591,7 +592,7 @@ class _PaymentOptionsState extends State<PaymentOptions> {
     Map odata = response.data['order'] ?? {};
     Navigator.pushAndRemoveUntil(
         context,
-        PageRouteBuilder(
+        SlideLeftPageRouteBuilder(
             pageBuilder: (c, a, b) => OrderPlaced(
                   paymentStatus: "Successful",
                   data: odata,

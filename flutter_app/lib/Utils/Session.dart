@@ -15,7 +15,7 @@ class Session {
 
   get baseOptions => BaseOptions(
         baseUrl: BASE_URL,
-    contentType: "application/json",
+        contentType: "application/json",
       );
 
   Future<Map<String, String>> getHeaders() async {

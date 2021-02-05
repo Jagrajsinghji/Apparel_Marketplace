@@ -9,7 +9,9 @@ import 'package:flutter_app/Bloc/ScreenBloc.dart';
 import 'package:flutter_app/UI/Dashboard/Category/Categories.dart';
 import 'package:flutter_app/UI/Dashboard/Category/CategoriesPage.dart';
 import 'package:flutter_app/UI/Dashboard/Home/ProductGridWIthThumbnail.dart';
+import 'package:flutter_app/UI/Dashboard/RecentProds/RecentProds4Grid.dart';
 import 'package:flutter_app/Utils/Extensions.dart';
+import 'package:flutter_app/Utils/PageRouteBuilders.dart';
 import 'package:flutter_app/Utils/Session.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -21,6 +23,8 @@ import 'ProductListWIthThumbnail.dart';
 import 'Sliders.dart';
 
 class Home extends StatefulWidget {
+
+ const Home({Key key}):super(key: key);
   @override
   _HomeState createState() => _HomeState();
 }
@@ -93,9 +97,6 @@ class _HomeState extends State<Home> {
         backgroundColor: Colors.white,
         body: SmartRefresher(
           controller: _refreshController,
-          onOffsetChange: (t, sd) {
-            print(sd);
-          },
           onRefresh: () async {
             await refreshBlocs(context);
             _refreshController.refreshCompleted();
@@ -142,13 +143,8 @@ class _HomeState extends State<Home> {
                                 color: Colors.white,
                                 child: InkWell(
                                   onTap: () {
-                                    Navigator.of(context).push(PageRouteBuilder(
-                                        transitionDuration:
-                                            Duration(seconds: 1),
-                                        reverseTransitionDuration:
-                                            Duration(milliseconds: 800),
-                                        pageBuilder: (c, a, b) =>
-                                            CategoriesPage()));
+                                    Navigator.of(context).push(MaterialPageRoute(
+                                        builder: (c) => CategoriesPage()));
                                   },
                                   child: Material(
                                     color: Colors.transparent,
@@ -207,59 +203,53 @@ class _HomeState extends State<Home> {
                               color: Colors.white,
                               child: InkWell(
                                 onTap: () {
-                                  Navigator.of(context).push(PageRouteBuilder(
-                                      transitionDuration: Duration(seconds: 1),
-                                      reverseTransitionDuration:
-                                          Duration(milliseconds: 800),
-                                      pageBuilder: (c, a, b) => CategoriesPage(
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (c) => CategoriesPage(
                                             categoryName: data['slug'],
                                           )));
                                 },
-                                child: Material(
-                                  color: Colors.transparent,
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Container(
-                                        height: 60,
-                                        width: 60,
-                                        decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            color: Colors.white),
-                                        child: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(100),
-                                          child: Center(
-                                            child: CachedNetworkImage(
-                                              imageUrl:
-                                                  "${Session.IMAGE_BASE_URL}/assets/images/categories/${data['image']}",
-                                              fit: BoxFit.fill,
-                                            ),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      height: 60,
+                                      width: 60,
+                                      decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: Colors.white),
+                                      child: ClipRRect(
+                                        borderRadius:
+                                            BorderRadius.circular(100),
+                                        child: Center(
+                                          child: CachedNetworkImage(
+                                            imageUrl:
+                                                "${Session.IMAGE_BASE_URL}/assets/images/categories/${data['image']}",
+                                            fit: BoxFit.fill,
                                           ),
                                         ),
                                       ),
-                                      Expanded(
-                                        flex: 1,
-                                        child: Padding(
-                                          padding: const EdgeInsets.only(
-                                              left: 4.0, right: 4, bottom: 4),
-                                          child: Text(
-                                            "${data['name']}",
-                                            maxLines: 2,
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.bold,
-                                              letterSpacing: 0.45,
-                                            ),
+                                    ),
+                                    Expanded(
+                                      flex: 1,
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 4.0, right: 4, bottom: 4),
+                                        child: Text(
+                                          "${data['name']}",
+                                          maxLines: 2,
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.bold,
+                                            letterSpacing: 0.45,
                                           ),
                                         ),
                                       ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ),
@@ -553,45 +543,47 @@ class _HomeState extends State<Home> {
                           //     ],
                           //     picsPath: "",
                           //   ),
-
-                          SliverList(
-                              delegate: SliverChildListDelegate([
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  bottom: 40.0, left: 10, right: 10, top: 10),
-                              child: InkWell(
-                                borderRadius: BorderRadius.circular(8),
-                                onTap: () {
-                                  ScreenBloc screenBloc =
-                                      Provider.of<ScreenBloc>(context,
-                                          listen: false);
-                                  screenBloc.setPage(2);
-                                },
-                                child: Container(
-                                  height: 50,
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Icon(Icons.add_circle_outline),
-                                      Padding(
-                                        padding:
-                                            const EdgeInsets.only(left: 10.0),
-                                        child: Text("Explore More"),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ])),
                         ],
                       );
                     }
                   },
                 ),
               ])),
+              SliverList(delegate: SliverChildListDelegate([
+                RecentProds4Grid()
+              ]),),
+              SliverList(
+                  delegate: SliverChildListDelegate([
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          bottom: 40.0, left: 10, right: 10, top: 10),
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(8),
+                        onTap: () {
+                          ScreenBloc screenBloc =
+                          Provider.of<ScreenBloc>(context,
+                              listen: false);
+                          screenBloc.setPage(2);
+                        },
+                        child: Container(
+                          height: 50,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment:
+                            CrossAxisAlignment.center,
+                            children: [
+                              Icon(Icons.add_circle_outline),
+                              Padding(
+                                padding:
+                                const EdgeInsets.only(left: 10.0),
+                                child: Text("Explore More"),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ])),
             ],
           ),
         ));

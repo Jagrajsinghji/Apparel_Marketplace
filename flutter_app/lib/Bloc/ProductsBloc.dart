@@ -21,7 +21,6 @@ class ProductsBloc with ChangeNotifier {
     String _url = "/api";
     Dio dio = Dio(Session.instance.baseOptions);
     dio.interceptors.add(_dioInterceptor);
-    if (forceRefresh) _dioCacheManager.delete(_url);
     dio.interceptors.add(_dioCacheManager.interceptor);
 
     Response response = await dio.get(_url,

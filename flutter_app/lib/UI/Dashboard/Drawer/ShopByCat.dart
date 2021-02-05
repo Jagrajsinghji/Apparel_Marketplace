@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/Bloc/CategoryBloc.dart';
 import 'package:flutter_app/UI/Dashboard/Category/CategoriesPage.dart';
+import 'package:flutter_app/Utils/PageRouteBuilders.dart';
 import 'package:provider/provider.dart';
 
 class ShopByCategory extends StatefulWidget {
@@ -42,7 +43,7 @@ class _ShopByCategoryState extends State<ShopByCategory> {
                     color: Colors.white,
                     child: ListTile(
                       onTap: () {
-                        Navigator.of(context).push(PageRouteBuilder(
+                        Navigator.of(context).push(SlideLeftPageRouteBuilder(
                             pageBuilder: (c, a, b) => CategoriesPage(
                                   categoryName: data['slug'],
                                 )));
@@ -83,7 +84,7 @@ class _ShopByCategoryState extends State<ShopByCategory> {
           padding: const EdgeInsets.only(left: 10.0),
           child: ListTile(
             onTap: () {
-              Navigator.of(context).push(PageRouteBuilder(
+              Navigator.of(context).push(SlideLeftPageRouteBuilder(
                   pageBuilder: (c, a, b) => CategoriesPage(
                         categoryName: catSlug,
                         subCatName: subCatData['slug'],
@@ -109,7 +110,7 @@ class _ShopByCategoryState extends State<ShopByCategory> {
         padding: const EdgeInsets.only(left: 10.0),
         child: ListTile(
           onTap: () {
-            Navigator.of(context).push(PageRouteBuilder(
+            Navigator.of(context).push(SlideLeftPageRouteBuilder(
                 pageBuilder: (c, a, b) => CategoriesPage(
                       categoryName: catSlug,
                       subCatName: subCatSlug,
