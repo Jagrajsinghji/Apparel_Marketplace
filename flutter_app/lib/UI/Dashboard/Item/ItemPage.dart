@@ -388,7 +388,7 @@ class _ItemPageState extends State<ItemPage> {
           ),
         ),
         leading: FlatButton(
-          child: Image.asset("assets/backArrow.png"),
+          child: Image.asset("assets/backArrow.png",color: Colors.black,),
           onPressed: () {
             Navigator.of(context).pop();
           },

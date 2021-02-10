@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/Utils/Extensions.dart';
 import 'package:flutter_app/Utils/Session.dart';
 
 class ViewProfileImage extends StatelessWidget {
@@ -27,7 +28,7 @@ class ViewProfileImage extends StatelessWidget {
           "Profile Picture",
           style: TextStyle(
             color: Color(0xff2c393f),
-            fontSize: 18,
+            fontSize: 18,fontFamily: goggleFont
           ),
         ),
         iconTheme: IconThemeData(color: Colors.black),

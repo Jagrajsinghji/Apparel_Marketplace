@@ -9,6 +9,7 @@ import 'package:flutter_app/Bloc/CountryStateBloc.dart';
 import 'package:flutter_app/UI/Dashboard/Item/ItemPage.dart';
 import 'package:flutter_app/UI/SignInUp/MobileLogin.dart';
 import 'package:flutter_app/UI/SignInUp/SignIn.dart';
+import 'package:flutter_app/Utils/Extensions.dart';
 import 'package:flutter_app/Utils/Session.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -45,7 +46,7 @@ class _CheckOutState extends State<CheckOut> {
           "Check Out",
           style: TextStyle(
             color: Color(0xff2c393f),
-            fontSize: 18,
+            fontSize: 18,fontFamily: goggleFont
           ),
         ),
         leading: FlatButton(
@@ -395,7 +396,7 @@ class _CheckOutState extends State<CheckOut> {
                                                 "\u20B9 ${(totalMRP * currency).round()}",
                                                 style: TextStyle(
                                                   color: Color(0xff7f7f7f),
-                                                  fontSize: 14,
+                                                  fontSize: 14,fontWeight: FontWeight.bold,
                                                   letterSpacing: 0.42,
                                                 ),
                                               ),
@@ -685,7 +686,7 @@ class _CheckOutState extends State<CheckOut> {
           itemPrice + double.parse(details['size_price']?.toString()??"0");
     } catch (err) {
       print(err.toString()+"Error In Shopping Bag");
-      print(details);
+
     }
     return Padding(
       padding: const EdgeInsets.only(bottom: 5),
@@ -694,8 +695,8 @@ class _CheckOutState extends State<CheckOut> {
         decoration: BoxDecoration(boxShadow: [
           BoxShadow(
               color: Colors.black12,
-              blurRadius: 1,
-              spreadRadius: 1,
+              blurRadius: .5,
+              spreadRadius: .5,
               offset: Offset(0, 1))
         ], color: Colors.white),
         child: Row(
@@ -711,12 +712,27 @@ class _CheckOutState extends State<CheckOut> {
               },
               child: Container(
                 height: double.maxFinite,
-                child: CachedNetworkImage(
-                  imageUrl:
-                      "${Session.IMAGE_BASE_URL}/assets/images/products/${details['item']['photo']}",
-                  fit: BoxFit.fitHeight,
-                ),
                 width: MediaQuery.of(context).size.width / 2.4,
+                child: Padding(
+                  padding: const EdgeInsets.all(2.0),
+                  child: Center(
+                    child: Container(decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),border: Border.all(color: Colors.grey.shade300)
+                    ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(20),
+                          child: CachedNetworkImage(
+                            imageUrl:
+                            "${Session.IMAGE_BASE_URL}/assets/images/products/${details['item']['photo']}",
+                            fit: BoxFit.fitHeight,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
               ),
             ),
             Expanded(

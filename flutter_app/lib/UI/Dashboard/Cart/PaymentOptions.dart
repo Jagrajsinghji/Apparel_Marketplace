@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/Bloc/CartBloc.dart';
 import 'package:flutter_app/Bloc/OrdersBloc.dart';
+import 'package:flutter_app/Utils/Extensions.dart';
 import 'package:flutter_app/Utils/PageRouteBuilders.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -57,7 +58,7 @@ class _PaymentOptionsState extends State<PaymentOptions> {
           "Choose Payment Options",
           style: TextStyle(
             color: Color(0xff2c393f),
-            fontSize: 18,
+            fontSize: 18,fontFamily: goggleFont
           ),
         ),
         iconTheme: IconThemeData(color: Colors.black),

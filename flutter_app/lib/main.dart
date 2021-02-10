@@ -28,7 +28,7 @@ import 'UI/Dashboard/Dashboard.dart';
 import 'UI/Dashboard/Profile/Orders/Orders.dart';
 import 'UI/SignInUp/MobileLogin.dart';
 import "UI/SplashScreen.dart";
-
+import 'UI/Dashboard/Profile/ReturnItems/ReturnItems.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -63,12 +63,13 @@ void main() async {
       child: MaterialApp(
         navigatorKey: Session.navigatorKey,
         debugShowCheckedModeBanner: false,
-        theme: ThemeData(textTheme: GoogleFonts.poppinsTextTheme()),
+        theme: ThemeData(textTheme: GoogleFonts.crimsonProTextTheme(),),
         routes: {
           "Splash": (c) => SplashScreen(),
           Session.BASE_URL: (c) => Dashboard(),
           "ShoppingBag": (c) => ShoppingBag(),
           "Orders": (c) => Orders(),
+          "Returns": (c)=>ReturnItems(),
           "HelpCenter": (c) => HelpCenter(),
           "dev": (x) => MobileLogin(),
         },
@@ -100,4 +101,5 @@ void main() async {
       ),
     ));
   }, FirebaseCrashlytics.instance.recordError);
+
 }

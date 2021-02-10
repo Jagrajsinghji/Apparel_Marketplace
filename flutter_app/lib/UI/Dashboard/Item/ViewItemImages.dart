@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/Utils/Extensions.dart';
 import 'package:flutter_app/Utils/Session.dart';
 import 'package:photo_view/photo_view.dart';
 
@@ -37,7 +38,7 @@ class _ViewItemImagesState extends State<ViewItemImages> {
         iconTheme: IconThemeData(color: Colors.black),
         title: Text(
           "${widget.title}",
-          style: TextStyle(color: Colors.black),
+          style: TextStyle(color: Colors.black,fontFamily: goggleFont),
         ),
       ),
       body: Center(

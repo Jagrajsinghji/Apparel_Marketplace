@@ -4,6 +4,7 @@ import 'package:flutter_app/Bloc/ItemBloc.dart';
 import 'package:flutter_app/UI/Components/AddToCartIcon.dart';
 import 'package:flutter_app/UI/Components/AddToWishListIcon.dart';
 import 'package:flutter_app/UI/Dashboard/Item/ItemPage.dart';
+import 'package:flutter_app/Utils/Extensions.dart';
 import 'package:flutter_app/Utils/Session.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -32,7 +33,7 @@ class _WishListState extends State<WishList> {
               "WishList",
               style: TextStyle(
                 color: Color(0xff2c393f),
-                fontSize: 18,
+                fontSize: 18,fontFamily: goggleFont
               ),
             ),
             elevation: 0,
@@ -151,8 +152,8 @@ class _WishListState extends State<WishList> {
         decoration: BoxDecoration(boxShadow: [
           BoxShadow(
               color: Colors.black12,
-              blurRadius: 1,
-              spreadRadius: 1,
+              blurRadius: .5,
+              spreadRadius: .5,
               offset: Offset(0, 1))
         ], color: Colors.white),
         child: Row(
@@ -168,12 +169,27 @@ class _WishListState extends State<WishList> {
               },
               child: Container(
                 height: double.maxFinite,
-                child: CachedNetworkImage(
-                  imageUrl:
-                      "${Session.IMAGE_BASE_URL}/assets/images/products/${details['product_image']}",
-                  fit: BoxFit.fitHeight,
-                ),
                 width: width / 2.4,
+                child: Padding(
+                  padding: const EdgeInsets.all(2.0),
+                  child: Center(
+                    child: Container(decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),border: Border.all(color: Colors.grey.shade300)
+                    ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(20),
+                          child: CachedNetworkImage(
+                            imageUrl:
+                            "${Session.IMAGE_BASE_URL}/assets/images/products/${details['product_image']}",
+                            fit: BoxFit.fitHeight,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
               ),
             ),
             Expanded(

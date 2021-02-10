@@ -4,6 +4,7 @@ import 'package:flutter_app/UI/Components/AddToCartIcon.dart';
 import 'package:flutter_app/UI/Components/AddToWishListIcon.dart';
 import 'package:flutter_app/UI/Components/ProductRateIcon.dart';
 import 'package:flutter_app/UI/Dashboard/Item/ItemPage.dart';
+import 'package:flutter_app/Utils/Extensions.dart';
 import 'package:flutter_app/Utils/PageRouteBuilders.dart';
 import 'package:flutter_app/Utils/Session.dart';
 
@@ -49,7 +50,7 @@ class _ProductListWithThumbnailState extends State<ProductListWithThumbnail> {
                                 text: "${widget.title.split(" ").first}",
                                 style: TextStyle(
                                   color: Color(0xffdc0f21),
-                                  fontSize: 15,
+                                  fontSize: 15,fontFamily:goggleFont,
                                   fontWeight: FontWeight.bold,
                                   letterSpacing: 0.45,
                                 ),
@@ -155,7 +156,6 @@ class _ProductListWithThumbnailState extends State<ProductListWithThumbnail> {
                                         style: TextStyle(
                                           color: Colors.black,
                                           fontSize: 12,
-                                          fontWeight: FontWeight.bold,
                                           letterSpacing: 0.45,
                                         ),
                                       ),

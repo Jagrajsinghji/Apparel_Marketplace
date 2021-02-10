@@ -8,6 +8,7 @@ import 'package:flutter_app/UI/Components/SearchIcon.dart';
 import 'package:flutter_app/UI/Components/WishListIcon.dart';
 import 'package:flutter_app/UI/Dashboard/Cart/ShoppingBag.dart';
 import 'package:flutter_app/UI/Dashboard/Item/ItemPage.dart';
+import 'package:flutter_app/Utils/Extensions.dart';
 import 'package:flutter_app/Utils/PageRouteBuilders.dart';
 import 'package:flutter_app/Utils/Session.dart';
 
@@ -40,7 +41,7 @@ class _AlRecentProdsState extends State<AlRecentProds> {
           "Recently Viewed Products",
           style: TextStyle(
             color: Color(0xff2c393f),
-            fontSize: 14,
+            fontSize: 14,fontFamily: goggleFont
           ),
         ),
         actions: [

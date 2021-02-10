@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/Bloc/CartBloc.dart';
+import 'package:flutter_app/UI/Dashboard/Item/ItemPage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 
@@ -23,7 +24,24 @@ class _AddToCartIconState extends State<AddToCartIcon> {
     Map cartProds = (_cartBloc.cartData ?? {})['products'] ?? {};
     bool alreadyAdded =
         cartProds.keys.any((element) => element.toString().contains(itemId));
-    return (alreadyAdded&&widget.inWishlist)? Container(height: 0,width: 0,): isLoading
+    return (alreadyAdded&&widget.inWishlist)? Padding(
+      padding: const EdgeInsets.only(left:5.0,top: 5.0),
+      child: InkWell(borderRadius:  BorderRadius.circular(10),
+        onTap: (){
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (c) => ItemPage(
+                    itemSlug: widget.productData['slug'],
+                  )));
+        },
+        child: Container(height: 30,
+            decoration: BoxDecoration(border: Border.all(color: Color(0xffDC0F21)),
+                borderRadius: BorderRadius.circular(10)
+            ),
+            child: Center(child: Text("View Product",style: TextStyle(color: Colors.black),))),
+      ),
+    ): isLoading
         ? SpinKitSquareCircle(
             color: Color(0xffDC0F21),
             size: 20,

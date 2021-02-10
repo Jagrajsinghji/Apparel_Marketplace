@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/Utils/Extensions.dart';
 import 'package:flutter_app/Utils/Session.dart';
 
 class OrderPlaced extends StatefulWidget {
@@ -31,7 +32,7 @@ class _OrderPlacedState extends State<OrderPlaced> {
           "Order Details",
           style: TextStyle(
             color: Color(0xff2c393f),
-            fontSize: 18,
+            fontSize: 18,fontFamily: goggleFont
           ),
         ),
         iconTheme: IconThemeData(color: Colors.black),

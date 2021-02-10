@@ -58,7 +58,6 @@ class _ProfileState extends State<Profile> {
                               PageRouteBuilder(opaque: false,barrierColor: Colors.black54,reverseTransitionDuration: Duration(milliseconds: 100),transitionDuration: Duration(milliseconds: 500),transitionsBuilder: (c,a,b,w){
                                 return SlideTransition(position: Tween(begin: Offset(0,1),end: Offset.zero).animate(CurvedAnimation(curve: Curves.fastLinearToSlowEaseIn,parent: a)),child: w,);
                               },pageBuilder:  (c,a,b) => MobileLogin()));
-                          print("sdfdshfkjsdhfkjsdhfkjfgskdhf");
                         },
                         child: Container(
                           width: 186,
@@ -165,7 +164,7 @@ class _ProfileState extends State<Profile> {
                           "Orders",
                           style: TextStyle(
                             color: Colors.black,
-                            fontSize: 14,
+                            fontSize: 16,
                             fontWeight: FontWeight.w400,
                           ),
                         ),
@@ -173,7 +172,28 @@ class _ProfileState extends State<Profile> {
                           "Check your order status",
                           style: TextStyle(
                             color: Colors.black,
-                            fontSize: 10,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ),
+                      ListTile(
+                        onTap: () {
+                          Navigator.pushNamed(context, "Returns");
+                        },
+                        title: Text(
+                          "Return Items",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                        subtitle: Text(
+                          "Check your returns status",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 12,
                             fontWeight: FontWeight.w400,
                           ),
                         ),
@@ -189,7 +209,7 @@ class _ProfileState extends State<Profile> {
                           "Help Center",
                           style: TextStyle(
                             color: Colors.black,
-                            fontSize: 14,
+                            fontSize: 16,
                             fontWeight: FontWeight.w400,
                           ),
                         ),
@@ -197,7 +217,7 @@ class _ProfileState extends State<Profile> {
                           "Help regarding your recent purchases",
                           style: TextStyle(
                             color: Colors.black,
-                            fontSize: 10,
+                            fontSize: 12,
                             fontWeight: FontWeight.w400,
                           ),
                         ),
@@ -213,7 +233,7 @@ class _ProfileState extends State<Profile> {
                           "Privacy Policy",
                           style: TextStyle(
                             color: Colors.black,
-                            fontSize: 14,
+                            fontSize: 16,
                             fontWeight: FontWeight.w400,
                           ),
                         ),
@@ -221,7 +241,7 @@ class _ProfileState extends State<Profile> {
                           "Have a look at our privacy policies",
                           style: TextStyle(
                             color: Colors.black,
-                            fontSize: 10,
+                            fontSize: 12,
                             fontWeight: FontWeight.w400,
                           ),
                         ),
@@ -238,7 +258,7 @@ class _ProfileState extends State<Profile> {
                           "Terms & Conditions",
                           style: TextStyle(
                             color: Colors.black,
-                            fontSize: 14,
+                            fontSize: 16,
                             fontWeight: FontWeight.w400,
                           ),
                         ),
@@ -246,7 +266,7 @@ class _ProfileState extends State<Profile> {
                           "Have you seen Our T&Cs ?",
                           style: TextStyle(
                             color: Colors.black,
-                            fontSize: 10,
+                            fontSize: 12,
                             fontWeight: FontWeight.w400,
                           ),
                         ),
@@ -256,7 +276,7 @@ class _ProfileState extends State<Profile> {
                       //     "Coupons",
                       //     style: TextStyle(
                       //       color: Colors.black,
-                      //       fontSize: 14,
+                      //       fontSize: 16,
                       //       fontWeight: FontWeight.w400,
                       //     ),
                       //   ),
@@ -264,7 +284,7 @@ class _ProfileState extends State<Profile> {
                       //     "Manage Coupons for additional discounts",
                       //     style: TextStyle(
                       //       color: Colors.black,
-                      //       fontSize: 10,
+                      //       fontSize: 12,
                       //       fontWeight: FontWeight.w400,
                       //     ),
                       //   ),
@@ -287,7 +307,7 @@ class _ProfileState extends State<Profile> {
                           "LogOut",
                           style: TextStyle(
                             color: Colors.black,
-                            fontSize: 14,
+                            fontSize: 16,
                             fontWeight: FontWeight.w400,
                           ),
                         ),
@@ -295,7 +315,7 @@ class _ProfileState extends State<Profile> {
                           "LogOut your account from this device.",
                           style: TextStyle(
                             color: Colors.black,
-                            fontSize: 10,
+                            fontSize: 12,
                             fontWeight: FontWeight.w400,
                           ),
                         ),

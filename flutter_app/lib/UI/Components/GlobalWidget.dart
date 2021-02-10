@@ -22,7 +22,7 @@ _bottomNav(BuildContext context, {VoidCallback voidCallback}) {
                   onTap: () {
                     screenBloc.setPage(0);
                     voidCallback();
-                  },
+                  },borderRadius: BorderRadius.circular(200),
                   child: Container(width: 50,height: 50,
                       child: Center(
                         child: Image.asset("assets/wowIcon.png",
@@ -37,7 +37,7 @@ _bottomNav(BuildContext context, {VoidCallback voidCallback}) {
                   onTap: () {
                     screenBloc.setPage(4);
                     voidCallback();
-                  },
+                  },borderRadius: BorderRadius.circular(200),
                   child: Container(
                     height: 50,
                     width: 50,

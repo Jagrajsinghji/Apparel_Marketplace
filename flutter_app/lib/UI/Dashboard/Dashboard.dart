@@ -70,7 +70,7 @@ class _DashboardState extends State<Dashboard> {
                                 : "Explore",
                         style: TextStyle(
                           color: Color(0xff2c393f),
-                          fontSize: 18,
+                          fontSize: 18,fontFamily: goggleFont
                         ),
                       ),
                 actions: [
@@ -134,9 +134,12 @@ class _DashboardState extends State<Dashboard> {
 
   void alertForLogin() {
     if (askedForLogin) return;
-    AuthBloc authBloc = Provider.of<AuthBloc>(context, listen: false);
-    if (authBloc.userData.length == 0)
-      Timer(Duration(seconds: 5), () {
+
+
+      Timer(Duration(seconds: 5), () async{
+        AuthBloc authBloc = Provider.of<AuthBloc>(context, listen: false);
+        await authBloc.getUserProfile();
+        if (authBloc.userData.length == 0)
         if (mounted) {
           Navigator.push(
               context,

@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/Bloc/AuthBloc.dart';
 import 'package:flutter_app/Bloc/CountryStateBloc.dart';
+import 'package:flutter_app/Utils/Extensions.dart';
 import 'package:flutter_app/Utils/PickerDialog.dart';
 import 'package:flutter_app/Utils/Session.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -116,7 +117,7 @@ class _EditProfileState extends State<EditProfile> {
             "Edit Profile",
             style: TextStyle(
               color: Color(0xff2c393f),
-              fontSize: 18,
+              fontSize: 18,fontFamily: goggleFont
             ),
           ),
           iconTheme: IconThemeData(color: Colors.black),

@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/UI/Components/CartIcon.dart';
 import 'package:flutter_app/UI/Dashboard/Cart/ShoppingBag.dart';
+import 'package:flutter_app/Utils/Extensions.dart';
 
 class Notifications extends StatefulWidget {
   @override
@@ -26,7 +27,7 @@ class _NotificationsState extends State<Notifications> {
               "Notification",
               style: TextStyle(
                 color: Color(0xff2c393f),
-                fontSize: 18,
+                fontSize: 18,fontFamily: goggleFont
               ),
             ),
             backgroundColor: Colors.white,

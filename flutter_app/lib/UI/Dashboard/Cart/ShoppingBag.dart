@@ -313,8 +313,8 @@ class _ShoppingBagState extends State<ShoppingBag> {
         decoration: BoxDecoration(boxShadow: [
           BoxShadow(
               color: Colors.black12,
-              blurRadius: 1,
-              spreadRadius: 1,
+              blurRadius: .5,
+              spreadRadius: .5,
               offset: Offset(0, 1))
         ], color: Colors.white),
         child: Row(
@@ -330,12 +330,27 @@ class _ShoppingBagState extends State<ShoppingBag> {
               },
               child: Container(
                 height: double.maxFinite,
-                child: CachedNetworkImage(
-                  imageUrl:
-                      "${Session.IMAGE_BASE_URL}/assets/images/products/${details['item']['photo']}",
-                  fit: BoxFit.fitHeight,
-                ),
                 width: width / 2.4,
+                child: Padding(
+                  padding: const EdgeInsets.all(2.0),
+                  child: Center(
+                    child: Container(decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),border: Border.all(color: Colors.grey.shade300)
+                    ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(20),
+                          child: CachedNetworkImage(
+                            imageUrl:
+                            "${Session.IMAGE_BASE_URL}/assets/images/products/${details['item']['photo']}",
+                            fit: BoxFit.fitHeight,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
               ),
             ),
             Expanded(
@@ -371,123 +386,7 @@ class _ShoppingBagState extends State<ShoppingBag> {
                           ),
                         ),
                       ),
-                    // Expanded(
-                    //   flex: 0,
-                    //   child: Padding(
-                    //     padding: const EdgeInsets.only(
-                    //         top: 5.0, bottom: 5),
-                    //     child: Container(
-                    //       decoration: BoxDecoration(
-                    //           color: Color(0xffF2F2F2),
-                    //           borderRadius:
-                    //               BorderRadius.circular(
-                    //                   8)),
-                    //       child: Row(
-                    //         mainAxisAlignment:
-                    //             MainAxisAlignment
-                    //                 .spaceEvenly,
-                    //         crossAxisAlignment:
-                    //             CrossAxisAlignment
-                    //                 .center,
-                    //         children: [
-                    //           Padding(
-                    //             padding:
-                    //                 const EdgeInsets
-                    //                         .only(
-                    //                     left: 5.0,
-                    //                     right: 2.5),
-                    //             child: Center(
-                    //               child: Text(
-                    //                 "Size : ${details['size']}",
-                    //                 style: TextStyle(
-                    //                   color: Color(
-                    //                       0xff515151),
-                    //                   fontSize: 12,
-                    //                   fontFamily:
-                    //                       "Poppins",
-                    //                   fontWeight:
-                    //                       FontWeight
-                    //                           .w300,
-                    //                   letterSpacing:
-                    //                       0.30,
-                    //                 ),
-                    //               ),
-                    //             ),
-                    //           ),
-                    //
-                    //           // DropdownButton(
-                    //           //   dropdownColor:
-                    //           //       Color(0xffF2F2F2),
-                    //           //   style: TextStyle(
-                    //           //     color:
-                    //           //         Color(0xff515151),
-                    //           //     fontSize: 12,
-                    //           //
-                    //           //     fontWeight:
-                    //           //         FontWeight.w300,
-                    //           //     letterSpacing: 0.30,
-                    //           //   ),
-                    //           //   value: details['size'],
-                    //           //   elevation: 0,
-                    //           //   underline: Container(
-                    //           //     width: 0,
-                    //           //     height: 0,
-                    //           //   ),
-                    //           //   items: [
-                    //           //     if (details['item'][
-                    //           //                 'size'] !=
-                    //           //             null &&
-                    //           //         details['item']
-                    //           //                 ['size']
-                    //           //             is List)
-                    //           //       ...(details['item']
-                    //           //                   ['size']
-                    //           //               as List)
-                    //           //           .map((e) =>
-                    //           //               DropdownMenuItem(
-                    //           //                 child: Text(
-                    //           //                     "$e"),
-                    //           //                 value: e,
-                    //           //                 onTap:
-                    //           //                     () async {
-                    //           //                   if (mounted)
-                    //           //                     setState(
-                    //           //                         () {
-                    //           //                       isLoading =
-                    //           //                           true;
-                    //           //                     });
-                    //           //                   CartBloc
-                    //           //                       cBloc =
-                    //           //                       CartBloc();
-                    //           //                   await cBloc
-                    //           //                       .removeItemFromCart(
-                    //           //                     key,
-                    //           //                   );
-                    //           //                   print("item removed");
-                    //           //                   await cBloc.addItemToCart(
-                    //           //                       details['item'][
-                    //           //                           'id'],
-                    //           //                       1,
-                    //           //                       size:
-                    //           //                           e);
-                    //           //                   print("item added again");
-                    //           //                   if (mounted)
-                    //           //                     setState(
-                    //           //                         () {
-                    //           //                       isLoading =
-                    //           //                           false;
-                    //           //                     });
-                    //           //                 },
-                    //           //               ))
-                    //           //           .toList(),
-                    //           //   ],
-                    //           //   onChanged: (x) {},
-                    //           // )
-                    //         ],
-                    //       ),
-                    //     ),
-                    //   ),
-                    // ),
+
                     Expanded(
                       flex: 0,
                       child: Padding(

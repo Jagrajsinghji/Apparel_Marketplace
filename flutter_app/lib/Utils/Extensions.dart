@@ -5,6 +5,7 @@ import 'package:flutter_app/Bloc/CategoryBloc.dart';
 import 'package:flutter_app/Bloc/ItemBloc.dart';
 import 'package:flutter_app/Bloc/OrdersBloc.dart';
 import 'package:flutter_app/Bloc/ProductsBloc.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:uni_links/uni_links.dart';
 
@@ -22,6 +23,7 @@ Future<void> refreshBlocs(BuildContext context,
   ItemBloc itemBloc = Provider.of<ItemBloc>(context, listen: false);
 
   orderBloc.getMyOrders();
+  orderBloc.getReturnItems();
   itemBloc.getWishList();
   if (logInOutRefresh) return;
   authBloc.getUserProfile();
@@ -45,3 +47,4 @@ void initLinks() async {
     print("exce");
   }
 }
+var goggleFont = GoogleFonts.crimsonPro().fontFamily;

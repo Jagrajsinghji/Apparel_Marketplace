@@ -181,7 +181,7 @@ class _HomeState extends State<Home> {
                                               style: TextStyle(
                                                 color: Colors.black,
                                                 fontSize: 12,
-                                                fontWeight: FontWeight.bold,
+
                                                 letterSpacing: 0.45,
                                               ),
                                             ),
@@ -209,7 +209,7 @@ class _HomeState extends State<Home> {
                                           )));
                                 },
                                 child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                   crossAxisAlignment:
                                       CrossAxisAlignment.center,
                                   children: [
@@ -243,7 +243,6 @@ class _HomeState extends State<Home> {
                                           style: TextStyle(
                                             color: Colors.black,
                                             fontSize: 12,
-                                            fontWeight: FontWeight.bold,
                                             letterSpacing: 0.45,
                                           ),
                                         ),

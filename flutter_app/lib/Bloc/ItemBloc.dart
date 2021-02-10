@@ -14,18 +14,17 @@ class ItemBloc with ChangeNotifier {
 
   DioInterceptor _dioInterceptor = DioInterceptor.getInstance();
 
-  Future<Response> getItemBySlug(
-    String slug,{bool forceRefresh=false}
-  ) async {
+  Future<Response> getItemBySlug(String slug,
+      {bool forceRefresh = false}) async {
     String _url = "/api/item/$slug";
     Dio dio = Dio(Session.instance.baseOptions);
     dio.interceptors.add(_dioInterceptor);
-    DioCacheManager _dioCacheManager = DioCacheManager(CacheConfig(
-      baseUrl: Session.BASE_URL,defaultRequestMethod: "GET"
-    ));
+    DioCacheManager _dioCacheManager = DioCacheManager(
+        CacheConfig(baseUrl: Session.BASE_URL, defaultRequestMethod: "GET"));
     dio.interceptors.add(_dioCacheManager.interceptor);
-    Response response = await dio.get(_url, options: buildCacheOptions(Duration(days: 3),
-        maxStale: Duration(days: 7), forceRefresh: forceRefresh));
+    Response response = await dio.get(_url,
+        options: buildCacheOptions(Duration(days: 3),
+            maxStale: Duration(days: 7), forceRefresh: forceRefresh));
     await Session.instance.updateCookie(response);
 
     return response;
@@ -94,4 +93,6 @@ class ItemBloc with ChangeNotifier {
       return null;
     }
   }
+
+
 }

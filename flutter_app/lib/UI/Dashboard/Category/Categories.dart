@@ -14,7 +14,7 @@ class Categories extends StatefulWidget {
 class _CategoriesState extends State<Categories> {
   Map moreCats = {
     "assets/bottomWear.jpg": "men/men-bottomwear/null",
-    "assets/jackets.jpg": "women/women-ethnic-wear/kurti-and-kurti-set",
+    // "assets/jackets.jpg": "women/women-ethnic-wear/kurti-and-kurti-set",
     "assets/kurtis.jpg": "women/women-ethnic-wear/kurti-and-kurti-set",
     "assets/winterWear.jpg": "women/womens-western-wear/women-sweaters",
   };
@@ -68,14 +68,14 @@ class _CategoriesState extends State<Categories> {
             return GridView.builder(
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
-                itemCount: categories.length + 5,
+                itemCount: categories.length + 4,
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 3,
                     crossAxisSpacing: 5,
                     mainAxisSpacing: 5,
                     childAspectRatio: .9),
                 itemBuilder: (c, i) {
-                  if (i == categories.length + 4) {
+                  if (i == categories.length + 3) {
                     return InkWell(
                       onTap: () {
                         Navigator.of(context).push(MaterialPageRoute(

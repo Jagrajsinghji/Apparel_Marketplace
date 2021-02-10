@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/Bloc/AuthBloc.dart';
 import 'package:flutter_app/Bloc/CountryStateBloc.dart';
+import 'package:flutter_app/Utils/Extensions.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 
@@ -69,7 +70,7 @@ class _ChooseAddressState extends State<ChooseAddress> {
           "Choose Shipping Address",
           style: TextStyle(
             color: Color(0xff2c393f),
-            fontSize: 18,
+            fontSize: 18,fontFamily: goggleFont
           ),
         ),
         iconTheme: IconThemeData(color: Colors.black),

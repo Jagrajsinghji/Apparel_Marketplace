@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/Utils/Extensions.dart';
 
 class ForgotPassword3 extends StatefulWidget {
   @override
@@ -18,7 +19,7 @@ class _ForgotPassword3State extends State<ForgotPassword3> {
           style: TextStyle(
             color: Color(0xff2c393f),
             fontSize: 14,
-            fontWeight: FontWeight.w400,
+            fontFamily: goggleFont
           ),
         ),
         centerTitle: true,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/Bloc/CategoryBloc.dart';
 import 'package:flutter_app/UI/Dashboard/Category/CategoriesPage.dart';
+import 'package:flutter_app/Utils/Extensions.dart';
 import 'package:flutter_app/Utils/PageRouteBuilders.dart';
 import 'package:provider/provider.dart';
 
@@ -21,7 +22,7 @@ class _ShopByCategoryState extends State<ShopByCategory> {
       return Padding(
         padding: const EdgeInsets.only(left: 8.0),
         child: Theme(
-          data: ThemeData(accentColor: Color(0xffDC0F21)),
+          data: ThemeData(accentColor: Color(0xffDC0F21),fontFamily: goggleFont,),
           child: ListView.builder(
               shrinkWrap: true,
               physics: BouncingScrollPhysics(),

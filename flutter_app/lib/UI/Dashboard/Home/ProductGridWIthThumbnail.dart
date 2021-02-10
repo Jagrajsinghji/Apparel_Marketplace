@@ -4,6 +4,7 @@ import 'package:flutter_app/UI/Components/AddToCartIcon.dart';
 import 'package:flutter_app/UI/Components/AddToWishListIcon.dart';
 import 'package:flutter_app/UI/Components/ProductRateIcon.dart';
 import 'package:flutter_app/UI/Dashboard/Item/ItemPage.dart';
+import 'package:flutter_app/Utils/Extensions.dart';
 import 'package:flutter_app/Utils/PageRouteBuilders.dart';
 import 'package:flutter_app/Utils/Session.dart';
 
@@ -54,7 +55,7 @@ class _ProductGridWIthThumbnailState extends State<ProductGridWIthThumbnail> {
                                   color: Color(0xffdc0f21),
                                   fontSize: 15,
                                   fontWeight: FontWeight.bold,
-                                  letterSpacing: 0.45,
+                                  letterSpacing: 0.45,fontFamily:goggleFont,
                                 ),
                                 children: [
                                   TextSpan(
@@ -153,7 +154,7 @@ class _ProductGridWIthThumbnailState extends State<ProductGridWIthThumbnail> {
                                         style: TextStyle(
                                           color: Colors.black,
                                           fontSize: 12,
-                                          fontWeight: FontWeight.bold,
+
                                           letterSpacing: 0.45,
                                         ),
                                       ),

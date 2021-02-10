@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/Bloc/AuthBloc.dart';
+import 'package:flutter_app/Utils/Extensions.dart';
 import 'package:provider/provider.dart';
 
 class ForgotPassword1 extends StatefulWidget {
@@ -25,7 +26,7 @@ class _ForgotPassword1State extends State<ForgotPassword1> {
           style: TextStyle(
             color: Color(0xff2c393f),
             fontSize: 14,
-            fontWeight: FontWeight.w400,
+              fontFamily: goggleFont
           ),
         ),
         centerTitle: true,

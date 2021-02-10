@@ -25,12 +25,13 @@ class _MobileLoginState extends State<MobileLogin> {
   GlobalKey<FormFieldState> _mobileKey = GlobalKey();
 
   String mobileNo;
-  bool otpSent = false;
+  bool otpSent = false,autoLogin=false;
   String otp;
 
   String _fieldOTP;
   SmsAutoFill _smsAutoFill = SmsAutoFill();
   StreamController<String> _statusController = StreamController();
+
 
   void getOtp() async {
     if(!_statusController.isClosed)
@@ -78,13 +79,16 @@ class _MobileLoginState extends State<MobileLogin> {
           backgroundColor: Colors.transparent,
           body: Align(
             alignment: Alignment.bottomCenter,
-            child: AnimatedContainer(
-                duration: Duration(milliseconds: 900),
-                curve: Curves.fastLinearToSlowEaseIn,
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(20)),
-                child: otpSent ? otpField() : mobileField()),
+            child: GestureDetector(onTap: (){
+            },
+              child: AnimatedContainer(
+                  duration: Duration(milliseconds: 900),
+                  curve: Curves.fastLinearToSlowEaseIn,
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20)),
+                  child: otpSent ? otpField() : mobileField()),
+            ),
           ),
         ),
       ),
@@ -139,9 +143,22 @@ class _MobileLoginState extends State<MobileLogin> {
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 5),
               child: PinFieldAutoFill(
-                onCodeChanged: (c) {
+                onCodeChanged: (c) async{
                   _fieldOTP = c;
-                  if (c.length == 6)if(!_statusController.isClosed) _statusController.add("Click To Login");
+                  if (c.length == 6) {
+                    if (!_statusController.isClosed) {
+                      _statusController.add("Click To Login");
+                    }
+                    if (otp != null && _fieldOTP == otp) {
+                      if(!_statusController.isClosed)
+                        _statusController.add("Logging In...");
+                      autoLogin=true;
+                      await Provider.of<AuthBloc>(context, listen: false)
+                          .loginWithNumber(mobileNo, _fieldOTP);
+                      refreshBlocs(context, logInOutRefresh: true);
+                      Navigator.pop(context);
+                    }
+                  }
                 },
               ),
             )),
@@ -181,7 +198,7 @@ class _MobileLoginState extends State<MobileLogin> {
               onTap: getOtp,
               child: Center(
                 child: Text(
-                  "Did’nt get the OTP?",
+                  "Didn't get OTP?",
                   style: TextStyle(
                     color: Color(0xff5b5b5b),
                     fontSize: 14,
@@ -198,6 +215,7 @@ class _MobileLoginState extends State<MobileLogin> {
             padding: const EdgeInsets.symmetric(horizontal: 27, vertical: 10),
             child: InkWell(
               onTap: () async {
+                if(autoLogin)return;
                 if (_fieldOTP == null)
                   Fluttertoast.showToast(msg: "Please Enter OTP.");
                 else if (_fieldOTP.length != 6)
