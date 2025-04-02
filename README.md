@@ -15,9 +15,9 @@ Welcome to **Apparel Marketplace**, a modern, fully-featured eCommerce platform 
 
 ## 🛠️ Tech Stack  
 - **Frontend:** Flutter (Dart)  
-- **State Management:** Provider / Riverpod / Bloc (mention the one you use)  
-- **Backend:** Firebase / Node.js / Django (mention if applicable)  
-- **Database:** Firestore / MySQL / MongoDB (mention the one used)  
+- **State Management:** Provider & Bloc 
+- **Backend:** Php
+- **Database:** MySQL   
 
 ## 🔧 Installation  
 Follow these steps to set up and run the app:  
